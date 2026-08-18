@@ -630,6 +630,24 @@ function mudarPagina(page) {
     }
 
 
+    /* A lista pode ter sido atualizada por um modal, filtro ou
+       uma nova versão publicada. Ao abrir Cursos, renderizamos
+       novamente os dados reais vindos do Supabase. */
+    if (
+        page === "cursos" &&
+        typeof window.carregarCursos === "function"
+    ) {
+
+        window.carregarCursos().catch(
+            erro => console.error(
+                "MEP EAD | Não foi possível atualizar os cursos:",
+                erro
+            )
+        );
+
+    }
+
+
     /* ================================
        TÍTULOS
     ================================= */
