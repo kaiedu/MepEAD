@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+ <link rel="icon" type="image/png" href="img/capa.png">
+
+    <meta
+        name="description"
+        content="Aula do MEP EAD"
+    >
+
+    <title>Aula | MEP EAD</title>
+
+    <!-- FONTES -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="../css/portal.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/aula.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div
+    class="portal"
+    id="portal"
+>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="portal-header">
+
+        <div class="portal-header-left">
+
+            <button
+                type="button"
+                class="portal-back-button"
+                id="voltarAulasButton"
+                aria-label="Voltar para as aulas"
+            >
+
+                <span aria-hidden="true">←</span>
+
+                <span>
+                    Voltar para aulas
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="portal-header-right">
+
+            <div class="portal-profile">
+
+                <div
+                    class="portal-profile-avatar"
+                    id="profileAvatar"
+                >
+
+                    <span id="profileInitial">
+                        A
+                    </span>
+
+                    <img
+                        id="profileImage"
+                        src=""
+                        alt="Foto do aluno"
+                        hidden
+                    >
+
+                </div>
+
+
+                <div class="portal-profile-info">
+
+                    <strong id="studentName">
+                        Aluno
+                    </strong>
+
+                    <span>
+                        Aluno
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="portal-logout-button"
+                id="logoutButton"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTEÚDO
+    ====================================================== -->
+
+    <main class="aula-page">
+
+
+        <!-- =================================================
+             CABEÇALHO
+        ================================================== -->
+
+        <section class="aula-header-section">
+
+            <div class="aula-header-content">
+
+                <span class="eyebrow">
+                    AULA
+                </span>
+
+
+                <h1 id="aulaViewTitulo">
+                    Carregando aula...
+                </h1>
+
+
+                <p id="aulaViewDescricao">
+                    Aguarde enquanto carregamos as informações
+                    desta aula.
+                </p>
+
+
+                <div class="aula-status">
+
+                    <span
+                        class="aula-status-dot"
+                        id="aulaStatusDot"
+                        aria-hidden="true"
+                    ></span>
+
+
+                    <div>
+
+                        <strong id="aulaStatusLabel">
+                            AGUARDANDO
+                        </strong>
+
+                        <p id="aulaStatusDescricao">
+                            Verificando disponibilidade...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             INFORMAÇÕES
+        ================================================== -->
+
+        <section class="aula-info-section">
+
+            <div class="aula-info-grid">
+
+
+                <div class="aula-info-card">
+
+                    <span class="aula-info-label">
+                        DATA
+                    </span>
+
+                    <strong id="aulaInfoData">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="aula-info-card">
+
+                    <span class="aula-info-label">
+                        HORÁRIO
+                    </span>
+
+                    <strong id="aulaInfoHorario">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="aula-info-card">
+
+                    <span class="aula-info-label">
+                        DURAÇÃO
+                    </span>
+
+                    <strong id="aulaInfoDuracao">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ÁREA PRINCIPAL
+        ================================================== -->
+
+        <section
+            class="aula-content-section"
+            id="aulaContentSection"
+        >
+
+
+            <!-- =================================================
+                 LIVE
+            ================================================== -->
+
+            <div
+                class="live-player-section"
+                id="livePlayerSection"
+                hidden
+            >
+
+                <div class="live-player-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            TRANSMISSÃO
+                        </span>
+
+                        <h2 id="livePlayerTitulo">
+                            Aula ao vivo
+                        </h2>
+
+                    </div>
+
+
+                    <span class="live-player-badge">
+                        AO VIVO
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="live-player-layout"
+                    id="livePlayerLayout"
+                >
+
+                <div
+                    class="live-player"
+                    id="livePlayer"
+                    tabindex="0"
+                >
+
+
+                    <iframe
+                        id="livePlayerIframe"
+                        src=""
+                        title="Transmissão da aula"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        hidden
+                    ></iframe>
+
+
+                    <div
+                        class="live-player-placeholder"
+                        id="livePlayerPlaceholder"
+                    >
+
+                        <div class="live-player-placeholder-icon">
+                            ▶
+                        </div>
+
+                        <h3>
+                            Transmissão indisponível
+                        </h3>
+
+                        <p>
+                            Aguarde o início da transmissão.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="live-fullscreen-button"
+                        id="liveFullscreenButton"
+                        aria-label="Tela cheia"
+                        title="Tela cheia"
+                    >
+                        ⛶
+                    </button>
+
+
+                    <!-- =================================================
+                         PRESENÇA
+                    ================================================== -->
+
+                    <div
+                        class="presenca-overlay"
+                        id="presencaOverlay"
+                        hidden
+                        aria-hidden="true"
+                    >
+
+                        <div
+                            class="presenca-overlay-backdrop"
+                            id="presencaOverlayBackdrop"
+                        ></div>
+
+
+                        <div
+                            class="presenca-modal"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="presencaModalTitulo"
+                        >
+
+                            <div
+                                class="presenca-modal-icon"
+                                aria-hidden="true"
+                            >
+                                ✓
+                            </div>
+
+
+                            <div class="presenca-modal-content">
+
+                                <span class="eyebrow">
+                                    PRESENÇA
+                                </span>
+
+
+                                <h2 id="presencaModalTitulo">
+                                    Confirme sua presença
+                                </h2>
+
+
+                                <p id="presencaModalAula">
+                                    Aula
+                                </p>
+
+
+                                <div
+                                    class="presenca-modal-status"
+                                    id="presencaModalStatus"
+                                >
+                                    O professor abriu uma chamada
+                                    de presença. Confirme para
+                                    registrar sua participação.
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="presenca-confirm-button"
+                                id="confirmarPresencaButton"
+                            >
+                                Confirmar presença
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     CHAT AO VIVO
+                ================================================== -->
+
+                <aside
+                    class="live-chat"
+                    id="liveChatPanel"
+                    aria-labelledby="liveChatTitle"
+                >
+
+                    <header class="live-chat-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                AO VIVO
+                            </span>
+
+                            <h3 id="liveChatTitle">
+                                Chat da aula
+                            </h3>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="live-chat-close-button"
+                            id="liveChatCloseButton"
+                            aria-label="Ocultar chat"
+                            title="Ocultar chat"
+                        >
+                            ×
+                        </button>
+
+                    </header>
+
+
+                    <div
+                        class="live-chat-messages"
+                        id="liveChatMessages"
+                        role="log"
+                        aria-live="polite"
+                        aria-relevant="additions"
+                    >
+
+                        <p class="live-chat-empty" id="liveChatEmpty">
+                            Ainda não há mensagens. Seja o primeiro a participar.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        class="live-chat-form"
+                        id="liveChatForm"
+                    >
+
+                        <label class="sr-only" for="liveChatInput">
+                            Escreva uma mensagem
+                        </label>
+
+                        <textarea
+                            id="liveChatInput"
+                            maxlength="1000"
+                            rows="1"
+                            placeholder="Escreva uma mensagem..."
+                            autocomplete="off"
+                        ></textarea>
+
+
+                        <div class="live-chat-form-footer">
+
+                            <span id="liveChatCharacterCount">
+                                0/1000
+                            </span>
+
+
+                            <button
+                                type="submit"
+                                class="live-chat-send-button"
+                                id="liveChatSendButton"
+                                disabled
+                            >
+                                Enviar
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </aside>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="live-chat-toggle-button"
+                    id="liveChatToggleButton"
+                    aria-label="Mostrar chat"
+                    aria-expanded="true"
+                    hidden
+                >
+                    <span aria-hidden="true">💬</span>
+                    <span>Chat</span>
+                    <strong id="liveChatUnreadCount" hidden>0</strong>
+                </button>
+
+
+                <div
+                    class="live-chat-notification"
+                    id="liveChatNotification"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                >
+                    <strong id="liveChatNotificationAuthor"></strong>
+                    <span id="liveChatNotificationText"></span>
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 AULA AGENDADA
+            ================================================== -->
+
+            <section
+                class="aula-locked-section"
+                id="aulaLockedCard"
+                hidden
+            >
+
+                <div class="aula-locked-icon">
+                    🔒
+                </div>
+
+
+                <span class="eyebrow">
+                    AULA AGENDADA
+                </span>
+
+
+                <h2>
+                    Esta aula ainda não começou
+                </h2>
+
+
+                <p>
+                    A transmissão será liberada quando
+                    o professor iniciar a aula.
+                </p>
+
+
+                <strong id="aulaAgendadaHorario">
+                    —
+                </strong>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 AULA ENCERRADA / INDISPONÍVEL
+            ================================================== -->
+
+            <section
+                class="aula-unavailable-section"
+                id="aulaUnavailableCard"
+                hidden
+            >
+
+                <div class="aula-unavailable-icon">
+                    !
+                </div>
+
+
+                <span class="eyebrow">
+                    ENCERRADA
+                </span>
+
+
+                <h2>
+                    Esta aula não está ao vivo
+                </h2>
+
+
+                <p id="aulaUnavailableDescricao">
+                    A transmissão desta aula não está disponível
+                    neste momento.
+                </p>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SOBRE A AULA
+            ================================================== -->
+
+            <section
+                class="aula-details-section"
+                id="aulaDetailsSection"
+            >
+
+                <div class="aula-details-card">
+
+                    <span class="eyebrow">
+                        SOBRE ESTA AULA
+                    </span>
+
+
+                    <h2 id="aulaDetailsTitulo">
+                        Aula
+                    </h2>
+
+
+                    <p id="aulaDetailsDescricao">
+                        —
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             RODAPÉ
+        ================================================== -->
+
+        <footer class="aula-footer">
+
+            <button
+                type="button"
+                class="aula-footer-back-button"
+                id="voltarAulasFooterButton"
+            >
+
+                <span aria-hidden="true">
+                    ←
+                </span>
+
+                <span>
+                    Voltar para aulas
+                </span>
+
+            </button>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div
+    class="portal-toast"
+    id="portalToast"
+    hidden
+    role="status"
+    aria-live="polite"
+>
+
+    <div
+        class="portal-toast-icon"
+        id="portalToastIcon"
+    >
+        ✓
+    </div>
+
+
+    <div class="portal-toast-content">
+
+        <strong id="portalToastTitulo">
+            Aviso
+        </strong>
+
+
+        <p id="portalToastMensagem"></p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SCRIPTS
+====================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="../js/supabase.js"></script>
+
+<script src="../js/aula.js"></script>
+
+
+</body>
+</html>

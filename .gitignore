@@ -1,0 +1,13 @@
+# Dependências e arquivos gerados localmente
+node_modules/
+.vercel/
+.vite/
+supabase/.temp/
+
+# Arquivos acidentais do editor
+**/Novo(a) Documento de Texto.txt
+
+# Arquivos temporários do sistema/editor
+.DS_Store
+Thumbs.db
+*.log

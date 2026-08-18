@@ -1,0 +1,1615 @@
+/* =========================================
+   MEP EAD
+   LOGIN.CSS
+   Ministério de Ensino no Propósito
+========================================= */
+
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: "Inter", sans-serif;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+
+/* =========================================
+   PÁGINA
+========================================= */
+
+.login-page {
+    background:
+        linear-gradient(
+            135deg,
+            #050505 0%,
+            #0b0b0b 35%,
+            #140606 70%,
+            #050505 100%
+        );
+
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   EFEITOS DE FUNDO
+========================================= */
+
+.background-effects {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* -----------------------------------------
+   ORB 1
+----------------------------------------- */
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.28;
+}
+
+
+.orb-one {
+    width: 600px;
+    height: 600px;
+
+    top: -300px;
+    left: -180px;
+
+    background: #ff0000;
+
+    animation:
+        floatOrbOne 14s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------
+   ORB 2
+----------------------------------------- */
+
+.orb-two {
+    width: 500px;
+    height: 500px;
+
+    right: -180px;
+    bottom: -250px;
+
+    background: #b30000;
+
+    animation:
+        floatOrbTwo 17s ease-in-out infinite;
+}
+
+
+/* -----------------------------------------
+   ORB ANIMATIONS
+----------------------------------------- */
+
+@keyframes floatOrbOne {
+
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(80px, 60px, 0);
+    }
+
+}
+
+
+@keyframes floatOrbTwo {
+
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(-70px, -50px, 0);
+    }
+
+}
+
+
+/* =========================================
+   GRID DE FUNDO
+========================================= */
+
+.background-grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 60px 60px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.8),
+            transparent
+        );
+}
+
+
+/* =========================================
+   PALAVRA AO FUNDO
+========================================= */
+
+.background-word {
+
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(-8deg);
+
+    font-size: clamp(
+        120px,
+        17vw,
+        300px
+    );
+
+    font-weight: 900;
+
+    letter-spacing: 12px;
+
+    color: rgba(
+        255,
+        255,
+        255,
+        0.025
+    );
+
+    user-select: none;
+    pointer-events: none;
+
+    white-space: nowrap;
+
+    z-index: 0;
+}
+
+
+/* =========================================
+   CONTAINER PRINCIPAL
+========================================= */
+
+.login-container {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(
+        1400px,
+        calc(100% - 80px)
+    );
+
+    min-height: 100vh;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(420px, 500px);
+
+    align-items: center;
+
+    gap: 100px;
+
+    padding: 60px 0;
+
+}
+
+
+/* =========================================
+   INTRODUÇÃO
+========================================= */
+
+.intro-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    min-width: 0;
+
+    animation:
+        fadeUp 0.8s ease both;
+
+}
+
+
+/* =========================================
+   MARCA
+========================================= */
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 70px;
+}
+
+
+.logo {
+
+    width: 72px;
+    height: 72px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(255, 0, 0, 0.35)
+        );
+
+}
+
+
+.brand-name {
+
+    font-size: 1.6rem;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   INTRO CONTENT
+========================================= */
+
+.intro-content {
+
+    max-width: 700px;
+}
+
+
+.eyebrow {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    color: #ff3434;
+}
+
+
+.eyebrow::before {
+
+    content: "";
+
+    width: 32px;
+    height: 2px;
+
+    background: #ff2020;
+
+}
+
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.intro-content h1 {
+
+    font-size: clamp(
+        5rem,
+        8vw,
+        8.5rem
+    );
+
+    line-height: 0.85;
+
+    font-weight: 900;
+
+    letter-spacing: -7px;
+
+    margin-bottom: 30px;
+}
+
+
+.intro-content h1 span {
+
+    display: block;
+
+    color: #ff2020;
+
+    text-shadow:
+        0 0 50px
+        rgba(255, 0, 0, 0.18);
+
+}
+
+
+.intro-content h2 {
+
+    max-width: 650px;
+
+    font-size: clamp(
+        1.7rem,
+        2.6vw,
+        2.5rem
+    );
+
+    line-height: 1.2;
+
+    font-weight: 400;
+
+    letter-spacing: -1px;
+
+    margin-bottom: 25px;
+
+    color: #eeeeee;
+}
+
+
+.intro-content h2 strong {
+
+    color: #ffffff;
+
+    font-weight: 800;
+}
+
+
+.intro-content p {
+
+    max-width: 620px;
+
+    font-size: 1rem;
+
+    line-height: 1.8;
+
+    color: #a8a8a8;
+
+}
+
+
+/* =========================================
+   INFORMAÇÕES DA PLATAFORMA
+========================================= */
+
+.platform-info {
+
+    display: flex;
+
+    gap: 35px;
+
+    margin-top: 60px;
+
+    flex-wrap: wrap;
+}
+
+
+.info-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.info-number {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+    color: #ff3030;
+
+    font-size: 0.75rem;
+
+    font-weight: 800;
+}
+
+
+.info-item div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.info-item strong {
+
+    font-size: 0.82rem;
+
+    font-weight: 700;
+}
+
+
+.info-item small {
+
+    font-size: 0.68rem;
+
+    color: #777;
+
+}
+
+
+/* =========================================
+   ÁREA DO LOGIN
+========================================= */
+
+.login-section {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    animation:
+        fadeUp 1s ease
+        0.1s both;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.login-card {
+
+    width: 100%;
+
+    padding: 48px;
+
+    border-radius: 32px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.11),
+            rgba(255, 255, 255, 0.045)
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.13
+        );
+
+    backdrop-filter:
+        blur(30px);
+
+    -webkit-backdrop-filter:
+        blur(30px);
+
+    box-shadow:
+        0 30px 80px
+        rgba(0, 0, 0, 0.45);
+
+}
+
+
+/* =========================================
+   CABEÇALHO LOGIN
+========================================= */
+
+.login-header {
+
+    margin-bottom: 38px;
+}
+
+
+.login-label {
+
+    display: block;
+
+    margin-bottom: 14px;
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #ff3030;
+}
+
+
+.login-header h2 {
+
+    font-size: 2.35rem;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    margin-bottom: 10px;
+}
+
+
+.login-header p {
+
+    color: #9d9d9d;
+
+    font-size: 0.88rem;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================
+   INPUT GROUP
+========================================= */
+
+.input-group {
+
+    margin-bottom: 25px;
+}
+
+
+.input-group label {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 0.8rem;
+
+    font-weight: 600;
+
+    color: #dddddd;
+}
+
+
+.label-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+
+.label-row label {
+
+    margin-bottom: 0;
+}
+
+
+/* =========================================
+   ESQUECI SENHA
+========================================= */
+
+.forgot-password {
+
+    color: #ff4040;
+
+    font-size: 0.7rem;
+
+    text-decoration: none;
+
+    transition:
+        color 0.25s ease;
+}
+
+
+.forgot-password:hover {
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   INPUT WRAPPER
+========================================= */
+
+.input-wrapper {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+/* =========================================
+   ÍCONE INPUT
+========================================= */
+
+.input-icon {
+
+    position: absolute;
+
+    left: 17px;
+
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #777;
+
+    pointer-events: none;
+
+    transition:
+        color 0.3s ease;
+}
+
+
+.input-icon svg {
+
+    width: 19px;
+    height: 19px;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+.input-wrapper input {
+
+    width: 100%;
+
+    height: 58px;
+
+    padding:
+        0 48px
+        0 50px;
+
+    border-radius: 16px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+    outline: none;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.20
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 0.85rem;
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+
+.input-wrapper input::placeholder {
+
+    color: #626262;
+}
+
+
+.input-wrapper input:focus {
+
+    border-color:
+        rgba(
+            255,
+            40,
+            40,
+            0.65
+        );
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.28
+        );
+
+    box-shadow:
+        0 0 0 4px
+        rgba(
+            255,
+            0,
+            0,
+            0.08
+        );
+}
+
+
+.input-group.active .input-icon {
+
+    color: #ff3030;
+}
+
+
+/* =========================================
+   MOSTRAR SENHA
+========================================= */
+
+.toggle-password {
+
+    position: absolute;
+
+    right: 10px;
+
+    width: 38px;
+    height: 38px;
+
+    margin: 0;
+
+    padding: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    background:
+        transparent;
+
+    color: #777;
+
+    box-shadow: none;
+
+    transform: none;
+
+}
+
+
+.toggle-password:hover {
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.05
+        );
+
+    color: #ffffff;
+
+    transform: none;
+
+}
+
+
+.toggle-password svg {
+
+    width: 19px;
+    height: 19px;
+
+}
+
+
+/* =========================================
+   BOTÃO LOGIN
+========================================= */
+
+.login-button {
+
+    width: 100%;
+
+    height: 58px;
+
+    margin-top: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff1c1c,
+            #c90000
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 0.85rem;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 15px 35px
+        rgba(
+            255,
+            0,
+            0,
+            0.20
+        );
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        filter 0.3s ease;
+}
+
+
+.login-button svg {
+
+    width: 19px;
+    height: 19px;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.login-button:hover {
+
+    transform:
+        translateY(-3px);
+
+    filter:
+        brightness(1.08);
+
+    box-shadow:
+        0 20px 40px
+        rgba(
+            255,
+            0,
+            0,
+            0.30
+        );
+}
+
+
+.login-button:hover svg {
+
+    transform:
+        translateX(4px);
+}
+
+
+.login-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
+.login-button:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.7;
+
+    transform: none;
+
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.login-button.loading {
+
+    pointer-events: none;
+}
+
+
+.login-button.loading::after {
+
+    content: "";
+
+    width: 16px;
+    height: 16px;
+
+    border:
+        2px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.35
+        );
+
+    border-top-color: #ffffff;
+
+    border-radius: 50%;
+
+    animation:
+        spin 0.7s linear infinite;
+}
+
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================
+   FOOTER DO LOGIN
+========================================= */
+
+.login-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 30px;
+
+    padding-top: 23px;
+
+    border-top:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.07
+        );
+}
+
+
+.security-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #6e6e6e;
+
+    font-size: 0.68rem;
+}
+
+
+.security-info svg {
+
+    width: 17px;
+    height: 17px;
+
+    color: #777;
+}
+
+
+.version {
+
+    font-size: 0.65rem;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    color: #555;
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+.mep-toast {
+
+    position: fixed;
+
+    top: 25px;
+    right: 25px;
+
+    z-index: 9999;
+
+    min-width: 280px;
+
+    max-width: 380px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px 18px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(
+            20,
+            20,
+            20,
+            0.94
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.10
+        );
+
+    backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+        0 20px 50px
+        rgba(
+            0,
+            0,
+            0,
+            0.4
+        );
+
+    transform:
+        translateX(
+            calc(100% + 40px)
+        );
+
+    opacity: 0;
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+}
+
+
+.mep-toast.show {
+
+    transform:
+        translateX(0);
+
+    opacity: 1;
+
+}
+
+
+.toast-icon {
+
+    width: 27px;
+    height: 27px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 0.75rem;
+
+    font-weight: 900;
+}
+
+
+.mep-toast.success .toast-icon {
+
+    background:
+        rgba(
+            40,
+            200,
+            100,
+            0.15
+        );
+
+    color: #50d987;
+}
+
+
+.mep-toast.error .toast-icon {
+
+    background:
+        rgba(
+            255,
+            50,
+            50,
+            0.15
+        );
+
+    color: #ff4b4b;
+}
+
+
+.mep-toast.info .toast-icon {
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+    color: #ffffff;
+}
+
+
+.toast-text {
+
+    font-size: 0.78rem;
+
+    line-height: 1.4;
+
+    color: #eeeeee;
+}
+
+
+/* =========================================
+   ANIMAÇÕES
+========================================= */
+
+@keyframes fadeUp {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1150px) {
+
+    .login-container {
+
+        grid-template-columns:
+            1fr 430px;
+
+        gap: 50px;
+
+    }
+
+
+    .intro-content h1 {
+
+        font-size:
+            clamp(
+                4.5rem,
+                7vw,
+                6.5rem
+            );
+
+    }
+
+
+    .platform-info {
+
+        gap: 20px;
+
+    }
+
+}
+
+
+/* =========================================
+   TABLET VERTICAL
+========================================= */
+
+@media (max-width: 950px) {
+
+    body {
+
+        overflow-y: auto;
+
+    }
+
+
+    .login-container {
+
+        width:
+            min(
+                700px,
+                calc(100% - 50px)
+            );
+
+        grid-template-columns: 1fr;
+
+        gap: 60px;
+
+        padding:
+            60px 0;
+
+    }
+
+
+    .intro-section {
+
+        align-items: center;
+
+        text-align: center;
+
+    }
+
+
+    .brand {
+
+        margin-bottom: 50px;
+
+    }
+
+
+    .eyebrow {
+
+        justify-content: center;
+
+    }
+
+
+    .intro-content p {
+
+        margin:
+            0 auto;
+
+    }
+
+
+    .platform-info {
+
+        justify-content: center;
+
+    }
+
+
+    .login-section {
+
+        width: 100%;
+
+    }
+
+
+    .login-card {
+
+        max-width: 500px;
+
+    }
+
+
+    .background-word {
+
+        display: none;
+
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    body {
+
+        overflow-y: auto;
+
+    }
+
+
+    .login-container {
+
+        width:
+            calc(100% - 32px);
+
+        padding:
+            35px 0 45px;
+
+        gap: 45px;
+
+    }
+
+
+    .brand {
+
+        margin-bottom: 40px;
+
+    }
+
+
+    .logo {
+
+        width: 58px;
+        height: 58px;
+
+    }
+
+
+    .brand-name {
+
+        font-size: 1.35rem;
+
+    }
+
+
+    .intro-content h1 {
+
+        font-size: 4.2rem;
+
+        letter-spacing: -4px;
+
+    }
+
+
+    .intro-content h2 {
+
+        font-size: 1.5rem;
+
+    }
+
+
+    .intro-content p {
+
+        font-size: 0.88rem;
+
+        line-height: 1.7;
+
+    }
+
+
+    .platform-info {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        width: 100%;
+
+        gap: 18px;
+
+        margin-top: 40px;
+
+    }
+
+
+    .info-item {
+
+        width: 100%;
+
+    }
+
+
+    .login-card {
+
+        padding: 32px 24px;
+
+        border-radius: 26px;
+
+    }
+
+
+    .login-header h2 {
+
+        font-size: 2rem;
+
+    }
+
+
+    .login-footer {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+    }
+
+
+    .mep-toast {
+
+        left: 16px;
+        right: 16px;
+
+        top: 16px;
+
+        min-width: 0;
+
+        max-width: none;
+
+    }
+
+}
+
+
+/* =========================================
+   TELAS MUITO PEQUENAS
+========================================= */
+
+@media (max-width: 380px) {
+
+    .intro-content h1 {
+
+        font-size: 3.6rem;
+
+    }
+
+
+    .login-card {
+
+        padding:
+            28px 20px;
+
+    }
+
+
+    .input-wrapper input {
+
+        height: 54px;
+
+    }
+
+
+    .login-button {
+
+        height: 55px;
+
+    }
+
+}
+
+
+/* =========================================
+   REDUÇÃO DE MOVIMENTO
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+
+        scroll-behavior:
+            auto !important;
+
+    }
+
+}

@@ -1,0 +1,5405 @@
+/* =========================================
+   MEP EAD
+   PORTAL DO ALUNO
+========================================= */
+
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    background: var(--gray-1);
+    color: #151519;
+    min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+img {
+    max-width: 100%;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================
+   VARIÁVEIS
+========================================= */
+
+:root {
+
+    --red: #ff2020;
+    --red-dark: #d91515;
+    --red-light: #ff4a4a;
+
+    --black: #0b0b0d;
+    --black-2: #111114;
+    --black-3: #18181c;
+
+    --white: #ffffff;
+
+    --gray-1: #f5f5f7;
+    --gray-2: #a4a4aa;
+    --gray-3: #6e6e75;
+
+    --border: #e7e7e9;
+    --border-dark: #dcdcdf;
+
+    --success: #18a957;
+    --warning: #e7a900;
+
+}
+
+
+/* =========================================
+   PORTAL
+========================================= */
+
+.portal {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.portal-header {
+
+    height: 82px;
+
+    background: var(--white);
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 45px;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 20;
+
+}
+
+
+/* =========================================
+   MARCA
+========================================= */
+
+.portal-brand {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+.portal-brand strong {
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    color: var(--black);
+
+    letter-spacing: -.3px;
+
+}
+
+.portal-brand span {
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    color: var(--gray-3);
+
+}
+
+
+/* =========================================
+   BOTÃO SAIR
+========================================= */
+
+.logout-button {
+
+    border: 1px solid transparent;
+
+    background: transparent;
+
+    color: var(--gray-3);
+
+    min-height: 38px;
+
+    padding: 0 14px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+
+}
+
+.logout-button:hover {
+
+    background: rgba(255, 32, 32, .08);
+
+    border-color: rgba(255, 32, 32, .12);
+
+    color: var(--red);
+
+}
+
+.logout-button:active {
+
+    transform: scale(.97);
+
+}
+
+.logout-button:focus-visible {
+
+    outline: 3px solid rgba(255, 32, 32, .18);
+
+    outline-offset: 2px;
+
+}
+
+
+/* =========================================
+   SISTEMA GERAL DE BOTÕES
+========================================= */
+
+.portal-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 40px;
+
+    padding: 0 17px;
+
+    border: 1px solid transparent;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+
+}
+
+.portal-button:active {
+
+    transform: scale(.975);
+
+}
+
+.portal-button:focus-visible {
+
+    outline: 3px solid rgba(255, 32, 32, .18);
+
+    outline-offset: 2px;
+
+}
+
+.portal-button-primary {
+
+    background: var(--red);
+
+    color: var(--white);
+
+    box-shadow:
+        0 7px 18px rgba(255, 32, 32, .18);
+
+}
+
+.portal-button-primary:hover {
+
+    background: var(--red-dark);
+
+    box-shadow:
+        0 10px 25px rgba(255, 32, 32, .25);
+
+    transform: translateY(-1px);
+
+}
+
+.portal-button-dark {
+
+    background: var(--black);
+
+    color: var(--white);
+
+}
+
+.portal-button-dark:hover {
+
+    background: var(--red);
+
+    transform: translateY(-1px);
+
+}
+
+.portal-button-light {
+
+    background: var(--white);
+
+    color: var(--black);
+
+    border-color: var(--border);
+
+}
+
+.portal-button-light:hover {
+
+    border-color: #cfcfd3;
+
+    background: #fafafa;
+
+}
+
+.portal-button-ghost {
+
+    background: transparent;
+
+    color: var(--gray-3);
+
+    border-color: transparent;
+
+}
+
+.portal-button-ghost:hover {
+
+    color: var(--red);
+
+    background: rgba(255, 32, 32, .06);
+
+}
+
+.portal-button-danger {
+
+    background: rgba(255, 32, 32, .08);
+
+    color: var(--red);
+
+    border-color: rgba(255, 32, 32, .12);
+
+}
+
+.portal-button-danger:hover {
+
+    background: var(--red);
+
+    color: var(--white);
+
+}
+
+.portal-button:disabled {
+
+    opacity: .5;
+
+    cursor: not-allowed;
+
+    transform: none !important;
+
+    box-shadow: none;
+
+}
+
+
+/* =========================================
+   CONTEÚDO
+========================================= */
+
+.portal-content {
+
+    width: min(1180px, calc(100% - 90px));
+
+    margin: 0 auto;
+
+    padding: 55px 0 70px;
+
+}
+
+
+/* =========================================
+   ÁREA DE PERFIL
+========================================= */
+
+.profile-area {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    margin-bottom: 35px;
+
+}
+
+
+/* =========================================
+   AVATAR
+========================================= */
+
+.profile-avatar {
+
+    width: 82px;
+
+    height: 82px;
+
+    min-width: 82px;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border: 4px solid var(--white);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, .10);
+
+}
+
+
+/* =========================================
+   INICIAL
+========================================= */
+
+.profile-avatar span {
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+}
+
+
+/* =========================================
+   FOTO
+========================================= */
+
+.profile-avatar img {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+
+/* =========================================
+   INFORMAÇÕES DO PERFIL
+========================================= */
+
+.profile-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+.profile-label {
+
+    color: var(--red);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+.profile-info h1 {
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    color: var(--gray-3);
+
+}
+
+.profile-info strong {
+
+    font-size: 27px;
+
+    font-weight: 850;
+
+    line-height: 1.1;
+
+    color: var(--black);
+
+}
+
+
+/* =========================================
+   WELCOME
+========================================= */
+
+.welcome-content {
+
+    min-height: 400px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--black) 0%,
+            var(--black-2) 60%,
+            var(--black-3) 100%
+        );
+
+    border-radius: 24px;
+
+    padding: 65px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, .08);
+
+}
+
+.welcome-content::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 480px;
+
+    height: 480px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 32, 32, .10);
+
+    right: -180px;
+
+    top: -220px;
+
+}
+
+.welcome-content::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+
+    height: 220px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(255, 32, 32, .20);
+
+    right: 90px;
+
+    bottom: -130px;
+
+}
+
+.eyebrow {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: block;
+
+    color: var(--red);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.7px;
+
+    margin-bottom: 18px;
+
+}
+
+.welcome-content h2 {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 700px;
+
+    color: var(--white);
+
+    font-size: clamp(32px, 5vw, 55px);
+
+    line-height: 1.02;
+
+    letter-spacing: -1.8px;
+
+    font-weight: 900;
+
+    margin-bottom: 20px;
+
+}
+
+.welcome-content p {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 620px;
+
+    color: #a8a8ae;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+
+}
+
+.welcome-content h2::first-letter {
+
+    color: var(--white);
+
+}
+
+
+/* =========================================
+   ESTRUTURA GERAL
+========================================= */
+
+.portal-section {
+
+    margin-top: 30px;
+
+}
+
+.portal-card {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+}
+
+
+/* =========================================
+   MEUS CURSOS
+========================================= */
+
+.cursos-section {
+
+    margin-top: 45px;
+
+}
+
+
+/* =========================================
+   CABEÇALHO DA SEÇÃO
+========================================= */
+
+.section-heading {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 24px;
+
+}
+
+.section-heading .eyebrow {
+
+    margin-bottom: 7px;
+
+}
+
+.section-heading h2 {
+
+    font-size: clamp(24px, 3vw, 30px);
+
+    line-height: 1.1;
+
+    font-weight: 850;
+
+    letter-spacing: -.8px;
+
+    color: var(--black);
+
+}
+
+.cursos-count {
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: var(--gray-3);
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================
+   GRID DOS CURSOS
+========================================= */
+
+.cursos-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 20px;
+
+}
+
+
+/* =========================================
+   CARD DO CURSO
+========================================= */
+
+.curso-card {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+
+}
+
+.curso-card:hover {
+
+    transform: translateY(-4px);
+
+    border-color: #dcdcdf;
+
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, .08);
+
+}
+
+
+/* =========================================
+   CAPA DO CURSO
+========================================= */
+
+.curso-card-cover {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #181818,
+            #0d0d0d
+        );
+
+}
+
+.curso-card-cover img {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform .35s ease;
+
+}
+
+.curso-card:hover
+.curso-card-cover img {
+
+    transform: scale(1.035);
+
+}
+
+.curso-card-cover::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .02),
+            rgba(0, 0, 0, .35)
+        );
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+.curso-card-cover-placeholder {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--white);
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+}
+
+
+/* =========================================
+   CONTEÚDO
+========================================= */
+
+.curso-card-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    flex: 1;
+
+    padding: 20px;
+
+}
+
+.curso-card-content .eyebrow {
+
+    margin-bottom: 8px;
+
+    font-size: 9px;
+
+}
+
+.curso-card-content h3 {
+
+    min-height: 46px;
+
+    margin-bottom: 9px;
+
+    color: var(--black);
+
+    font-size: 19px;
+
+    line-height: 1.2;
+
+    font-weight: 850;
+
+    letter-spacing: -.3px;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+
+}
+
+.curso-card-content p {
+
+    margin: 0;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+
+}
+
+
+/* =========================================
+   BOTÃO ACESSAR CURSO
+========================================= */
+
+.curso-acessar-button {
+
+    width: 100%;
+
+    min-height: 42px;
+
+    margin-top: 20px;
+
+    padding: 0 16px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: var(--black);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.curso-acessar-button:hover {
+
+    background: var(--red);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(255, 32, 32, .18);
+
+}
+
+.curso-acessar-button:active {
+
+    transform: translateY(0);
+
+}
+
+.curso-acessar-button:focus-visible {
+
+    outline: 3px solid rgba(255, 32, 32, .15);
+
+    outline-offset: 3px;
+
+}
+
+
+/* =========================================
+   CARREGANDO
+========================================= */
+
+.cursos-loading {
+
+    grid-column: 1 / -1;
+
+    min-height: 180px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   SPINNER
+========================================= */
+
+.loading-spinner {
+
+    width: 28px;
+
+    height: 28px;
+
+    border: 3px solid var(--border);
+
+    border-top-color: var(--red);
+
+    border-radius: 50%;
+
+    animation:
+        cursosSpinner .8s linear infinite;
+
+}
+
+@keyframes cursosSpinner {
+
+    to {
+
+        transform: rotate(360deg);
+
+    }
+
+}
+
+
+/* =========================================
+   ESTADO VAZIO
+========================================= */
+
+.portal-empty-state {
+
+    margin-top: 20px;
+
+    padding: 45px 25px;
+
+    text-align: center;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+}
+
+.portal-empty-icon {
+
+    margin-bottom: 14px;
+
+    font-size: 32px;
+
+    line-height: 1;
+
+}
+
+.portal-empty-state h3 {
+
+    margin-bottom: 8px;
+
+    color: var(--black);
+
+    font-size: 17px;
+
+    font-weight: 850;
+
+}
+
+.portal-empty-state p {
+
+    max-width: 420px;
+
+    margin: 0 auto;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 950px) {
+
+    .cursos-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 620px) {
+
+    .cursos-section {
+
+        margin-top: 32px;
+
+    }
+
+    .section-heading {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+    }
+
+    .cursos-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 16px;
+
+    }
+
+    .curso-card-content {
+
+        padding: 18px;
+
+    }
+
+    .curso-card-content h3 {
+
+        min-height: auto;
+
+    }
+
+}
+
+/* =========================================
+   META DO CURSO
+========================================= */
+
+.portal-curso-meta {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 18px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid var(--border);
+
+}
+
+.portal-curso-meta span {
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    color: var(--gray-3);
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+}
+
+.portal-curso-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 36px;
+
+    padding: 0 15px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: var(--black);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.portal-curso-button:hover {
+
+    background: var(--red);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 15px rgba(255, 32, 32, .18);
+
+}
+
+.portal-curso-button:active {
+
+    transform: scale(.97);
+
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.cursos-loading {
+
+    grid-column: 1 / -1;
+
+    min-height: 150px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+}
+
+.loading-spinner {
+
+    width: 18px;
+
+    height: 18px;
+
+    border: 2px solid #dedee2;
+
+    border-top-color: var(--red);
+
+    border-radius: 50%;
+
+    animation:
+        portalSpinner .7s linear infinite;
+
+}
+
+@keyframes portalSpinner {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================
+   VAZIO
+========================================= */
+
+.cursos-empty {
+
+    grid-column: 1 / -1;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 45px 25px;
+
+    text-align: center;
+
+}
+
+.cursos-empty strong {
+
+    display: block;
+
+    font-size: 16px;
+
+    color: var(--black);
+
+    margin-bottom: 7px;
+
+}
+
+.cursos-empty span {
+
+    font-size: 12px;
+
+    color: var(--gray-3);
+
+}
+
+
+/* =========================================================
+   ÁREA INTERNA DO CURSO
+========================================================= */
+
+.curso-view-section {
+
+    margin-top: 45px;
+
+}
+
+
+/* =========================================================
+   CABEÇALHO DO CURSO
+========================================================= */
+
+.curso-view-header {
+
+    margin-bottom: 28px;
+
+}
+
+.curso-voltar-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--gray-3);
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    min-height: 34px;
+
+    padding: 0 8px 0 0;
+
+    margin-bottom: 20px;
+
+    cursor: pointer;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+
+}
+
+.curso-voltar-button:hover {
+
+    color: var(--red);
+
+    transform: translateX(-3px);
+
+}
+
+.curso-voltar-button:focus-visible {
+
+    outline: 3px solid rgba(255, 32, 32, .15);
+
+    outline-offset: 4px;
+
+    border-radius: 6px;
+
+}
+
+
+/* =========================================================
+   CABEÇALHO VISUAL
+========================================================= */
+
+.curso-view-heading {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 22px;
+
+    padding: 38px 40px;
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+.curso-view-heading::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+
+    height: 260px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 32, 32, .06);
+
+    right: -100px;
+
+    top: -120px;
+
+    pointer-events: none;
+
+}
+
+.curso-view-heading .eyebrow {
+
+    margin-bottom: 10px;
+
+}
+
+.curso-view-heading h2 {
+
+    position: relative;
+
+    z-index: 2;
+
+    color: var(--black);
+
+    font-size: clamp(28px, 4vw, 42px);
+
+    line-height: 1.05;
+
+    font-weight: 900;
+
+    letter-spacing: -1.4px;
+
+    margin-bottom: 12px;
+
+}
+
+.curso-view-heading p {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 720px;
+
+    color: var(--gray-3);
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================================================
+   RESUMO DO CURSO
+========================================================= */
+
+.curso-view-summary {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 28px;
+
+}
+
+.curso-summary-item {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 20px 22px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+.curso-summary-item span {
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color: var(--gray-3);
+
+}
+
+.curso-summary-item strong {
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    color: var(--black);
+
+}
+
+
+/* =========================================================
+   LIVE AO VIVO NO CURSO
+========================================================= */
+
+.aluno-live-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b0b0d 0%,
+            #151519 65%,
+            #1d1010 100%
+        );
+
+    border: 1px solid rgba(255, 32, 32, .18);
+
+    border-radius: 22px;
+
+    padding: 28px;
+
+    margin-bottom: 32px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, .10);
+
+}
+
+.aluno-live-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+
+    height: 280px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 32, 32, .10);
+
+    right: -120px;
+
+    top: -150px;
+
+    pointer-events: none;
+
+}
+
+.aluno-live-card-header {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 25px;
+
+}
+
+.live-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: rgba(255, 32, 32, .12);
+
+    color: #ff4a4a;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 12px;
+
+}
+
+.live-badge span {
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    box-shadow:
+        0 0 0 4px rgba(255, 32, 32, .12);
+
+    animation:
+        livePulse 1.4s infinite;
+
+}
+
+@keyframes livePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .45;
+        transform: scale(.75);
+    }
+
+}
+
+.aluno-live-card h3 {
+
+    color: var(--white);
+
+    font-size: 23px;
+
+    font-weight: 850;
+
+    letter-spacing: -.5px;
+
+    margin-bottom: 7px;
+
+}
+
+.aluno-live-card p {
+
+    color: #99999f;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+.aluno-live-time {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 5px;
+
+}
+
+.aluno-live-time span {
+
+    color: #77777d;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+.aluno-live-time strong {
+
+    color: var(--white);
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   CORPO DA LIVE
+========================================================= */
+
+.aluno-live-card-body {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin: 25px 0;
+
+    padding: 18px;
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    border-radius: 14px;
+
+    background: rgba(255,255,255,.035);
+
+}
+
+.aluno-live-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    min-width: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-size: 16px;
+
+    box-shadow:
+        0 8px 18px rgba(255, 32, 32, .18);
+
+}
+
+.aluno-live-card-body strong {
+
+    display: block;
+
+    color: var(--white);
+
+    font-size: 13px;
+
+    margin-bottom: 4px;
+
+}
+
+.aluno-live-card-body p {
+
+    font-size: 11px;
+
+    color: #85858b;
+
+}
+
+
+/* =========================================================
+   BOTÃO ENTRAR NA LIVE
+========================================================= */
+
+.aluno-entrar-live-button {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    min-height: 43px;
+
+    padding: 0 20px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(255, 32, 32, .20);
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.aluno-entrar-live-button:hover {
+
+    background: var(--red-dark);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 26px rgba(255, 32, 32, .28);
+
+}
+
+.aluno-entrar-live-button:active {
+
+    transform: scale(.97);
+
+}
+
+.aluno-entrar-live-button:disabled {
+
+    opacity: .5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+
+}
+
+
+/* =========================================================
+   CARD INDIVIDUAL DA AULA
+========================================================= */
+
+.curso-aula-card {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 17px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    flex-wrap: wrap;
+
+    gap: 16px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+
+}
+
+.curso-aula-card:hover {
+
+    border-color: #d8d8dc;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, .055);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =========================================================
+   NÚMERO DA AULA
+========================================================= */
+
+.curso-aula-number {
+
+    width: 45px;
+
+    height: 45px;
+
+    min-width: 45px;
+
+    flex: 0 0 45px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--black);
+
+    color: var(--white);
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+}
+
+
+/* =========================================================
+   CONTEÚDO DA AULA
+========================================================= */
+
+.curso-aula-content {
+
+    min-width: 0;
+
+    flex: 1 1 0;
+
+    width: auto;
+
+}
+
+.curso-aula-content .eyebrow {
+
+    margin-bottom: 5px;
+
+    font-size: 8px;
+
+}
+
+.curso-aula-content h4 {
+
+    color: var(--black);
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    margin-bottom: 4px;
+
+}
+
+.curso-aula-content p {
+
+    margin: 0;
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   AÇÕES DA AULA
+========================================================= */
+
+.curso-aula-actions {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    padding-left: 61px;
+
+    flex-shrink: 0;
+
+}
+
+.curso-aula-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 37px;
+
+    padding: 0 14px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: var(--black);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+}
+
+/* =========================================================
+   ESTADOS DA AULA
+========================================================= */
+
+.curso-aula-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 999px;
+
+    background: #f1f1f3;
+
+    color: var(--gray-3);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+
+}
+
+.curso-aula-status.live {
+
+    background: rgba(255, 32, 32, .08);
+
+    color: var(--red);
+
+}
+
+.curso-aula-status.completed {
+
+    background: rgba(24, 169, 87, .08);
+
+    color: var(--success);
+
+}
+
+
+/* =========================================================
+   ÁREA DA LIVE
+========================================================= */
+
+.live-view-section {
+
+    margin-top: 45px;
+
+}
+
+.live-view-header {
+
+    margin-bottom: 25px;
+
+}
+
+.live-view-heading {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+}
+
+.live-view-title-row {
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+}
+
+.live-view-heading h2 {
+
+    font-size: clamp(25px, 4vw, 38px);
+
+    font-weight: 900;
+
+    color: var(--black);
+
+    letter-spacing: -1.2px;
+
+}
+
+.live-view-heading p {
+
+    margin-top: 8px;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+.live-view-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: rgba(255, 32, 32, .09);
+
+    color: var(--red);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: .8px;
+
+}
+
+
+/* =========================================================
+   LAYOUT DA LIVE
+========================================================= */
+
+.aluno-live-layout {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr) 300px;
+
+    gap: 22px;
+
+    align-items: start;
+
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+.aluno-live-player-wrapper {
+
+    min-width: 0;
+
+}
+
+.aluno-live-player {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    background: #050505;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    border: 1px solid #242428;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, .14);
+
+}
+
+.aluno-live-player iframe {
+
+    width: 100%;
+
+    height: 100%;
+
+    border: 0;
+
+    display: block;
+
+}
+
+.aluno-live-player-placeholder {
+
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 300px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    color: #77777d;
+
+    text-align: center;
+
+    padding: 30px;
+
+}
+
+.aluno-live-player-placeholder span {
+
+    width: 55px;
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-size: 18px;
+
+    box-shadow:
+        0 10px 25px rgba(255, 32, 32, .20);
+
+}
+
+.aluno-live-player-placeholder strong {
+
+    color: #ddd;
+
+    font-size: 13px;
+
+}
+
+.aluno-live-player-placeholder small {
+
+    color: #77777d;
+
+    font-size: 11px;
+
+    max-width: 350px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   CHAMADA DE PRESENÇA
+========================================================= */
+
+.presence-alert {
+
+    margin-top: 15px;
+
+    padding: 22px;
+
+    border: 1px solid rgba(255, 32, 32, .22);
+
+    border-radius: 18px;
+
+    background: var(--white);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.08);
+
+}
+
+.presence-alert-top {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+}
+
+.presence-alert-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    min-width: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(255,32,32,.10);
+
+    color: var(--red);
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+}
+
+.presence-alert .eyebrow {
+
+    margin-bottom: 5px;
+
+}
+
+.presence-alert h3 {
+
+    font-size: 17px;
+
+    font-weight: 850;
+
+    color: var(--black);
+
+}
+
+.presence-alert > p {
+
+    margin: 18px 0;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   CONTADOR
+========================================================= */
+
+.presence-countdown {
+
+    display: flex;
+
+    align-items: baseline;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin: 18px 0;
+
+}
+
+.presence-countdown strong {
+
+    color: var(--red);
+
+    font-size: 48px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+    font-variant-numeric: tabular-nums;
+
+}
+
+.presence-countdown span {
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   BOTÃO CONFIRMAR PRESENÇA
+========================================================= */
+
+.presence-confirm-button {
+
+    width: 100%;
+
+    min-height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(255, 32, 32, .18);
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.presence-confirm-button:hover {
+
+    background: var(--red-dark);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 11px 23px rgba(255, 32, 32, .24);
+
+}
+
+.presence-confirm-button:active {
+
+    transform: scale(.98);
+
+}
+
+.presence-confirm-button:disabled {
+
+    background: #d6d6d9;
+
+    color: #85858b;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+
+}
+
+
+/* =========================================================
+   RESULTADO DA PRESENÇA
+========================================================= */
+
+.presence-result {
+
+    margin-top: 12px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    background: #f5f5f7;
+
+    color: var(--gray-3);
+
+}
+
+.presence-result.success {
+
+    background: rgba(24, 169, 87, .08);
+
+    color: var(--success);
+
+}
+
+.presence-result.error {
+
+    background: rgba(255, 32, 32, .08);
+
+    color: var(--red);
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.aluno-live-sidebar {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+.aluno-live-info-card,
+.aluno-presence-status-card {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 22px;
+
+}
+
+.aluno-live-info-card h3 {
+
+    color: var(--black);
+
+    font-size: 17px;
+
+    line-height: 1.3;
+
+    font-weight: 850;
+
+    margin: 5px 0 20px;
+
+}
+
+.aluno-live-info-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+.aluno-live-info-list > div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+.aluno-live-info-list span {
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+
+    color: var(--gray-3);
+
+}
+
+.aluno-live-info-list strong {
+
+    font-size: 12px;
+
+    color: var(--black);
+
+}
+
+
+/* =========================================================
+   STATUS DA PRESENÇA
+========================================================= */
+
+.student-presence-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 10px 0;
+
+}
+
+.presence-status-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #aaa;
+
+}
+
+.presence-status-dot.active {
+
+    background: var(--success);
+
+    box-shadow:
+        0 0 0 4px rgba(24, 169, 87, .10);
+
+}
+
+.presence-status-dot.pending {
+
+    background: var(--warning);
+
+    box-shadow:
+        0 0 0 4px rgba(231, 169, 0, .10);
+
+}
+
+.presence-status-dot.error {
+
+    background: var(--red);
+
+    box-shadow:
+        0 0 0 4px rgba(255, 32, 32, .10);
+
+}
+
+.student-presence-status strong {
+
+    color: var(--black);
+
+    font-size: 12px;
+
+}
+
+.aluno-presence-status-card p {
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   MENSAGEM DO PORTAL
+========================================================= */
+
+.portal-live-message {
+
+    margin-top: 18px;
+
+    padding: 15px 18px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   MODAL DA LIVE
+========================================================= */
+
+.student-live-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    background: rgba(0,0,0,.82);
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+
+}
+
+.student-live-modal[hidden] {
+
+    display: none;
+
+}
+
+.student-live-modal-content {
+
+    position: relative;
+
+    width: min(1000px, 100%);
+
+    max-height: calc(100vh - 50px);
+
+    overflow: auto;
+
+    background: #101012;
+
+    border: 1px solid #29292d;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.45);
+
+}
+
+.student-live-modal-close {
+
+    position: absolute;
+
+    top: 15px;
+
+    right: 15px;
+
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.08);
+
+    color: var(--white);
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+
+}
+
+.student-live-modal-close:hover {
+
+    background: var(--red);
+
+    color: var(--white);
+
+    transform: rotate(4deg);
+
+}
+
+.student-live-modal-close:active {
+
+    transform: scale(.94);
+
+}
+
+.student-live-modal-header {
+
+    padding: 5px 55px 20px 5px;
+
+}
+
+.student-live-modal-header h2 {
+
+    color: var(--white);
+
+    font-size: 22px;
+
+    font-weight: 850;
+
+    margin: 0 0 6px;
+
+}
+
+.student-live-modal-header p {
+
+    color: #85858b;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   PLAYER DO MODAL
+========================================================= */
+
+.student-live-modal-player {
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background: #050505;
+
+    border: 1px solid #222226;
+
+}
+
+.student-live-modal-player iframe {
+
+    width: 100%;
+
+    height: 100%;
+
+    border: 0;
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   BOTÕES DO MODAL
+========================================================= */
+
+.student-live-modal-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+}
+
+.student-live-modal-button {
+
+    min-height: 39px;
+
+    padding: 0 16px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: #252529;
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+
+}
+
+.student-live-modal-button:hover {
+
+    background: var(--red);
+
+}
+
+.student-live-modal-button:active {
+
+    transform: scale(.97);
+
+}
+
+
+/* =========================================================
+   ESTADO DE CARREGAMENTO DA LIVE
+========================================================= */
+
+.live-loading {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    min-height: 120px;
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+}
+
+.live-loading .loading-spinner {
+
+    width: 16px;
+
+    height: 16px;
+
+}
+
+
+/* =========================================================
+   ESTADO OFFLINE
+========================================================= */
+
+.live-offline {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    min-height: 240px;
+
+    padding: 30px;
+
+    background: #08080a;
+
+    border-radius: 16px;
+
+}
+
+.live-offline-icon {
+
+    width: 54px;
+
+    height: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.06);
+
+    color: #77777d;
+
+    margin-bottom: 14px;
+
+}
+
+.live-offline strong {
+
+    color: var(--white);
+
+    font-size: 14px;
+
+    margin-bottom: 6px;
+
+}
+
+.live-offline span {
+
+    max-width: 380px;
+
+    color: #77777d;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   SEPARADOR
+========================================================= */
+
+.portal-divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    background: var(--border);
+
+    margin: 30px 0;
+
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .cursos-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+    .aluno-live-layout {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .aluno-live-sidebar {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .portal-header {
+
+        padding: 0 25px;
+
+    }
+
+    .portal-content {
+
+        width:
+            min(
+                calc(100% - 50px),
+                760px
+            );
+
+        padding: 40px 0 60px;
+
+    }
+
+    .welcome-content {
+
+        min-height: 380px;
+
+        padding: 45px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .portal-header {
+
+        height: 72px;
+
+        padding: 0 20px;
+
+    }
+
+    .portal-brand strong {
+
+        font-size: 15px;
+
+    }
+
+    .portal-brand span {
+
+        font-size: 9px;
+
+    }
+
+    .logout-button {
+
+        padding: 0 11px;
+
+    }
+
+    .portal-content {
+
+        width: calc(100% - 35px);
+
+        padding: 30px 0 45px;
+
+    }
+
+    .profile-area {
+
+        gap: 17px;
+
+        margin-bottom: 25px;
+
+    }
+
+    .profile-avatar {
+
+        width: 65px;
+
+        height: 65px;
+
+        min-width: 65px;
+
+    }
+
+    .profile-avatar span {
+
+        font-size: 23px;
+
+    }
+
+    .profile-info strong {
+
+        font-size: 21px;
+
+    }
+
+    .profile-info h1 {
+
+        font-size: 13px;
+
+    }
+
+    .welcome-content {
+
+        min-height: 360px;
+
+        padding: 35px 28px;
+
+        border-radius: 20px;
+
+    }
+
+    .welcome-content h2 {
+
+        font-size: 34px;
+
+        letter-spacing: -1px;
+
+    }
+
+    .welcome-content p {
+
+        font-size: 14px;
+
+    }
+
+    .cursos-section {
+
+        margin-top: 35px;
+
+    }
+
+    .section-heading {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 5px;
+
+    }
+
+    .section-heading h2 {
+
+        font-size: 24px;
+
+    }
+
+    .cursos-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+
+    }
+
+    .portal-curso-cover {
+
+        height: 175px;
+
+    }
+
+    .curso-view-section,
+    .live-view-section {
+
+        margin-top: 30px;
+
+    }
+
+    .curso-view-heading {
+
+        padding: 28px 24px;
+
+        border-radius: 18px;
+
+    }
+
+    .curso-view-heading h2 {
+
+        font-size: 29px;
+
+    }
+
+    .curso-view-summary {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 28px;
+
+}
+    .aluno-live-card {
+
+        padding: 22px;
+
+        border-radius: 18px;
+
+    }
+
+    .aluno-live-card-header {
+
+        flex-direction: column;
+
+    }
+
+    .aluno-live-time {
+
+        align-items: flex-start;
+
+    }
+
+    .aluno-live-layout {
+
+        gap: 15px;
+
+    }
+
+    .aluno-live-sidebar {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .live-view-heading {
+
+        padding: 24px 20px;
+
+    }
+
+    .aluno-live-player {
+
+        border-radius: 14px;
+
+    }
+
+    .presence-alert {
+
+        padding: 18px;
+
+    }
+
+    .curso-aula-card {
+
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+
+    }
+
+    .curso-aula-content {
+
+        width: calc(100% - 61px);
+
+    }
+
+    .curso-aula-actions {
+
+        width: 100%;
+
+        padding-left: 61px;
+
+    }
+
+    .curso-aula-button {
+
+        flex: 1;
+
+    }
+
+    .student-live-modal {
+
+        padding: 12px;
+
+    }
+
+    .student-live-modal-content {
+
+        padding: 15px;
+
+        border-radius: 15px;
+
+        max-height: calc(100vh - 24px);
+
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR PEQUENO
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .portal-header {
+
+        padding: 0 16px;
+
+    }
+
+    .portal-brand span {
+
+        display: none;
+
+    }
+
+    .portal-content {
+
+        width: calc(100% - 28px);
+
+        padding: 25px 0 35px;
+
+    }
+
+    .profile-area {
+
+        align-items: flex-start;
+
+    }
+
+    .profile-avatar {
+
+        width: 58px;
+
+        height: 58px;
+
+        min-width: 58px;
+
+    }
+
+    .profile-info strong {
+
+        font-size: 19px;
+
+    }
+
+    .welcome-content {
+
+        min-height: 340px;
+
+        padding: 30px 24px;
+
+    }
+
+    .welcome-content h2 {
+
+        font-size: 30px;
+
+    }
+
+    .welcome-content p {
+
+        font-size: 13px;
+
+        line-height: 1.6;
+
+    }
+
+    .eyebrow {
+
+        font-size: 9px;
+
+    }
+
+    .curso-view-heading h2 {
+
+        font-size: 26px;
+
+    }
+
+    .curso-view-heading p {
+
+        font-size: 12px;
+
+    }
+
+    .curso-summary-item {
+
+        padding: 16px;
+
+    }
+
+    .aluno-live-card {
+
+        padding: 18px;
+
+    }
+
+    .aluno-live-card-body {
+
+        align-items: flex-start;
+
+    }
+
+    .presence-countdown strong {
+
+        font-size: 42px;
+
+    }
+
+    .curso-aula-card {
+
+        padding: 14px;
+
+    }
+
+    .curso-aula-number {
+
+        width: 40px;
+
+        height: 40px;
+
+        min-width: 40px;
+
+    }
+
+    .curso-aula-content {
+
+        width: calc(100% - 56px);
+
+    }
+
+    .curso-aula-actions {
+
+        padding-left: 56px;
+
+        flex-direction: column;
+
+    }
+
+    .curso-aula-button {
+
+        width: 100%;
+
+        flex: none;
+
+    }
+
+    .student-live-modal-header h2 {
+
+        font-size: 18px;
+
+    }
+
+    .student-live-modal-actions {
+
+        flex-direction: column;
+
+    }
+
+    .student-live-modal-button {
+
+        width: 100%;
+
+    }
+
+}
+
+/* =========================================================
+   AJUSTES PARA A ESTRUTURA ATUAL DO PORTAL
+========================================================= */
+
+
+/* =========================================================
+   ESTADO VAZIO
+========================================================= */
+
+.portal-empty-state {
+
+    width: 100%;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 45px 25px;
+
+    text-align: center;
+
+}
+
+.portal-empty-icon {
+
+    width: 54px;
+    height: 54px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: #f3f3f5;
+
+    font-size: 24px;
+
+}
+
+.portal-empty-state h3 {
+
+    color: var(--black);
+
+    font-size: 16px;
+
+    font-weight: 850;
+
+    margin-bottom: 7px;
+
+}
+
+.portal-empty-state p {
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   CONTADOR DE AULAS
+========================================================= */
+
+.curso-aulas-count {
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: var(--gray-3);
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   PROGRESSO DO CURSO
+========================================================= */
+
+.curso-progress-card {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    margin-bottom: 30px;
+
+}
+
+.curso-progress-header {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+
+}
+
+.curso-progress-header .eyebrow {
+
+    margin-bottom: 6px;
+
+}
+
+.curso-progress-header h3 {
+
+    color: var(--black);
+
+    font-size: 18px;
+
+    font-weight: 850;
+
+}
+
+.curso-progress-header > strong {
+
+    color: var(--red);
+
+    font-size: 24px;
+
+    font-weight: 900;
+
+}
+
+.curso-progress-bar {
+
+    width: 100%;
+
+    height: 9px;
+
+    background: #ededf0;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+
+}
+
+.curso-progress-fill {
+
+    height: 100%;
+
+    background: var(--red);
+
+    border-radius: inherit;
+
+    transition: width .4s ease;
+
+}
+
+.curso-progress-info {
+
+    margin-top: 10px;
+
+}
+
+.curso-progress-info span {
+
+    color: var(--gray-3);
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================================
+   LOADING DAS AULAS
+========================================================= */
+
+.curso-aulas-loading {
+
+    width: 100%;
+
+    min-height: 120px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    margin-bottom: 15px;
+
+}
+
+
+/* =========================================================
+   ÁREA DA AULA
+========================================================= */
+
+.aula-view-section {
+
+    margin-top: 38px;
+
+}
+
+.aula-view-header {
+
+    margin-bottom: 25px;
+
+}
+
+.aula-voltar-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 34px;
+
+    padding: 0 8px 0 0;
+
+    margin-bottom: 18px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--gray-3);
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+
+}
+
+.aula-voltar-button:hover {
+
+    color: var(--red);
+
+    transform: translateX(-3px);
+
+}
+
+.aula-view-heading {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    padding: 32px 35px;
+
+}
+
+.aula-view-heading::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 32, 32, .055);
+
+    right: -90px;
+    top: -110px;
+
+    pointer-events: none;
+
+}
+
+.aula-view-heading .eyebrow,
+.aula-view-heading h2,
+.aula-view-heading p {
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+.aula-view-heading .eyebrow {
+
+    margin-bottom: 9px;
+
+}
+
+.aula-view-heading h2 {
+
+    color: var(--black);
+
+    font-size: clamp(28px, 4vw, 40px);
+
+    line-height: 1.05;
+
+    font-weight: 900;
+
+    letter-spacing: -1.2px;
+
+    margin-bottom: 10px;
+
+}
+
+.aula-view-heading p {
+
+    max-width: 720px;
+
+    color: var(--gray-3);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================================================
+   STATUS DA AULA
+========================================================= */
+
+.aula-status-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+.aula-status-indicator {
+
+    width: 12px;
+    height: 12px;
+
+    min-width: 12px;
+
+    border-radius: 50%;
+
+    background: var(--warning);
+
+    box-shadow:
+        0 0 0 5px rgba(231, 169, 0, .10);
+
+}
+
+.aula-status-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+}
+
+.aula-status-label {
+
+    display: block;
+
+    color: var(--gray-3);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 4px;
+
+}
+
+.aula-status-content strong {
+
+    display: block;
+
+    color: var(--black);
+
+    font-size: 14px;
+
+    font-weight: 850;
+
+    margin-bottom: 3px;
+
+}
+
+.aula-status-content p {
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   PLAYER DA AULA
+========================================================= */
+
+.live-player-section {
+
+    margin-bottom: 25px;
+
+}
+
+.live-player-header {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 15px;
+
+}
+
+.live-player-header .eyebrow {
+
+    margin-bottom: 5px;
+
+}
+
+.live-player-header h3 {
+
+    color: var(--black);
+
+    font-size: 21px;
+
+    font-weight: 850;
+
+}
+
+.live-player-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 28px;
+
+    padding: 0 10px;
+
+    border-radius: 999px;
+
+    background: rgba(255, 32, 32, .09);
+
+    color: var(--red);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: .7px;
+
+}
+
+.live-player {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    background: #050505;
+
+    border: 1px solid #242428;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, .13);
+
+}
+
+.live-player iframe {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    border: 0;
+
+}
+
+.live-player-placeholder {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+}
+
+.live-player-icon {
+
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-size: 19px;
+
+    margin-bottom: 14px;
+
+    box-shadow:
+        0 10px 25px rgba(255, 32, 32, .22);
+
+}
+
+.live-player-placeholder h3 {
+
+    color: #ddd;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    margin-bottom: 6px;
+
+}
+
+.live-player-placeholder p {
+
+    color: #77777d;
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   AULA BLOQUEADA / AGENDADA
+========================================================= */
+
+.aula-locked-card {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+}
+
+.aula-locked-icon {
+
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 17px;
+
+    border-radius: 16px;
+
+    background: #f2f2f4;
+
+    font-size: 23px;
+
+}
+
+.aula-locked-card .eyebrow {
+
+    margin-bottom: 9px;
+
+}
+
+.aula-locked-card h3 {
+
+    color: var(--black);
+
+    font-size: 20px;
+
+    font-weight: 850;
+
+    margin-bottom: 8px;
+
+}
+
+.aula-locked-card > p {
+
+    max-width: 520px;
+
+    margin: 0 auto;
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+.aula-agendada-info {
+
+    display: inline-flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 200px;
+
+    margin: 22px auto;
+
+    padding: 14px 18px;
+
+    background: #f6f6f8;
+
+    border-radius: 12px;
+
+}
+
+.aula-agendada-info span {
+
+    color: var(--gray-3);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+
+}
+
+.aula-agendada-info strong {
+
+    color: var(--black);
+
+    font-size: 14px;
+
+    font-weight: 850;
+
+}
+
+.aula-acessar-button {
+
+    min-height: 42px;
+
+    padding: 0 19px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: var(--black);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.aula-acessar-button:hover {
+
+    background: var(--red);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(255, 32, 32, .18);
+
+}
+
+.aula-acessar-button:disabled {
+
+    background: #e7e7e9;
+
+    color: #96969c;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+
+}
+
+
+/* =========================================================
+   ACESSO À LIVE
+========================================================= */
+
+.aula-access-area {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    margin-bottom: 25px;
+
+}
+
+.aula-access-hint {
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DA AULA
+========================================================= */
+
+.aula-info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+
+}
+
+.aula-info-card {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 19px 20px;
+
+}
+
+.aula-info-card span {
+
+    color: var(--gray-3);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+}
+
+.aula-info-card strong {
+
+    color: var(--black);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
+   PRESENÇA DA AULA
+========================================================= */
+
+.aula-presenca-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    margin-bottom: 30px;
+
+}
+
+.aula-presenca-icon {
+
+    width: 46px;
+    height: 46px;
+
+    min-width: 46px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: rgba(24, 169, 87, .08);
+
+    color: var(--success);
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+}
+
+.aula-presenca-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+}
+
+.aula-presenca-content .eyebrow {
+
+    margin-bottom: 4px;
+
+}
+
+.aula-presenca-content h3 {
+
+    color: var(--black);
+
+    font-size: 14px;
+
+    font-weight: 850;
+
+    margin-bottom: 4px;
+
+}
+
+.aula-presenca-content p {
+
+    color: var(--gray-3);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+.aula-presenca-status {
+
+    padding: 7px 10px;
+
+    border-radius: 999px;
+
+    background: #f1f1f3;
+
+    color: var(--gray-3);
+
+    font-size: 8px;
+
+    font-weight: 850;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   MATERIAIS
+========================================================= */
+
+.aula-materiais-section {
+
+    margin-top: 30px;
+
+}
+
+.aula-materiais-section .section-heading {
+
+    margin-bottom: 18px;
+
+}
+
+.aula-materiais-section .section-heading h3 {
+
+    color: var(--black);
+
+    font-size: 22px;
+
+    font-weight: 850;
+
+}
+
+.aula-materiais-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+}
+
+.aula-materiais-empty {
+
+    margin-top: 10px;
+
+}
+
+
+/* =========================================================
+   MODAL DE PRESENÇA
+========================================================= */
+
+.presenca-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+}
+
+.presenca-overlay[hidden] {
+
+    display: none;
+
+}
+
+.presenca-overlay-backdrop {
+
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, .72);
+
+    backdrop-filter: blur(7px);
+
+    -webkit-backdrop-filter: blur(7px);
+
+}
+
+.presenca-modal {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(460px, 100%);
+
+    background: var(--white);
+
+    border-radius: 22px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, .30);
+
+    animation:
+        presencaModalIn .25s ease;
+
+}
+
+@keyframes presencaModalIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(12px) scale(.98);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0) scale(1);
+
+    }
+
+}
+
+.presenca-modal-icon {
+
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 18px;
+
+    border-radius: 18px;
+
+    background: rgba(24, 169, 87, .09);
+
+    color: var(--success);
+
+    font-size: 24px;
+
+    font-weight: 900;
+
+}
+
+.presenca-modal .eyebrow {
+
+    margin-bottom: 9px;
+
+}
+
+.presenca-modal h2 {
+
+    color: var(--black);
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    letter-spacing: -.6px;
+
+    margin-bottom: 9px;
+
+}
+
+.presenca-modal > p {
+
+    color: var(--gray-3);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+.presenca-modal-live-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin: 22px 0;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background: #f5f5f7;
+
+}
+
+.presenca-modal-live-info span {
+
+    color: var(--gray-3);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+}
+
+.presenca-modal-live-info strong {
+
+    color: var(--black);
+
+    font-size: 13px;
+
+    font-weight: 850;
+
+}
+
+.presenca-confirmar-button {
+
+    width: 100%;
+
+    min-height: 45px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(255, 32, 32, .18);
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.presenca-confirmar-button:hover {
+
+    background: var(--red-dark);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 12px 25px rgba(255, 32, 32, .25);
+
+}
+
+.presenca-confirmar-button:disabled {
+
+    background: #d8d8db;
+
+    color: #85858b;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+
+}
+
+.presenca-modal-status {
+
+    display: block;
+
+    margin-top: 12px;
+
+    color: var(--gray-3);
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   BANNER DE PRESENÇA ATIVA
+========================================================= */
+
+.presenca-active-banner {
+
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 900;
+
+    width: min(440px, calc(100% - 30px));
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 15px;
+
+    background: var(--black);
+
+    border: 1px solid rgba(255, 32, 32, .25);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, .25);
+
+}
+
+.presenca-active-banner[hidden] {
+
+    display: none;
+
+}
+
+.presenca-active-banner-icon {
+
+    width: 40px;
+    height: 40px;
+
+    min-width: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-size: 16px;
+
+    font-weight: 900;
+
+}
+
+.presenca-active-banner-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+.presenca-active-banner-content strong {
+
+    color: var(--white);
+
+    font-size: 11px;
+
+    font-weight: 850;
+
+}
+
+.presenca-active-banner-content span {
+
+    color: #96969c;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+.presenca-active-banner-button {
+
+    min-height: 35px;
+
+    padding: 0 12px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.portal-toast {
+
+    position: fixed;
+
+    right: 25px;
+    top: 105px;
+
+    z-index: 1200;
+
+    width: min(380px, calc(100% - 30px));
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    background: var(--black);
+
+    border: 1px solid #29292d;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, .20);
+
+}
+
+.portal-toast[hidden] {
+
+    display: none;
+
+}
+
+.portal-toast-icon {
+
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: var(--red);
+
+    color: var(--white);
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+}
+
+.portal-toast-content {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+.portal-toast-content strong {
+
+    color: var(--white);
+
+    font-size: 10px;
+
+    font-weight: 850;
+
+}
+
+.portal-toast-content span {
+
+    color: #96969c;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+
+/* =========================================================
+   RESPONSIVO DOS NOVOS ELEMENTOS
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .curso-progress-card {
+
+        padding: 20px;
+
+    }
+
+    .curso-progress-header {
+
+        align-items: flex-start;
+
+    }
+
+    .aula-view-heading {
+
+        padding: 27px 23px;
+
+        border-radius: 18px;
+
+    }
+
+    .aula-view-heading h2 {
+
+        font-size: 29px;
+
+    }
+
+    .aula-status-card {
+
+        align-items: flex-start;
+
+    }
+
+    .live-player-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+    }
+
+    .aula-locked-card {
+
+        padding: 28px 20px;
+
+    }
+
+    .aula-access-area {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+    .aula-info-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+
+    }
+
+    .aula-presenca-card {
+
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+
+    }
+
+    .aula-presenca-status {
+
+        margin-left: 61px;
+
+    }
+
+    .presenca-modal {
+
+        padding: 28px 22px;
+
+        border-radius: 18px;
+
+    }
+
+    .presenca-active-banner {
+
+        right: 15px;
+
+        bottom: 15px;
+
+        width: calc(100% - 30px);
+
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+
+    }
+
+    .presenca-active-banner-content {
+
+        width: calc(100% - 55px);
+
+    }
+
+    .presenca-active-banner-button {
+
+        width: 100%;
+
+        margin-top: 4px;
+
+    }
+
+    .portal-toast {
+
+        top: 87px;
+
+        right: 15px;
+
+        width: calc(100% - 30px);
+
+    }
+
+}
+
+@media (max-width: 430px) {
+
+    .curso-progress-card {
+
+        padding: 18px;
+
+    }
+
+    .curso-progress-header > strong {
+
+        font-size: 21px;
+
+    }
+
+    .aula-view-heading {
+
+        padding: 24px 20px;
+
+    }
+
+    .aula-view-heading h2 {
+
+        font-size: 26px;
+
+    }
+
+    .aula-view-heading p {
+
+        font-size: 12px;
+
+    }
+
+    .aula-status-card {
+
+        padding: 17px;
+
+    }
+
+    .live-player {
+
+        border-radius: 14px;
+
+    }
+
+    .aula-presenca-status {
+
+        margin-left: 0;
+
+        width: 100%;
+
+        text-align: center;
+
+    }
+
+}
+.curso-aula-acessar-button {
+
+    width: 100%;
+
+    min-height: 44px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 0;
+
+    padding: 0 18px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: var(--black);
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: .1px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}

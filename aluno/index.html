@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+ <link rel="icon" type="image/png" href="img/capa.png">
+
+    <meta
+        name="description"
+        content="Portal do aluno MEP EAD"
+    >
+
+    <title>
+        Portal de Ensino | MEP EAD
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/portal.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<main
+    class="portal"
+    id="portalRoot"
+>
+
+
+    <!-- =====================================================
+         CABEÇALHO DO PORTAL
+    ====================================================== -->
+
+    <header class="portal-header">
+
+        <div class="portal-brand">
+
+            <strong>
+                MEP EAD
+            </strong>
+
+            <span>
+                Ministério de Ensino no Propósito
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="logout-button"
+            id="logoutButton"
+        >
+            Sair
+        </button>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+    ====================================================== -->
+
+    <section class="portal-content">
+
+
+        <!-- =================================================
+             PERFIL DO ALUNO
+        ================================================== -->
+
+        <div class="profile-area">
+
+            <div
+                class="profile-avatar"
+                id="profileAvatar"
+            >
+
+                <span id="profileInitial">
+                    A
+                </span>
+
+
+                <img
+                    id="profileImage"
+                    src=""
+                    alt="Foto de perfil"
+                    hidden
+                >
+
+            </div>
+
+
+            <div class="profile-info">
+
+                <span class="profile-label">
+                    PORTAL DO ALUNO
+                </span>
+
+
+                <h1 id="welcomeTitle">
+                    Bem-vindo(a)
+                </h1>
+
+
+                <strong id="studentName">
+                    Carregando...
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             HOME DO PORTAL
+        ================================================== -->
+
+        <section
+            class="portal-view"
+            id="portalHomeView"
+        >
+
+
+            <!-- =============================================
+                 APRESENTAÇÃO
+            ============================================== -->
+
+            <div class="welcome-content">
+
+                <span class="eyebrow">
+                    PORTAL DE ENSINO NO PROPÓSITO
+                </span>
+
+
+                <h2>
+                    Continue seus estudos
+                </h2>
+
+
+                <p>
+                    Acompanhe suas aulas e participe das
+                    transmissões do MEP EAD.
+                </p>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 DESTAQUE DA LIVE ATUAL
+
+                 Esta área permanece disponível para o
+                 portal.js controlar quando necessário.
+            ============================================== -->
+
+            <section
+                class="portal-section live-highlight-section"
+                id="liveHighlightSection"
+                hidden
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            MEP EAD
+                        </span>
+
+
+                        <h2>
+                            Live
+                        </h2>
+
+                    </div>
+
+
+                    <span
+                        class="live-highlight-status"
+                        id="liveHighlightStatus"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="live-highlight-card"
+                    id="liveHighlightCard"
+                >
+
+                    <div class="live-highlight-content">
+
+                        <span
+                            class="live-highlight-label"
+                            id="liveHighlightLabel"
+                        >
+                            —
+                        </span>
+
+
+                        <h3 id="liveHighlightTitulo">
+                            Live
+                        </h3>
+
+
+                        <p id="liveHighlightDescricao">
+                            —
+                        </p>
+
+
+                        <button
+                            type="button"
+                            class="live-highlight-button"
+                            id="liveHighlightButton"
+                        >
+                            Acessar live
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 MEUS CURSOS
+            ============================================== -->
+
+            <section
+                class="portal-section cursos-section"
+                id="cursosSection"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            MEUS ESTUDOS
+                        </span>
+
+
+                        <h2>
+                            Meus cursos
+                        </h2>
+
+                    </div>
+
+
+                    <span
+                        class="cursos-count"
+                        id="cursosCount"
+                    >
+                        0 cursos
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     CARREGAMENTO DOS CURSOS
+                ========================================== -->
+
+                <div
+                    class="cursos-grid"
+                    id="cursosGrid"
+                >
+
+                    <div
+                        class="cursos-loading"
+                        id="cursosLoading"
+                    >
+
+                        <div class="loading-spinner"></div>
+
+
+                        <span>
+                            Carregando seus cursos...
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     NENHUM CURSO
+                ========================================== -->
+
+                <div
+                    class="portal-empty-state"
+                    id="cursosEmpty"
+                    hidden
+                >
+
+                    <div class="portal-empty-icon">
+                        📚
+                    </div>
+
+
+                    <h3>
+                        Nenhum curso disponível
+                    </h3>
+
+
+                    <p>
+                        No momento você não possui cursos disponíveis.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             VISÃO DO CURSO
+
+             A HOME fica oculta quando esta view é aberta.
+        ================================================== -->
+
+        <section
+            class="portal-view curso-view-section"
+            id="cursoViewSection"
+            hidden
+        >
+
+
+            <!-- =============================================
+                 CABEÇALHO DO CURSO
+            ============================================== -->
+
+            <div class="curso-view-header">
+
+
+                <button
+                    type="button"
+                    class="curso-voltar-button"
+                    id="voltarCursosButton"
+                >
+
+                    <span aria-hidden="true">
+                        ←
+                    </span>
+
+                    <span>
+                        Voltar para meus cursos
+                    </span>
+
+                </button>
+
+
+
+                <div class="curso-view-heading">
+
+                    <span class="eyebrow">
+                        MEU CURSO
+                    </span>
+
+
+                    <h2 id="cursoViewTitulo">
+                        Curso
+                    </h2>
+
+
+                    <p id="cursoViewDescricao">
+                        Descrição do curso
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 RESUMO DO CURSO
+            ============================================== -->
+
+            <div class="curso-view-summary">
+
+
+                <div class="curso-summary-item">
+
+                    <span>
+                        TURMA
+                    </span>
+
+
+                    <strong id="cursoViewTurma">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="curso-summary-item">
+
+                    <span>
+                        PERÍODO
+                    </span>
+
+
+                    <strong id="cursoViewPeriodo">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="curso-summary-item">
+
+                    <span>
+                        AULAS
+                    </span>
+
+
+                    <strong id="cursoViewTotalAulas">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="curso-summary-item">
+
+                    <span>
+                        FREQUÊNCIA
+                    </span>
+
+
+                    <strong id="cursoViewFrequencia">
+                        0%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PROGRESSO
+            ============================================== -->
+
+            <div
+                class="curso-progress-card"
+                id="cursoProgressCard"
+            >
+
+                <div class="curso-progress-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            SEU PROGRESSO
+                        </span>
+
+
+                        <h3>
+                            Acompanhamento
+                        </h3>
+
+                    </div>
+
+
+                    <strong id="cursoProgressPercent">
+                        0%
+                    </strong>
+
+                </div>
+
+
+
+                <div class="curso-progress-bar">
+
+                    <div
+                        class="curso-progress-fill"
+                        id="cursoProgressFill"
+                        style="width: 0%;"
+                    ></div>
+
+                </div>
+
+
+
+                <div class="curso-progress-info">
+
+                    <span id="cursoProgressTexto">
+                        Nenhuma aula concluída.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 AULAS DO CURSO
+            ============================================== -->
+
+            <section
+                class="curso-aulas-section"
+                id="cursoAulasSection"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            CONTEÚDO
+                        </span>
+
+
+                        <h2>
+                            Aulas
+                        </h2>
+
+
+                        <p>
+                            Acompanhe as aulas da sua turma.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        class="curso-aulas-count"
+                        id="cursoAulasCount"
+                    >
+                        0 aulas
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     CARREGANDO AULAS
+                ========================================== -->
+
+                <div
+                    class="curso-aulas-loading"
+                    id="cursoAulasLoading"
+                    hidden
+                >
+
+                    <div class="loading-spinner"></div>
+
+
+                    <span>
+                        Carregando aulas...
+                    </span>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     LISTA DE AULAS
+
+                     O portal.js cria os cards aqui.
+                ========================================== -->
+
+                <div
+                    class="curso-aulas-list"
+                    id="cursoAulasList"
+                ></div>
+
+
+
+                <!-- =========================================
+                     NENHUMA AULA
+                ========================================== -->
+
+                <div
+                    class="portal-empty-state"
+                    id="cursoAulasEmpty"
+                    hidden
+                >
+
+                    <div class="portal-empty-icon">
+                        🎓
+                    </div>
+
+
+                    <h3>
+                        Nenhuma aula disponível
+                    </h3>
+
+
+                    <p>
+                        As aulas do curso aparecerão aqui
+                        quando forem disponibilizadas.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             VISÃO DA AULA
+
+             Mantida aqui para compatibilidade com a estrutura
+             atual do portal.js.
+
+             Caso o fluxo definitivo seja:
+             portal.html → aluno/aula.html
+
+             esta view poderá ser removida posteriormente.
+        ================================================== -->
+
+        <section
+            class="portal-view aula-view-section"
+            id="aulaViewSection"
+            hidden
+        >
+
+
+            <!-- =============================================
+                 CABEÇALHO DA AULA
+            ============================================== -->
+
+            <div class="aula-view-header">
+
+
+                <button
+                    type="button"
+                    class="portal-back-button aula-voltar-button"
+                    id="voltarAulasButton"
+                    aria-label="Voltar para as aulas"
+                >
+
+                    <span aria-hidden="true">
+                        ←
+                    </span>
+
+
+                    <span>
+                        Voltar para aulas
+                    </span>
+
+                </button>
+
+
+
+                <div class="aula-view-heading">
+
+                    <span class="eyebrow">
+                        AULA
+                    </span>
+
+
+                    <h2 id="aulaViewTitulo">
+                        Aula
+                    </h2>
+
+
+                    <p id="aulaViewDescricao">
+                        Descrição da aula
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 STATUS DA AULA
+            ============================================== -->
+
+            <div
+                class="aula-status-card"
+                id="aulaStatusCard"
+            >
+
+                <span
+                    class="aula-status-indicator"
+                    id="aulaStatusIndicator"
+                    aria-hidden="true"
+                ></span>
+
+
+                <div class="aula-status-content">
+
+                    <span
+                        class="aula-status-label"
+                        id="aulaStatusLabel"
+                    >
+                        AGUARDANDO
+                    </span>
+
+
+                    <strong id="aulaStatusTitulo">
+                        Aula
+                    </strong>
+
+
+                    <p id="aulaStatusDescricao">
+                        Verificando disponibilidade...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PLAYER DA LIVE
+            ============================================== -->
+
+            <section
+                class="live-player-section"
+                id="livePlayerSection"
+                hidden
+            >
+
+                <div
+                    class="live-player"
+                    id="livePlayer"
+                >
+
+
+                    <div
+                        class="live-player-title"
+                        id="livePlayerTitulo"
+                        hidden
+                    >
+                        Live
+                    </div>
+
+
+
+                    <iframe
+                        id="livePlayerIframe"
+                        src=""
+                        title="Live MEP EAD"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        hidden
+                    ></iframe>
+
+
+
+                    <div
+                        class="live-player-placeholder"
+                        id="livePlayerPlaceholder"
+                        hidden
+                    >
+
+                        <span>
+                            ▶
+                        </span>
+
+
+                        <strong>
+                            Transmissão ao vivo
+                        </strong>
+
+
+                        <small>
+                            A transmissão está ao vivo,
+                            mas o vídeo ainda não foi configurado.
+                        </small>
+
+                    </div>
+
+
+
+                    <button
+                        type="button"
+                        id="liveFullscreenButton"
+                        class="live-fullscreen-button"
+                        aria-label="Tela cheia"
+                        title="Tela cheia"
+                    >
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 AULA AGENDADA
+            ============================================== -->
+
+            <div
+                class="aula-locked-card"
+                id="aulaLockedCard"
+                hidden
+            >
+
+                <div class="aula-locked-icon">
+                    🔒
+                </div>
+
+
+                <span class="eyebrow">
+                    AULA AGENDADA
+                </span>
+
+
+                <h3>
+                    Esta aula ainda não começou
+                </h3>
+
+
+                <p>
+                    A transmissão será liberada quando
+                    o professor iniciar a live.
+                </p>
+
+
+
+                <div
+                    class="aula-agendada-info"
+                    id="aulaAgendadaInfo"
+                >
+
+                    <span>
+                        Início previsto
+                    </span>
+
+
+                    <strong id="aulaAgendadaHorario">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <button
+                    type="button"
+                    class="aula-acessar-button"
+                    id="aulaAcessarButton"
+                    disabled
+                >
+                    🔒 Aula indisponível
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 ACESSO À LIVE
+            ============================================== -->
+
+            <div
+                class="aula-access-area"
+                id="aulaAccessArea"
+                hidden
+            >
+
+                <button
+                    type="button"
+                    class="aula-acessar-button"
+                    id="aulaAcessarLiveButton"
+                >
+                    ▶ Acessar aula
+                </button>
+
+
+                <span
+                    class="aula-access-hint"
+                    id="aulaAccessHint"
+                >
+                    A transmissão está ao vivo.
+                </span>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 INFORMAÇÕES DA AULA
+            ============================================== -->
+
+            <div
+                class="aula-info-grid"
+                id="aulaInfoGrid"
+            >
+
+
+                <div class="aula-info-card">
+
+                    <span>
+                        DATA
+                    </span>
+
+
+                    <strong id="aulaInfoData">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="aula-info-card">
+
+                    <span>
+                        HORÁRIO
+                    </span>
+
+
+                    <strong id="aulaInfoHorario">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <div class="aula-info-card">
+
+                    <span>
+                        DURAÇÃO
+                    </span>
+
+
+                    <strong id="aulaInfoDuracao">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 MATERIAIS
+            ============================================== -->
+
+            <section
+                class="aula-materiais-section"
+                id="aulaMateriaisSection"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            MATERIAL
+                        </span>
+
+
+                        <h3>
+                            Materiais da aula
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="aula-materiais-list"
+                    id="aulaMateriaisList"
+                ></div>
+
+
+
+                <div
+                    class="portal-empty-state aula-materiais-empty"
+                    id="aulaMateriaisEmpty"
+                    hidden
+                >
+
+                    <div class="portal-empty-icon">
+                        📎
+                    </div>
+
+
+                    <h3>
+                        Nenhum material
+                    </h3>
+
+
+                    <p>
+                        Os materiais desta aula aparecerão aqui
+                        quando forem disponibilizados.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 VOLTAR PARA AULAS
+            ============================================== -->
+
+            <div class="aula-view-footer">
+
+                <button
+                    type="button"
+                    class="aula-footer-back-button"
+                    id="voltarAulasFooterButton"
+                >
+                    ← Voltar para aulas
+                </button>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     MODAL GLOBAL DE PRESENÇA
+
+     A presença aparece somente quando uma chamada estiver
+     aberta para o aluno.
+========================================================== -->
+
+<div
+    class="presenca-overlay"
+    id="presencaOverlay"
+    hidden
+    aria-hidden="true"
+>
+
+    <div
+        class="presenca-overlay-backdrop"
+        id="presencaOverlayBackdrop"
+    ></div>
+
+
+    <div
+        class="presenca-modal"
+        id="presencaModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="presencaModalTitulo"
+    >
+
+
+        <div
+            class="presenca-modal-icon"
+            aria-hidden="true"
+        >
+            <i class="fa-solid fa-location-dot"></i>
+        </div>
+
+
+        <span class="eyebrow">
+            REGISTRO DE PRESENÇA
+        </span>
+
+
+        <h2 id="presencaModalTitulo">
+            Confirme sua presença
+        </h2>
+
+
+        <p id="presencaModalDescricao">
+            O professor abriu o registro de presença
+            para esta aula.
+        </p>
+
+
+        <div
+            class="presenca-modal-live-info"
+            id="presencaModalLiveInfo"
+        >
+
+            <span>
+                AULA
+            </span>
+
+
+            <strong id="presencaModalAula">
+                —
+            </strong>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="presenca-confirmar-button"
+            id="confirmarPresencaButton"
+        >
+
+            <i
+                class="fa-solid fa-check"
+                aria-hidden="true"
+            ></i>
+
+
+            Confirmar presença
+
+        </button>
+
+
+        <span
+            class="presenca-modal-status"
+            id="presencaModalStatus"
+        >
+            Sua confirmação será registrada no sistema.
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST / NOTIFICAÇÕES
+========================================================== -->
+
+<div
+    class="portal-toast"
+    id="portalToast"
+    hidden
+    role="status"
+    aria-live="polite"
+>
+
+    <span
+        class="portal-toast-icon"
+        id="portalToastIcon"
+    >
+        ✓
+    </span>
+
+
+    <div class="portal-toast-content">
+
+        <strong id="portalToastTitulo">
+            Aviso
+        </strong>
+
+
+        <span id="portalToastMensagem">
+            —
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/supabase.js"></script>
+
+<script src="../js/portal.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1127 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+ <link rel="icon" type="image/png" href="img/capa.png">
+
+    <title>Professor | MEP EAD</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/professor.css"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                M
+            </div>
+
+            <div class="brand-text">
+
+                <strong>MEP EAD</strong>
+
+                <span>
+                    Ministério de Ensino
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+
+            <!-- PRINCIPAL -->
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    PRINCIPAL
+                </span>
+
+
+                <button
+                    class="nav-item active"
+                    data-page="dashboard"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ⌂
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- ENSINO -->
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    ENSINO
+                </span>
+
+
+                <button
+                    class="nav-item"
+                    data-page="cursos"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ▣
+                    </span>
+
+                    <span>
+                        Meus cursos
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="turmas"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ▤
+                    </span>
+
+                    <span>
+                        Minhas turmas
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="aulas"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ▶
+                    </span>
+
+                    <span>
+                        Aulas
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="alunos"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Alunos
+                    </span>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- ACOMPANHAMENTO -->
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    ACOMPANHAMENTO
+                </span>
+
+
+                <button
+                    class="nav-item"
+                    data-page="lives"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ◉
+                    </span>
+
+                    <span>
+                        Lives
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="presencas"
+                    type="button"
+                >
+
+                    <span class="nav-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Presenças
+                    </span>
+
+                </button>
+
+            </div>
+
+        </nav>
+
+
+
+        <!-- RODAPÉ -->
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="nav-item"
+                data-page="configuracoes"
+                type="button"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Configurações
+                </span>
+
+            </button>
+
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+                type="button"
+            >
+
+                <span>
+                    ↪
+                </span>
+
+                <span>
+                    Sair da conta
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- =========================================
+             TOPBAR
+        ========================================== -->
+
+        <header class="topbar">
+
+            <div class="page-heading">
+
+                <span>
+                    MEP EAD
+                </span>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="profile">
+
+                <div class="profile-info">
+
+                    <strong id="userName">
+                        Carregando...
+                    </strong>
+
+                    <span>
+                        Professor
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    P
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             DASHBOARD
+        ========================================== -->
+
+        <section
+            class="page active"
+            id="page-dashboard"
+        >
+
+            <div class="welcome-card">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ÁREA DO PROFESSOR
+                    </span>
+
+                    <h2>
+                        Bem-vindo ao MEP EAD.
+                    </h2>
+
+                    <p>
+                        Aqui você acompanha suas turmas,
+                        organiza suas aulas e acompanha
+                        seus alunos.
+                    </p>
+
+                </div>
+
+
+                <div class="welcome-decoration">
+                    MEP
+                </div>
+
+            </div>
+
+
+
+            <!-- ESTATÍSTICAS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        📚
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Meus cursos
+                        </span>
+
+                        <strong id="totalCursos">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        🎓
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Minhas turmas
+                        </span>
+
+                        <strong id="totalTurmas">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        👨‍🎓
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Meus alunos
+                        </span>
+
+                        <strong id="totalAlunos">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        ▶
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Aulas
+                        </span>
+
+                        <strong id="totalAulas">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- GRID INFERIOR -->
+
+            <div class="content-grid">
+
+
+                <!-- PRÓXIMA LIVE -->
+
+                <div class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                TRANSMISSÕES
+                            </span>
+
+                            <h3>
+                                Próxima live
+                            </h3>
+
+                        </div>
+
+
+                        <span class="live-status">
+                            OFFLINE
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="empty-content"
+                        id="proximaLive"
+                    >
+
+                        <div class="empty-icon">
+                            ◉
+                        </div>
+
+                        <strong>
+                            Nenhuma live cadastrada
+                        </strong>
+
+                        <p>
+                            Quando houver uma transmissão
+                            vinculada às suas turmas,
+                            ela aparecerá aqui.
+                        </p>
+
+                        <button
+                            class="primary-button"
+                            data-page="lives"
+                            type="button"
+                        >
+                            Ver minhas lives
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TURMAS -->
+
+                <div class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                ENSINO
+                            </span>
+
+                            <h3>
+                                Minhas turmas
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="teacher-turmas-list"
+                        id="dashboardTurmas"
+                    >
+
+                        <div class="activity-empty">
+
+                            <div class="empty-icon">
+                                🎓
+                            </div>
+
+                            <p>
+                                Carregando suas turmas...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             MEUS CURSOS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-cursos"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ENSINO
+                    </span>
+
+                    <h2>
+                        Meus cursos
+                    </h2>
+
+                    <p>
+                        Cursos nos quais você atua como professor.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="teacher-courses-grid"
+                id="listaCursos"
+            >
+
+                <div class="loading-state">
+
+                    <div class="loading-spinner"></div>
+
+                    <span>
+                        Carregando cursos...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="empty-state"
+                id="cursosEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                <h3>
+                    Nenhum curso encontrado
+                </h3>
+
+                <p>
+                    Você ainda não está vinculado a nenhum curso.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             MINHAS TURMAS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-turmas"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ENSINO
+                    </span>
+
+                    <h2>
+                        Minhas turmas
+                    </h2>
+
+                    <p>
+                        Turmas que estão sob sua responsabilidade.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="teacher-toolbar">
+
+                <div class="teacher-search">
+
+                    <span>
+                        ⌕
+                    </span>
+
+                    <input
+                        type="search"
+                        id="buscarTurma"
+                        placeholder="Buscar turma..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="teacher-turmas-grid"
+                id="listaTurmas"
+            >
+
+                <div class="loading-state">
+
+                    <div class="loading-spinner"></div>
+
+                    <span>
+                        Carregando turmas...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="empty-state"
+                id="turmasEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    🎓
+                </div>
+
+                <h3>
+                    Nenhuma turma encontrada
+                </h3>
+
+                <p>
+                    Você ainda não possui turmas vinculadas.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             AULAS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-aulas"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ENSINO
+                    </span>
+
+                    <h2>
+                        Aulas
+                    </h2>
+
+                    <p>
+                        Organize o conteúdo das suas turmas.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="novaAulaButton"
+                >
+
+                    <span>
+                        +
+                    </span>
+
+                    <span>
+                        Nova aula
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <div class="teacher-info-card">
+
+                <div class="info-card-icon">
+                    ▶
+                </div>
+
+                <div>
+
+                    <strong>
+                        Área de aulas
+                    </strong>
+
+                    <p>
+                        Aqui você poderá criar aulas,
+                        adicionar vídeos, materiais e
+                        organizar a ordem do conteúdo.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="teacher-lessons-grid"
+                id="listaAulas"
+            >
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ▶
+                    </div>
+
+                    <h3>
+                        Nenhuma aula cadastrada
+                    </h3>
+
+                    <p>
+                        Suas aulas aparecerão aqui.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             ALUNOS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-alunos"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ACOMPANHAMENTO
+                    </span>
+
+                    <h2>
+                        Meus alunos
+                    </h2>
+
+                    <p>
+                        Alunos matriculados nas suas turmas.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="teacher-toolbar">
+
+                <div class="teacher-search">
+
+                    <span>
+                        ⌕
+                    </span>
+
+                    <input
+                        type="search"
+                        id="buscarAluno"
+                        placeholder="Buscar aluno..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="teacher-students-list"
+                id="listaAlunos"
+            >
+
+                <div class="loading-state">
+
+                    <div class="loading-spinner"></div>
+
+                    <span>
+                        Carregando alunos...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="empty-state"
+                id="alunosEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    👨‍🎓
+                </div>
+
+                <h3>
+                    Nenhum aluno encontrado
+                </h3>
+
+                <p>
+                    Os alunos das suas turmas aparecerão aqui.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             LIVES
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-lives"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ACOMPANHAMENTO
+                    </span>
+
+                    <h2>
+                        Minhas lives
+                    </h2>
+
+                    <p>
+                        Acompanhe as transmissões vinculadas
+                        às suas turmas.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="teacher-lives-grid"
+                id="listaLives"
+            >
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🔴
+                    </div>
+
+                    <h3>
+                        Nenhuma live cadastrada
+                    </h3>
+
+                    <p>
+                        Quando uma live for vinculada
+                        às suas turmas, ela aparecerá aqui.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             PRESENÇAS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-presencas"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ACOMPANHAMENTO
+                    </span>
+
+                    <h2>
+                        Presenças
+                    </h2>
+
+                    <p>
+                        Acompanhe a participação dos alunos
+                        nas transmissões.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="teacher-info-card">
+
+                <div class="info-card-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        Controle de presença
+                    </strong>
+
+                    <p>
+                        Depois que as lives estiverem
+                        estruturadas, você poderá registrar
+                        e consultar a presença dos alunos.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="empty-state" id="listaPresencas">
+
+                <div class="empty-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    Nenhuma presença registrada
+                </h3>
+
+                <p>
+                    Os registros de presença aparecerão aqui.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CONFIGURAÇÕES
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-configuracoes"
+        >
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        SISTEMA
+                    </span>
+
+                    <h2>
+                        Configurações
+                    </h2>
+
+                    <p>
+                        Gerencie suas informações pessoais.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="teacher-info-card">
+
+                <div class="info-card-icon">
+                    ⚙
+                </div>
+
+                <div>
+
+                    <strong>
+                        Configurações do professor
+                    </strong>
+
+                    <p>
+                        Esta área será utilizada posteriormente
+                        para configurações da sua conta.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================================
+         SUPABASE
+    ========================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/supabase.js"></script>
+
+    <script src="../js/professor.js"></script>
+
+<script src="../js/professores.js"></script>
+
+
+</body>
+
+</html>

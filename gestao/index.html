@@ -1,0 +1,3914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Gestão | MEP EAD</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/gestao.css"
+    >
+
+ <link rel="icon" type="image/png" href="img/capa.png">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                M
+            </div>
+
+            <div class="brand-text">
+
+                <strong>MEP EAD</strong>
+
+                <span>
+                    Ministério de Ensino
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    PRINCIPAL
+                </span>
+
+                <button
+                    class="nav-item active"
+                    data-page="dashboard"
+                >
+
+                    <span class="nav-icon">⌂</span>
+
+                    <span>Dashboard</span>
+
+                </button>
+
+            </div>
+
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    ACADÊMICO
+                </span>
+
+                <button
+                    class="nav-item"
+                    data-page="cursos"
+                >
+
+                    <span class="nav-icon">▣</span>
+
+                    <span>Cursos</span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="turmas"
+                >
+
+                    <span class="nav-icon">▤</span>
+
+                    <span>Turmas</span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="alunos"
+                >
+
+                    <span class="nav-icon">♙</span>
+
+                    <span>Alunos</span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="professores"
+                >
+
+                    <span class="nav-icon">♟</span>
+
+                    <span>Professores</span>
+
+                </button>
+
+            </div>
+
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    ACOMPANHAMENTO
+                </span>
+
+
+                <button
+                    class="nav-item"
+                    data-page="lives"
+                >
+
+                    <span class="nav-icon">◉</span>
+
+                    <span>Lives</span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="presencas"
+                >
+
+                    <span class="nav-icon">✓</span>
+
+                    <span>Presenças</span>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-page="relatorios"
+                >
+
+                    <span class="nav-icon">▥</span>
+
+                    <span>Relatórios</span>
+
+                </button>
+
+            </div>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="nav-item"
+                data-page="configuracoes"
+            >
+
+                <span class="nav-icon">⚙</span>
+
+                <span>Configurações</span>
+
+            </button>
+
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+            >
+
+                <span>↪</span>
+
+                <span>Sair da conta</span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="page-heading">
+
+                <span>
+                    MEP EAD
+                </span>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="profile">
+
+                <div class="profile-info">
+
+                    <strong id="userName">
+                        Carregando...
+                    </strong>
+
+                    <span>
+                        Gestor
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    A
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             DASHBOARD
+        ========================================== -->
+
+        <section
+            class="page active"
+            id="page-dashboard"
+        >
+
+            <div class="welcome-card">
+
+                <div>
+
+                    <span class="eyebrow">
+                        VISÃO GERAL
+                    </span>
+
+                    <h2>
+                        Bem-vindo ao MEP EAD.
+                    </h2>
+
+                    <p>
+                        Gerencie o ensino, acompanhe
+                        seus alunos e organize as
+                        transmissões do Ministério
+                        de Ensino no Propósito.
+                    </p>
+
+                </div>
+
+                <div class="welcome-decoration">
+                    MEP
+                </div>
+
+            </div>
+
+
+            <!-- ESTATÍSTICAS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        📚
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Cursos
+                        </span>
+
+                        <strong id="totalCursos">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        👥
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Alunos
+                        </span>
+
+                        <strong id="totalAlunos">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        👨‍🏫
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Professores
+                        </span>
+
+                        <strong id="totalProfessores">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        🔴
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span>
+                            Lives
+                        </span>
+
+                        <strong id="totalLives">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- GRID INFERIOR -->
+
+            <div class="content-grid">
+
+
+                <!-- PRÓXIMA LIVE -->
+
+                <div class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                TRANSMISSÕES
+                            </span>
+
+                            <h3>
+                                Próxima aula
+                            </h3>
+
+                        </div>
+
+                        <span class="live-status">
+                            OFFLINE
+                        </span>
+
+                    </div>
+
+
+                    <div class="empty-content">
+
+                        <div class="empty-icon">
+                            ◉
+                        </div>
+
+                        <strong>
+                            Nenhuma live cadastrada
+                        </strong>
+
+                        <p>
+                            Quando uma transmissão
+                            for cadastrada, ela
+                            aparecerá aqui.
+                        </p>
+
+                        <button
+                            class="primary-button"
+                            data-page="lives"
+                        >
+                            Gerenciar lives
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ATIVIDADE -->
+
+                <div class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                SISTEMA
+                            </span>
+
+                            <h3>
+                                Atividade recente
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-empty">
+
+                        <div class="empty-icon">
+                            ✓
+                        </div>
+
+                        <p>
+                            Nenhuma atividade registrada
+                            ainda.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CURSOS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-cursos"
+        >
+
+            <div class="section-header courses-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ACADÊMICO
+                    </span>
+
+                    <h2>
+                        Cursos
+                    </h2>
+
+                    <p>
+                        Gerencie os cursos oferecidos
+                        pelo MEP EAD.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="novoCursoButton"
+                >
+
+                    <span class="button-icon">
+                        +
+                    </span>
+
+                    <span>
+                        Novo curso
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- BARRA DE CONTROLE -->
+
+            <div class="courses-toolbar">
+
+                <div class="courses-search">
+
+                    <span class="search-icon">
+                        ⌕
+                    </span>
+
+                    <input
+                        type="text"
+                        id="buscarCurso"
+                        placeholder="Buscar curso..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div class="courses-filter">
+
+                    <select id="filtroCursos">
+
+                        <option value="todos">
+                            Todos os cursos
+                        </option>
+
+                        <option value="ativos">
+                            Ativos
+                        </option>
+
+                        <option value="inativos">
+                            Inativos
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONTADOR -->
+
+            <div class="courses-summary">
+
+                <span>
+                    Cursos cadastrados
+                </span>
+
+                <strong id="contadorCursos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <!-- LISTA -->
+
+            <div
+                class="courses-grid"
+                id="listaCursos"
+            >
+
+                <div
+                    class="courses-loading"
+                    id="cursosLoading"
+                >
+
+                    <div class="loading-spinner"></div>
+
+                    <span>
+                        Carregando cursos...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ESTADO VAZIO -->
+
+            <div
+                class="courses-empty"
+                id="cursosEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                <h3>
+                    Nenhum curso encontrado
+                </h3>
+
+                <p>
+                    Ainda não existem cursos cadastrados
+                    ou nenhum curso corresponde à sua busca.
+                </p>
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="novoCursoEmptyButton"
+                >
+                    + Criar primeiro curso
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             MODAL | NOVO CURSO
+        ========================================== -->
+
+        <div
+            class="modal-overlay"
+            id="cursoModal"
+            hidden
+        >
+
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="cursoModalTitle"
+            >
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            ACADÊMICO
+                        </span>
+
+                        <h2 id="cursoModalTitle">
+                            Novo curso
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="fecharCursoModal"
+                        aria-label="Fechar"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="cursoForm"
+                    autocomplete="off"
+                >
+
+                    <div class="form-group">
+
+                        <label for="cursoNome">
+                            Nome do curso
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cursoNome"
+                            name="nome"
+                            placeholder="Ex.: Teologia Online"
+                            maxlength="150"
+                            required
+                        >
+
+                        <small>
+                            Nome que será exibido para alunos e professores.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="cursoDescricao">
+                            Descrição
+                        </label>
+
+                        <textarea
+                            id="cursoDescricao"
+                            name="descricao"
+                            placeholder="Descreva brevemente o curso..."
+                            maxlength="1000"
+                            rows="4"
+                        ></textarea>
+
+                        <small>
+                            Uma breve descrição sobre o conteúdo do curso.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="cursoImagem">
+                            Imagem da capa
+                        </label>
+
+                        <input
+                            type="url"
+                            id="cursoImagem"
+                            name="imagem_url"
+                            placeholder="https://..."
+                        >
+
+                        <small>
+                            Cole a URL da imagem que será utilizada como capa.
+                        </small>
+
+                    </div>
+
+
+                    <div
+                        class="curso-preview"
+                        id="cursoPreview"
+                        hidden
+                    >
+
+                        <div class="preview-image-container">
+
+                            <img
+                                id="cursoPreviewImagem"
+                                src=""
+                                alt="Prévia da capa do curso"
+                            >
+
+                        </div>
+
+                        <div class="preview-info">
+
+                            <span class="preview-label">
+                                PRÉ-VISUALIZAÇÃO
+                            </span>
+
+                            <strong id="cursoPreviewNome">
+                                Nome do curso
+                            </strong>
+
+                            <p id="cursoPreviewDescricao">
+                                Descrição do curso
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="toggle-field">
+
+                            <input
+                                type="checkbox"
+                                id="cursoAtivo"
+                                name="ativo"
+                                checked
+                            >
+
+                            <span class="toggle"></span>
+
+                            <span class="toggle-text">
+
+                                <strong>
+                                    Curso ativo
+                                </strong>
+
+                                <small>
+                                    O curso ficará disponível na plataforma.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div
+                        class="form-message"
+                        id="cursoFormMessage"
+                        hidden
+                    ></div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="cancelarCurso"
+                        >
+                            Cancelar
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="primary-button"
+                            id="salvarCursoButton"
+                        >
+
+                            <span class="button-loading">
+                                Salvando...
+                            </span>
+
+                            <span class="button-normal">
+                                Criar curso
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             ALUNOS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-alunos"
+        >
+
+            <div class="section-header alunos-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ACADÊMICO
+                    </span>
+
+                    <h2>
+                        Alunos
+                    </h2>
+
+                    <p>
+                        Gerencie os alunos cadastrados no MEP EAD.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="novoAlunoButton"
+                >
+
+                    <span class="button-icon">
+                        +
+                    </span>
+
+                    <span>
+                        Novo aluno
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- BARRA DE CONTROLE -->
+
+            <div class="alunos-toolbar">
+
+                <div class="alunos-search">
+
+                    <span>
+                        ⌕
+                    </span>
+
+                    <input
+                        type="text"
+                        id="buscarAluno"
+                        placeholder="Buscar aluno..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div class="alunos-filter">
+
+                    <select id="filtroAlunos">
+
+                        <option value="todos">
+                            Todos
+                        </option>
+
+                        <option value="ativos">
+                            Ativos
+                        </option>
+
+                        <option value="inativos">
+                            Inativos
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- RESUMO -->
+
+            <div class="alunos-summary">
+
+                <span>
+                    Alunos cadastrados
+                </span>
+
+                <strong id="contadorAlunos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <!-- LISTA -->
+
+            <div
+                class="alunos-grid"
+                id="listaAlunos"
+            >
+
+                <div
+                    class="alunos-loading"
+                    id="alunosLoading"
+                >
+
+                    <div class="loading-spinner"></div>
+
+                    <span>
+                        Carregando alunos...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ESTADO VAZIO -->
+
+            <div
+                class="alunos-empty"
+                id="alunosEmpty"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    👨‍🎓
+                </div>
+
+                <h3>
+                    Nenhum aluno encontrado
+                </h3>
+
+                <p>
+                    Ainda não existem alunos cadastrados.
+                </p>
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="novoAlunoEmptyButton"
+                >
+                    + Cadastrar primeiro aluno
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             MODAL | NOVO ALUNO
+        ========================================== -->
+
+        <div
+            class="modal-overlay"
+            id="alunoModal"
+            hidden
+        >
+
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="alunoModalTitle"
+            >
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            ACADÊMICO
+                        </span>
+
+                        <h2 id="alunoModalTitle">
+                            Novo aluno
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="fecharAlunoModal"
+                        aria-label="Fechar"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="alunoForm"
+                    autocomplete="off"
+                >
+
+                    <div class="form-group">
+
+                        <label for="alunoNome">
+                            Nome completo
+                        </label>
+
+                        <input
+                            type="text"
+                            id="alunoNome"
+                            name="nome"
+                            placeholder="Nome completo do aluno"
+                            maxlength="150"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="alunoEmail">
+                            E-mail
+                        </label>
+
+                        <input
+                            type="email"
+                            id="alunoEmail"
+                            name="email"
+                            placeholder="aluno@email.com"
+                            maxlength="200"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="alunoSenha">
+                            Senha temporária
+                        </label>
+
+                        <input
+                            type="password"
+                            id="alunoSenha"
+                            name="senha"
+                            placeholder="Defina uma senha temporária"
+                            minlength="6"
+                            required
+                        >
+
+                        <small>
+                            O gestor define a senha que será entregue ao aluno.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="alunoSenhaConfirmacao">
+                            Confirmar senha
+                        </label>
+
+                        <input
+                            type="password"
+                            id="alunoSenhaConfirmacao"
+                            name="senha_confirmacao"
+                            placeholder="Digite a senha novamente"
+                            minlength="6"
+                            required
+                        >
+
+                        <small>
+                            Digite novamente a senha temporária para confirmar.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="toggle-field">
+
+                            <input
+                                type="checkbox"
+                                id="alunoAtivo"
+                                name="ativo"
+                                checked
+                            >
+
+                            <span class="toggle"></span>
+
+                            <span class="toggle-text">
+
+                                <strong>
+                                    Aluno ativo
+                                </strong>
+
+                                <small>
+                                    O aluno poderá acessar o MEP EAD.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div
+                        class="form-message"
+                        id="alunoFormMessage"
+                        hidden
+                    ></div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="cancelarAluno"
+                        >
+                            Cancelar
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="primary-button"
+                            id="salvarAlunoButton"
+                        >
+
+                            <span class="button-loading">
+                                Criando...
+                            </span>
+
+                            <span class="button-normal">
+                                Criar aluno
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+  <!-- =========================================
+     TURMAS
+========================================== -->
+
+<section
+    class="page"
+    id="page-turmas"
+>
+
+    <div class="section-header turmas-header">
+
+        <div class="section-header-content">
+
+            <span class="eyebrow">
+                ACADÊMICO
+            </span>
+
+            <h2>
+                Turmas
+            </h2>
+
+            <p>
+                Organize e acompanhe os alunos
+                matriculados em cada turma.
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="primary-button"
+            id="novaTurmaButton"
+        >
+
+            <span class="button-icon">
+                +
+            </span>
+
+            <span>
+                Nova turma
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- =========================================
+         FERRAMENTAS
+    ========================================== -->
+
+    <div class="turmas-toolbar">
+
+        <div class="turmas-search">
+
+            <span class="turmas-search-icon">
+                ⌕
+            </span>
+
+            <input
+                type="search"
+                id="turmasSearch"
+                placeholder="Pesquisar turma ou curso..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="turmas-filters">
+
+            <select
+                id="turmasFiltroStatus"
+                aria-label="Filtrar por status"
+            >
+
+                <option value="todas">
+                    Todas
+                </option>
+
+                <option value="ativas">
+                    Ativas
+                </option>
+
+                <option value="inativas">
+                    Inativas
+                </option>
+
+            </select>
+
+
+            <select
+                id="turmasFiltroCurso"
+                aria-label="Filtrar por curso"
+            >
+
+                <option value="">
+                    Todos os cursos
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         CABEÇALHO DA LISTA
+    ========================================== -->
+
+    <div class="turmas-list-header">
+
+        <div>
+
+            <span class="eyebrow">
+                TURMAS CADASTRADAS
+            </span>
+
+            <h3>
+                Suas turmas
+            </h3>
+
+        </div>
+
+        <span
+            class="turmas-count"
+            id="turmasCount"
+        >
+            0 turmas
+        </span>
+
+    </div>
+
+
+    <!-- =========================================
+         LISTA
+    ========================================== -->
+
+    <div
+        class="turmas-grid"
+        id="listaTurmas"
+    >
+
+        <div
+            class="turmas-loading"
+            id="turmasLoading"
+        >
+
+            <div class="loading-spinner"></div>
+
+            <span>
+                Carregando turmas...
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         NENHUM RESULTADO
+    ========================================== -->
+
+    <div
+        class="turmas-no-results"
+        id="turmasNoResults"
+        hidden
+    >
+
+        <div class="empty-icon">
+            🔎
+        </div>
+
+        <h3>
+            Nenhuma turma encontrada
+        </h3>
+
+        <p>
+            Tente alterar sua pesquisa ou os filtros.
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         ESTADO VAZIO
+    ========================================== -->
+
+    <div
+        class="turmas-empty"
+        id="turmasEmpty"
+        hidden
+    >
+
+        <div class="empty-icon">
+            🎓
+        </div>
+
+        <h3>
+            Nenhuma turma cadastrada
+        </h3>
+
+        <p>
+            Crie sua primeira turma para começar
+            a organizar os alunos dos cursos.
+        </p>
+
+        <button
+            type="button"
+            class="primary-button"
+            id="novaTurmaEmptyButton"
+        >
+
+            <span class="button-icon">
+                +
+            </span>
+
+            <span>
+                Criar primeira turma
+            </span>
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     MODAL | NOVA TURMA
+========================================== -->
+
+<div
+    class="modal-overlay"
+    id="turmaModal"
+    hidden
+>
+
+    <div
+        class="modal modal-turma"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="turmaModalTitle"
+    >
+
+
+        <!-- CABEÇALHO -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    ACADÊMICO
+                </span>
+
+                <h2 id="turmaModalTitle">
+                    Nova turma
+                </h2>
+
+                <p>
+                    Cadastre uma nova turma para um curso.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="fecharTurmaModal"
+                aria-label="Fechar"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- FORMULÁRIO -->
+
+        <form
+            id="turmaForm"
+            autocomplete="off"
+        >
+
+
+            <!-- =========================================
+                 01 | CURSO
+            ========================================== -->
+
+            <div class="form-section">
+
+                <div class="form-section-header">
+
+                    <span class="form-section-number">
+                        01
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Curso
+                        </h3>
+
+                        <p>
+                            Escolha o curso ao qual a turma pertence.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="turmaCurso">
+                        Curso
+                    </label>
+
+                    <select
+                        id="turmaCurso"
+                        name="curso_id"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione um curso
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 02 | IDENTIFICAÇÃO
+            ========================================== -->
+
+            <div class="form-section">
+
+                <div class="form-section-header">
+
+                    <span class="form-section-number">
+                        02
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Identificação
+                        </h3>
+
+                        <p>
+                            Defina como a turma será apresentada.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="turmaNome">
+                            Nome da turma
+                        </label>
+
+                        <input
+                            type="text"
+                            id="turmaNome"
+                            name="nome"
+                            placeholder="Ex.: Turma 01 - 2026"
+                            maxlength="150"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="turmaCodigo">
+                            Código
+                        </label>
+
+                        <input
+                            type="text"
+                            id="turmaCodigo"
+                            name="codigo"
+                            placeholder="Ex.: TEO202601"
+                            maxlength="50"
+                        >
+
+                        <small>
+                            Opcional.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="turmaDescricao">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="turmaDescricao"
+                        name="descricao"
+                        placeholder="Adicione uma breve descrição da turma..."
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 03 | PERÍODO
+            ========================================== -->
+
+            <div class="form-section">
+
+                <div class="form-section-header">
+
+                    <span class="form-section-number">
+                        03
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Período
+                        </h3>
+
+                        <p>
+                            Informe quando a turma começa e termina.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="turmaDataInicio">
+                            Data de início
+                        </label>
+
+                        <input
+                            type="date"
+                            id="turmaDataInicio"
+                            name="data_inicio"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="turmaDataFim">
+                            Data de término
+                        </label>
+
+                        <input
+                            type="date"
+                            id="turmaDataFim"
+                            name="data_fim"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 04 | STATUS
+            ========================================== -->
+
+            <div class="form-section">
+
+                <div class="form-section-header">
+
+                    <span class="form-section-number">
+                        04
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Status
+                        </h3>
+
+                        <p>
+                            Controle se a turma está disponível.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="toggle-field">
+
+                    <input
+                        type="checkbox"
+                        id="turmaAtiva"
+                        name="ativo"
+                        checked
+                    >
+
+                    <span class="toggle"></span>
+
+                    <span class="toggle-text">
+
+                        <strong>
+                            Turma ativa
+                        </strong>
+
+                        <small>
+                            A turma ficará disponível para gerenciamento.
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <!-- MENSAGEM -->
+
+            <div
+                class="form-message"
+                id="turmaFormMessage"
+                hidden
+            ></div>
+
+
+            <!-- AÇÕES -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    id="cancelarTurma"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                    id="salvarTurmaButton"
+                >
+                    Criar turma
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     MODAL | GERENCIAR TURMA
+========================================== -->
+
+<div
+    class="modal-overlay gerenciar-turma-overlay"
+    id="gerenciarTurmaModal"
+    hidden
+>
+
+    <div
+        class="gerenciar-turma-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gerenciarTurmaTitulo"
+    >
+
+
+        <!-- =========================================
+             CABEÇALHO
+        ========================================== -->
+
+        <header class="gerenciar-turma-header">
+
+            <div class="gerenciar-turma-header-left">
+
+                <span class="eyebrow">
+                    ACADÊMICO • TURMAS
+                </span>
+
+                <div class="gerenciar-turma-title-row">
+
+                    <h2 id="gerenciarTurmaTitulo">
+                        Turma
+                    </h2>
+
+                    <span
+                        class="turma-status ativa"
+                        id="gerenciarTurmaStatus"
+                    >
+                        ATIVA
+                    </span>
+
+                </div>
+
+                <p>
+                    Gerencie professores e alunos
+                    desta turma.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="fecharGerenciarTurma"
+                aria-label="Fechar gerenciamento da turma"
+            >
+                ×
+            </button>
+
+        </header>
+
+
+
+        <!-- =========================================
+             CONTEÚDO
+        ========================================== -->
+
+        <div class="gerenciar-turma-content">
+
+
+            <!-- =========================================
+                 INFORMAÇÕES DA TURMA
+            ========================================== -->
+
+            <section class="turma-overview">
+
+
+                <!-- CAPA DO CURSO -->
+
+                <div class="turma-course-cover">
+
+                    <div
+                        class="turma-course-cover-placeholder"
+                        id="gerenciarTurmaImagemPlaceholder"
+                    >
+
+                        <span>
+                            MEP
+                        </span>
+
+                    </div>
+
+
+                    <img
+                        id="gerenciarTurmaImagem"
+                        src=""
+                        alt=""
+                        hidden
+                    >
+
+                </div>
+
+
+                <!-- INFORMAÇÕES -->
+
+                <div class="turma-overview-info">
+
+                    <span class="eyebrow">
+                        CURSO
+                    </span>
+
+                    <h3 id="gerenciarTurmaCurso">
+                        Curso
+                    </h3>
+
+
+                    <div class="turma-overview-grid">
+
+
+                        <!-- CÓDIGO -->
+
+                        <div class="turma-info-item">
+
+                            <span>
+                                Código da turma
+                            </span>
+
+                            <strong id="gerenciarTurmaCodigo">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <!-- PERÍODO -->
+
+                        <div class="turma-info-item">
+
+                            <span>
+                                Período
+                            </span>
+
+                            <strong id="gerenciarTurmaPeriodo">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <!-- ALUNOS -->
+
+                        <div class="turma-info-item">
+
+                            <span>
+                                Alunos matriculados
+                            </span>
+
+                            <strong>
+
+                                <span id="contadorAlunosTurma">
+                                    0
+                                </span>
+
+                                alunos
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- PROFESSORES -->
+
+                        <div class="turma-info-item">
+
+                            <span>
+                                Professores
+                            </span>
+
+                            <strong>
+
+                                <span id="contadorProfessoresTurma">
+                                    0
+                                </span>
+
+                                professores
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="turma-info-item">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong id="gerenciarTurmaStatusTexto">
+                                Ativa
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIÇÃO -->
+
+                    <div class="turma-overview-description">
+
+                        <span>
+                            Sobre a turma
+                        </span>
+
+                        <p id="gerenciarTurmaDescricao">
+                            Nenhuma descrição informada.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- DIVISOR -->
+
+            <div class="gerenciar-turma-divider"></div>
+
+
+
+            <!-- =========================================
+                 ÁREA DE PROFESSORES
+            ========================================== -->
+
+            <section class="turma-professores-section">
+
+
+                <!-- CABEÇALHO -->
+
+                <div class="turma-professores-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            EQUIPE DOCENTE
+                        </span>
+
+                        <h3>
+                            Professores da turma
+                        </h3>
+
+                        <p>
+                            Adicione um ou mais professores responsáveis
+                            por esta turma.
+                        </p>
+
+                    </div>
+
+
+                    <div class="turma-professores-count">
+
+                        <strong id="contadorProfessoresTurmaHeader">
+                            0
+                        </strong>
+
+                        <span>
+                            professores
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DUAS COLUNAS -->
+
+                <div class="turma-professores-layout">
+
+
+                    <!-- PROFESSORES DA TURMA -->
+
+                    <div class="turma-professores-column">
+
+
+                        <div class="turma-column-header">
+
+                            <div>
+
+                                <h4>
+                                    Professores responsáveis
+                                </h4>
+
+                                <span>
+                                    Professores que já pertencem à turma
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="turma-professores-list"
+                            id="listaProfessoresTurma"
+                        >
+
+                            <div class="turma-professores-loading">
+
+                                <div class="loading-spinner"></div>
+
+                                <span>
+                                    Carregando professores...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ADICIONAR PROFESSORES -->
+
+                    <div
+                        class="turma-professores-column turma-disponiveis-column"
+                    >
+
+
+                        <div class="turma-column-header">
+
+                            <div>
+
+                                <h4>
+                                    Adicionar professores
+                                </h4>
+
+                                <span>
+                                    Professores cadastrados no MEP EAD
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PESQUISA -->
+
+                        <div class="turma-professores-search">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input
+                                type="search"
+                                id="pesquisarProfessoresTurma"
+                                placeholder="Pesquisar professor..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <!-- LISTA DISPONÍVEIS -->
+
+                        <div
+                            class="turma-professores-list"
+                            id="listaProfessoresDisponiveis"
+                        >
+
+                            <div class="turma-professores-loading">
+
+                                <div class="loading-spinner"></div>
+
+                                <span>
+                                    Carregando professores...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- DIVISOR -->
+
+            <div class="gerenciar-turma-divider"></div>
+
+
+
+            <!-- =========================================
+                 ÁREA DE ALUNOS
+            ========================================== -->
+
+            <section class="turma-alunos-section">
+
+
+                <!-- CABEÇALHO -->
+
+                <div class="turma-alunos-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            MATRÍCULAS
+                        </span>
+
+                        <h3>
+                            Alunos da turma
+                        </h3>
+
+                        <p>
+                            Gerencie os alunos que fazem parte desta turma.
+                        </p>
+
+                    </div>
+
+
+                    <div class="turma-alunos-count">
+
+                        <strong id="contadorAlunosTurmaHeader">
+                            0
+                        </strong>
+
+                        <span>
+                            alunos
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DUAS COLUNAS -->
+
+                <div class="turma-alunos-layout">
+
+
+                    <!-- =========================================
+                         ALUNOS MATRICULADOS
+                    ========================================== -->
+
+                    <div class="turma-alunos-column">
+
+
+                        <div class="turma-column-header">
+
+                            <div>
+
+                                <h4>
+                                    Alunos matriculados
+                                </h4>
+
+                                <span>
+                                    Alunos que já pertencem à turma
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="turma-alunos-list"
+                            id="listaAlunosTurma"
+                        >
+
+                            <div class="turma-alunos-loading">
+
+                                <div class="loading-spinner"></div>
+
+                                <span>
+                                    Carregando alunos...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ADICIONAR ALUNOS
+                    ========================================== -->
+
+                    <div
+                        class="turma-alunos-column turma-disponiveis-column"
+                    >
+
+
+                        <div class="turma-column-header">
+
+                            <div>
+
+                                <h4>
+                                    Adicionar alunos
+                                </h4>
+
+                                <span>
+                                    Alunos cadastrados no MEP EAD
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PESQUISA -->
+
+                        <div class="turma-alunos-search">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input
+                                type="search"
+                                id="pesquisarAlunosTurma"
+                                placeholder="Pesquisar aluno..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <!-- LISTA DISPONÍVEIS -->
+
+                        <div
+                            class="turma-alunos-list"
+                            id="listaAlunosDisponiveis"
+                        >
+
+                            <div class="turma-alunos-loading">
+
+                                <div class="loading-spinner"></div>
+
+                                <span>
+                                    Carregando alunos...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 MENSAGEM
+            ========================================== -->
+
+            <div
+                class="form-message"
+                id="gerenciarTurmaMensagem"
+                hidden
+            ></div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             RODAPÉ
+        ========================================== -->
+
+        <footer class="gerenciar-turma-footer">
+
+            <div class="gerenciar-turma-footer-info">
+
+                <span>
+                    Gerenciamento da turma
+                </span>
+
+                <strong id="gerenciarTurmaFooterNome">
+                    —
+                </strong>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="fecharGerenciarTurmaFooter"
+            >
+                Fechar
+            </button>
+
+        </footer>
+
+    </div>
+
+</div>
+
+
+
+       <!-- =========================================
+     PROFESSORES
+========================================== -->
+
+<section
+    class="page"
+    id="page-professores"
+>
+
+    <div class="section-header professores-header">
+
+        <div>
+
+            <span class="eyebrow">
+                ACADÊMICO
+            </span>
+
+            <h2>
+                Professores
+            </h2>
+
+            <p>
+                Gerencie os professores do MEP EAD.
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="primary-button"
+            id="novoProfessorButton"
+        >
+
+            <span class="button-icon">
+                +
+            </span>
+
+            <span>
+                Novo professor
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- BARRA DE CONTROLE -->
+
+    <div class="professores-toolbar">
+
+        <div class="professores-search">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="buscarProfessor"
+                placeholder="Buscar professor..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="professores-filter">
+
+            <select id="filtroProfessores">
+
+                <option value="todos">
+                    Todos
+                </option>
+
+                <option value="ativos">
+                    Ativos
+                </option>
+
+                <option value="inativos">
+                    Inativos
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESUMO -->
+
+    <div class="professores-summary">
+
+        <span>
+            Professores cadastrados
+        </span>
+
+        <strong id="contadorProfessores">
+            0
+        </strong>
+
+    </div>
+
+
+    <!-- LISTA -->
+
+    <div
+        class="professores-grid"
+        id="listaProfessores"
+    >
+
+        <div
+            class="professores-loading"
+            id="professoresLoading"
+        >
+
+            <div class="loading-spinner"></div>
+
+            <span>
+                Carregando professores...
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ESTADO VAZIO -->
+
+    <div
+        class="professores-empty"
+        id="professoresEmpty"
+        hidden
+    >
+
+        <div class="empty-icon">
+            👨‍🏫
+        </div>
+
+        <h3>
+            Nenhum professor encontrado
+        </h3>
+
+        <p>
+            Ainda não existem professores cadastrados.
+        </p>
+
+        <button
+            type="button"
+            class="primary-button"
+            id="novoProfessorEmptyButton"
+        >
+
+            + Cadastrar primeiro professor
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     MODAL | NOVO PROFESSOR
+========================================== -->
+
+<div
+    class="modal-overlay"
+    id="professorModal"
+    hidden
+>
+
+    <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="professorModalTitle"
+    >
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    ACADÊMICO
+                </span>
+
+                <h2 id="professorModalTitle">
+                    Novo professor
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="fecharProfessorModal"
+                aria-label="Fechar"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="professorForm"
+            autocomplete="off"
+        >
+
+            <!-- NOME -->
+
+            <div class="form-group">
+
+                <label for="professorNome">
+                    Nome completo
+                </label>
+
+                <input
+                    type="text"
+                    id="professorNome"
+                    name="nome"
+                    placeholder="Nome completo do professor"
+                    maxlength="150"
+                    required
+                >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="professorEmail">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="professorEmail"
+                    name="email"
+                    placeholder="professor@email.com"
+                    maxlength="200"
+                    required
+                >
+
+            </div>
+
+
+            <!-- SENHA -->
+
+            <div class="form-group">
+
+                <label for="professorSenha">
+                    Senha temporária
+                </label>
+
+                <input
+                    type="password"
+                    id="professorSenha"
+                    name="senha"
+                    placeholder="Defina uma senha temporária"
+                    minlength="6"
+                    required
+                >
+
+                <small>
+                    O gestor define a senha que será entregue ao professor.
+                </small>
+
+            </div>
+
+
+            <!-- CONFIRMAÇÃO -->
+
+            <div class="form-group">
+
+                <label for="professorSenhaConfirmacao">
+                    Confirmar senha
+                </label>
+
+                <input
+                    type="password"
+                    id="professorSenhaConfirmacao"
+                    name="senha_confirmacao"
+                    placeholder="Digite a senha novamente"
+                    minlength="6"
+                    required
+                >
+
+                <small>
+                    Digite novamente a senha temporária para confirmar.
+                </small>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label class="toggle-field">
+
+                    <input
+                        type="checkbox"
+                        id="professorAtivo"
+                        name="ativo"
+                        checked
+                    >
+
+                    <span class="toggle"></span>
+
+                    <span class="toggle-text">
+
+                        <strong>
+                            Professor ativo
+                        </strong>
+
+                        <small>
+                            O professor poderá acessar o MEP EAD.
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <!-- MENSAGEM -->
+
+            <div
+                class="form-message"
+                id="professorFormMessage"
+                hidden
+            ></div>
+
+
+            <!-- AÇÕES -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    id="cancelarProfessor"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                    id="salvarProfessorButton"
+                >
+
+                    <span class="button-loading">
+                        Criando...
+                    </span>
+
+                    <span class="button-normal">
+                        Criar professor
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     LIVES
+========================================== -->
+
+<section
+    class="page"
+    id="page-lives"
+>
+
+    <!-- =====================================
+         CABEÇALHO
+    ====================================== -->
+
+    <div class="section-header">
+
+        <div>
+
+            <span class="eyebrow">
+                ACOMPANHAMENTO
+            </span>
+
+            <h2>
+                Lives
+            </h2>
+
+            <p>
+                Gerencie as transmissões ao vivo
+                do MEP EAD.
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="primary-button"
+            id="novaLiveButton"
+        >
+            + Nova live
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================
+         FILTROS
+    ====================================== -->
+
+    <div class="lives-toolbar">
+
+        <div class="lives-filter">
+
+            <label for="filtroLiveStatus">
+                Status
+            </label>
+
+            <select id="filtroLiveStatus">
+
+                <option value="todas">
+                    Todas
+                </option>
+
+                <option value="agendadas">
+                    Agendadas
+                </option>
+
+                <option value="ao-vivo">
+                    Ao vivo
+                </option>
+
+                <option value="encerradas">
+                    Encerradas
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="lives-filter">
+
+            <label for="filtroLiveCurso">
+                Curso
+            </label>
+
+            <select id="filtroLiveCurso">
+
+                <option value="">
+                    Todos os cursos
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="lives-filter lives-search">
+
+            <label for="buscarLive">
+                Buscar
+            </label>
+
+            <input
+                type="search"
+                id="buscarLive"
+                placeholder="Buscar live..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         CONTADOR
+    ====================================== -->
+
+    <div class="lives-summary">
+
+        <div class="lives-summary-item">
+
+            <span>
+                Total
+            </span>
+
+            <strong id="livesTotal">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="lives-summary-item">
+
+            <span>
+                Agendadas
+            </span>
+
+            <strong id="livesAgendadas">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="lives-summary-item">
+
+            <span>
+                Ao vivo
+            </span>
+
+            <strong
+                class="live-number"
+                id="livesAoVivo"
+            >
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="lives-summary-item">
+
+            <span>
+                Encerradas
+            </span>
+
+            <strong id="livesEncerradas">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         LISTA DE LIVES
+    ====================================== -->
+
+    <div
+        class="lives-list"
+        id="livesList"
+    >
+
+        <!-- =================================
+             LOADING
+        ================================== -->
+
+        <div
+            class="lives-loading"
+            id="livesLoading"
+        >
+
+            <div class="loading-spinner"></div>
+
+            <span>
+                Carregando lives...
+            </span>
+
+        </div>
+
+
+        <!-- =================================
+             ESTADO VAZIO
+        ================================== -->
+
+        <div
+            class="lives-empty"
+            id="livesEmpty"
+            hidden
+        >
+
+            <div class="lives-empty-icon">
+                🔴
+            </div>
+
+            <h3>
+                Nenhuma live cadastrada
+            </h3>
+
+            <p>
+                Crie sua primeira transmissão
+                para começar.
+            </p>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="novaLiveEmptyButton"
+            >
+                + Criar primeira live
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     MODAL | NOVA LIVE
+========================================== -->
+
+<div
+    class="modal-overlay"
+    id="novaLiveModal"
+    hidden
+>
+
+    <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="novaLiveTitulo"
+    >
+
+        <!-- =================================
+             CABEÇALHO
+        ================================== -->
+
+        <header class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    TRANSMISSÃO
+                </span>
+
+                <h2 id="novaLiveTitulo">
+                    Nova live
+                </h2>
+
+                <p>
+                    Vincule a transmissão a um
+                    curso e uma turma.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="fecharNovaLive"
+                aria-label="Fechar"
+            >
+                ×
+            </button>
+
+        </header>
+
+
+
+        <!-- =================================
+             FORMULÁRIO
+        ================================== -->
+
+        <form
+            id="novaLiveForm"
+            class="live-form"
+        >
+
+            <!-- CURSO -->
+
+            <div class="form-group">
+
+                <label for="liveCurso">
+                    Curso
+                </label>
+
+                <select
+                    id="liveCurso"
+                    name="curso_id"
+                    required
+                >
+
+                    <option value="">
+                        Selecione o curso
+                    </option>
+
+                </select>
+
+                <small>
+                    Selecione o curso que receberá
+                    esta aula.
+                </small>
+
+            </div>
+
+
+
+            <!-- TURMA -->
+
+            <div class="form-group">
+
+                <label for="liveTurma">
+                    Turma
+                </label>
+
+                <select
+                    id="liveTurma"
+                    name="turma_id"
+                    required
+                    disabled
+                >
+
+                    <option value="">
+                        Primeiro selecione o curso
+                    </option>
+
+                </select>
+
+                <small>
+                    A live ficará disponível somente
+                    para os alunos desta turma.
+                </small>
+
+            </div>
+
+
+
+            <!-- TÍTULO -->
+
+            <div class="form-group">
+
+                <label for="liveTitulo">
+                    Título da aula
+                </label>
+
+                <input
+                    type="text"
+                    id="liveTitulo"
+                    name="titulo"
+                    placeholder="Ex.: Aula 01 • Introdução à Teologia"
+                    maxlength="150"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIÇÃO -->
+
+            <div class="form-group">
+
+                <label for="liveDescricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="liveDescricao"
+                    name="descricao"
+                    rows="4"
+                    maxlength="1000"
+                    placeholder="Descreva o conteúdo desta aula..."
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- YOUTUBE -->
+
+            <div class="form-group">
+
+                <label for="liveYoutube">
+                    Link do YouTube
+                </label>
+
+                <input
+                    type="url"
+                    id="liveYoutube"
+                    name="youtube_url"
+                    placeholder="https://www.youtube.com/watch?v=..."
+                >
+
+                <small>
+                    Cole o link da transmissão ou do
+                    vídeo do YouTube.
+                </small>
+
+            </div>
+
+
+
+            <!-- ID DO VÍDEO -->
+
+            <div class="form-group">
+
+                <label for="liveYoutubeId">
+                    ID do vídeo / transmissão
+                </label>
+
+                <input
+                    type="text"
+                    id="liveYoutubeId"
+                    name="youtube_video_id"
+                    placeholder="Ex.: dQw4w9WgXcQ"
+                    maxlength="100"
+                >
+
+                <small>
+                    Pode ser preenchido automaticamente
+                    a partir do link.
+                </small>
+
+            </div>
+
+
+
+            <!-- DATA E HORÁRIO -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="liveData">
+                        Data
+                    </label>
+
+                    <input
+                        type="date"
+                        id="liveData"
+                        name="data"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="liveHorario">
+                        Horário
+                    </label>
+
+                    <input
+                        type="time"
+                        id="liveHorario"
+                        name="horario"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="liveAtiva">
+                    Status
+                </label>
+
+                <select
+                    id="liveAtiva"
+                    name="ativa"
+                >
+
+                    <option value="true">
+                        Ativa
+                    </option>
+
+                    <option value="false">
+                        Inativa
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- MENSAGEM -->
+
+            <div
+                class="form-message"
+                id="novaLiveMensagem"
+                hidden
+            ></div>
+
+
+
+            <!-- AÇÕES -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    id="cancelarNovaLive"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                    id="salvarNovaLive"
+                >
+                    Criar live
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     MODAL | GERENCIAR LIVE
+========================================== -->
+
+<div
+    class="modal-overlay"
+    id="gerenciarLiveModal"
+    hidden
+>
+
+    <div
+        class="live-management-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gerenciarLiveTitulo"
+    >
+
+        <!-- CABEÇALHO -->
+
+        <header class="live-management-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    CONTROLE DA AULA
+                </span>
+
+                <div class="live-title-row">
+
+                    <h2 id="gerenciarLiveTitulo">
+                        Aula
+                    </h2>
+
+                    <span
+                        class="live-status"
+                        id="gerenciarLiveStatus"
+                    >
+                        AGENDADA
+                    </span>
+
+                </div>
+
+                <p id="gerenciarLiveTurma">
+                    Turma
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="fecharGerenciarLive"
+                aria-label="Fechar gerenciamento da live"
+            >
+                ×
+            </button>
+
+        </header>
+
+
+
+        <!-- CONTEÚDO -->
+
+        <div class="live-management-content">
+
+            <!-- PLAYER -->
+
+            <section class="live-player-section">
+
+                <div
+                    class="live-player"
+                    id="livePlayer"
+                >
+
+                    <div class="live-player-placeholder">
+
+                        <span>
+                            ▶
+                        </span>
+
+                        <strong>
+                            Transmissão do YouTube
+                        </strong>
+
+                        <small>
+                            A transmissão aparecerá aqui.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- INFORMAÇÕES -->
+
+            <section class="live-info-section">
+
+                <div class="live-info-item">
+
+                    <span>
+                        CURSO
+                    </span>
+
+                    <strong id="gerenciarLiveCurso">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="live-info-item">
+
+                    <span>
+                        TURMA
+                    </span>
+
+                    <strong id="gerenciarLiveTurmaInfo">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="live-info-item">
+
+                    <span>
+                        DATA
+                    </span>
+
+                    <strong id="gerenciarLiveData">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="live-info-item">
+
+                    <span>
+                        HORÁRIO
+                    </span>
+
+                    <strong id="gerenciarLiveHorario">
+                        —
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================
+                 CONTROLE DE PRESENÇA
+            ================================== -->
+
+            <section class="live-presence-control">
+
+                <div class="live-presence-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            PRESENÇA
+                        </span>
+
+                        <h3>
+                            Controle de presença
+                        </h3>
+
+                        <p>
+                            Abra uma chamada para que
+                            os alunos confirmem presença.
+                        </p>
+
+                    </div>
+
+
+                    <div
+    class="presence-counter"
+    id="presenceCounter"
+    hidden
+>
+    0 chamadas
+</div>
+
+                </div>
+
+
+
+                <!-- CHAMADA ATUAL -->
+
+<div
+    class="presence-current"
+    id="presenceCurrent"
+    hidden
+>
+
+    <div class="presence-live-indicator">
+
+        <span></span>
+
+        CHAMADA ABERTA
+
+    </div>
+
+    <strong id="presenceTimer">
+        15
+    </strong>
+
+    <span>
+        segundos restantes
+    </span>
+
+    <div
+        class="presence-response"
+        hidden
+    >
+
+        <strong id="presenceRespondidas">
+            0
+        </strong>
+
+        /
+
+        <strong id="presenceTotalAlunos">
+            0
+        </strong>
+
+        alunos responderam
+
+    </div>
+
+</div>
+
+
+                <!-- BOTÃO -->
+
+                <button
+                    type="button"
+                    class="presence-button"
+                    id="abrirChamadaButton"
+                >
+                    ✓ Abrir chamada de presença
+                </button>
+
+
+
+                <!-- ÚLTIMA CHAMADA -->
+
+                <div
+                    class="presence-last"
+                    id="presenceLast"
+                    hidden
+                >
+
+                    <span>
+                        Última chamada
+                    </span>
+
+                    <strong id="presenceLastResult">
+                        —
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+           <!-- =================================
+     AÇÕES DA LIVE
+================================== -->
+
+<div class="live-management-actions">
+
+    <button
+        type="button"
+        class="primary-button"
+        id="iniciarLiveButton"
+    >
+        ▶ Iniciar live
+    </button>
+
+    <button
+        type="button"
+        class="secondary-button"
+        id="editarLiveButton"
+    >
+        Editar live
+    </button>
+
+    <button
+        type="button"
+        class="danger-button"
+        id="encerrarLiveButton"
+    >
+        Encerrar live
+    </button>
+
+</div>
+
+
+    </div>
+
+</div>
+
+
+        <!-- =========================================
+             PRESENÇAS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-presencas"
+        >
+
+            <div class="section-header">
+
+                <span class="eyebrow">
+                    ACOMPANHAMENTO
+                </span>
+
+                <h2>
+                    Presenças
+                </h2>
+
+                <p>
+                    Acompanhe as confirmações de presença em cada live.
+                </p>
+
+            </div>
+
+            <div class="presencas-summary">
+                <div><span>REGISTROS</span><strong id="presencasTotal">0</strong></div>
+                <div><span>CONFIRMADAS</span><strong id="presencasConfirmadas">0</strong></div>
+                <div><span>FREQUÊNCIA MÉDIA</span><strong id="presencasMedia">0%</strong></div>
+            </div>
+
+            <div class="presencas-toolbar">
+                <div class="presencas-search">
+                    <span>⌕</span>
+                    <input type="search" id="presencasBusca" placeholder="Pesquisar aluno, live, curso ou turma..." autocomplete="off">
+                </div>
+
+                <div class="presencas-filters">
+                    <select id="presencasFiltroCurso" aria-label="Filtrar por curso">
+                        <option value="">Todos os cursos</option>
+                    </select>
+                    <select id="presencasFiltroTurma" aria-label="Filtrar por turma">
+                        <option value="">Todas as turmas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="presencas-table-wrap">
+                <table class="presencas-table">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Curso / turma</th>
+                            <th>Live</th>
+                            <th>Chamada</th>
+                            <th>Resposta</th>
+                            <th>Horário da resposta</th>
+                            <th>Frequência</th>
+                        </tr>
+                    </thead>
+                    <tbody id="presencasLista">
+                        <tr><td colspan="7" class="presencas-loading">Carregando presenças...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" id="presencasEmpty" hidden>
+                <div class="empty-icon">✓</div>
+                <h3>Nenhum registro encontrado</h3>
+                <p>Ajuste os filtros ou aguarde as chamadas de presença das lives.</p>
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             RELATÓRIOS
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-relatorios"
+        >
+
+            <div class="section-header">
+                <span class="eyebrow">ACOMPANHAMENTO</span>
+                <h2>Relatórios de frequência</h2>
+                <p>Escolha os dados que deseja incluir e gere um PDF formatado.</p>
+            </div>
+
+            <div class="relatorios-layout">
+                <section class="relatorio-card">
+                    <h3>1. Filtre os dados</h3>
+                    <div class="relatorio-filters">
+                        <div class="form-group">
+                            <label for="relatorioCurso">Curso</label>
+                            <select id="relatorioCurso"><option value="">Todos os cursos</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="relatorioTurma">Turma</label>
+                            <select id="relatorioTurma"><option value="">Todas as turmas</option></select>
+                        </div>
+                    </div>
+                    <p class="relatorio-help" id="relatorioResumo">Carregando dados de frequência...</p>
+                </section>
+
+                <section class="relatorio-card">
+                    <h3>2. Escolha as informações</h3>
+                    <div class="relatorio-fields">
+                        <label><input type="checkbox" value="nome" checked> Nome do aluno</label>
+                        <label><input type="checkbox" value="email" checked> E-mail</label>
+                        <label><input type="checkbox" value="curso" checked> Curso</label>
+                        <label><input type="checkbox" value="turma" checked> Turma</label>
+                        <label><input type="checkbox" value="frequencia" checked> Frequência (%)</label>
+                        <label><input type="checkbox" value="chamadas" checked> Chamadas respondidas</label>
+                    </div>
+                    <button type="button" class="primary-button" id="gerarRelatorioPdf">↓ Gerar PDF</button>
+                </section>
+            </div>
+
+            <div class="empty-state" id="relatorioEmpty" hidden>
+                <div class="empty-icon">📊</div>
+                <h3>Nenhum registro para o relatório</h3>
+                <p>Selecione outra turma ou aguarde registros de presença.</p>
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CONFIGURAÇÕES
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-configuracoes"
+        >
+
+            <div class="section-header">
+
+                <span class="eyebrow">
+                    SISTEMA
+                </span>
+
+                <h2>
+                    Configurações
+                </h2>
+
+                <p>
+                    Configurações gerais da plataforma.
+                </p>
+
+            </div>
+
+            <div class="placeholder-card">
+
+                <span>⚙</span>
+
+                <h3>
+                    Configurações
+                </h3>
+
+                <p>
+                    Esta área será desenvolvida
+                    posteriormente.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/supabase.js"></script>
+<script src="../js/gestao.js"></script>
+<script src="../js/alunos.js"></script>
+<script src="../js/professores.js"></script>
+<script src="../js/cursos.js"></script>
+<script src="../js/turmas.js"></script>
+<script src="../js/lives.js"></script>
+<script src="../js/presencas.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="../js/relatorios.js"></script>
+
+<script>
+    console.log("===== MEP EAD =====");
+    console.log("gestao.js carregado");
+    console.log("alunos.js carregado");
+    console.log("professores.js carregado");
+    console.log("cursos.js carregado");
+    console.log("turmas.js carregado");
+</script>
