@@ -3,7 +3,7 @@
     "use strict";
     if (typeof supabaseClient === "undefined") return;
 
-    let dados = [], cursos = [], turmas = [];
+    let dados = [], cursos = [], turmas = [], lives = [];
     const $ = id => document.getElementById(id);
     const normalizar = valor => String(valor || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
     const hoje = () => new Date().toLocaleDateString("pt-BR");
@@ -20,11 +20,35 @@
     function preencherFiltros() {
         $("relatorioCurso").innerHTML = `<option value="">Todos os cursos</option>${cursos.map(c => `<option value="${c.id}">${c.nome}</option>`).join("")}`;
         $("relatorioTurma").innerHTML = `<option value="">Todas as turmas</option>${turmas.map(t => `<option value="${t.id}">${t.nome}</option>`).join("")}`;
+        atualizarFiltroLives();
+    }
+
+    function atualizarFiltroLives() {
+        const seletor = $("relatorioLive");
+        if (!seletor) return;
+        const cursoId = $("relatorioCurso")?.value || "";
+        const turmaId = $("relatorioTurma")?.value || "";
+        const valorAtual = seletor.value;
+        const turmaPorId = new Map(turmas.map(turma => [turma.id, turma]));
+        const opcoes = lives.filter(live => {
+            const turma = turmaPorId.get(live.turma_id);
+            return (!turmaId || live.turma_id === turmaId) && (!cursoId || turma?.curso_id === cursoId);
+        });
+        seletor.innerHTML = `<option value="">Todas as aulas e lives</option>${opcoes.map(live => `<option value="${live.id}">${live.titulo || "Aula sem título"} · ${formatarDataLive(live.data_live)}</option>`).join("")}`;
+        if ([...seletor.options].some(opcao => opcao.value === valorAtual)) seletor.value = valorAtual;
     }
 
     function filtrados() {
-        const cursoId = $("relatorioCurso").value, turmaId = $("relatorioTurma").value;
-        return dados.filter(item => (!cursoId || item.curso.id === cursoId) && (!turmaId || item.turma.id === turmaId));
+        const cursoId = $("relatorioCurso").value;
+        const turmaId = $("relatorioTurma").value;
+        const liveId = $("relatorioLive")?.value || "";
+        return dados.filter(item => (!cursoId || item.curso.id === cursoId) && (!turmaId || item.turma.id === turmaId) && (!liveId || item.live.id === liveId));
+    }
+
+    function formatarDataLive(valor) {
+        if (!valor) return "sem data";
+        const data = new Date(`${String(valor).slice(0, 10)}T00:00:00`);
+        return Number.isNaN(data.getTime()) ? String(valor) : data.toLocaleDateString("pt-BR");
     }
 
     function atualizarResumo() {
@@ -36,33 +60,47 @@
     async function carregarDados() {
         try {
             const { data: presencas, error } = await supabaseClient.from("presencas")
-                .select("aula_id,turma_id,aluno_id,presente,respondido_em,created_at");
+                .select("chamada_id,aluno_id,presente,respondido_em,created_at");
             if (error) throw error;
             const registros = presencas || [];
+            const idsChamadas = [...new Set(registros.map(item => item.chamada_id).filter(Boolean))];
+            const { data: chamadas, error: erroChamadas } = idsChamadas.length
+                ? await supabaseClient.from("presencas_chamadas").select("id,aula_id,turma_id,numero").in("id", idsChamadas)
+                : { data: [], error: null };
+            if (erroChamadas) throw erroChamadas;
+            const chamadasPorId = new Map((chamadas || []).map(item => [item.id, item]));
+            const registrosComContexto = registros.map(registro => ({ ...registro, chamada: chamadasPorId.get(registro.chamada_id) }))
+                .filter(registro => registro.chamada?.aula_id && registro.chamada?.turma_id);
             const idsAlunos = [...new Set(registros.map(item => item.aluno_id).filter(Boolean))];
-            const idsTurmas = [...new Set(registros.map(item => item.turma_id).filter(Boolean))];
-            const [alunosResposta, turmasResposta, cursosResposta] = await Promise.all([
+            const idsTurmas = [...new Set(registrosComContexto.map(item => item.chamada.turma_id))];
+            const idsLives = [...new Set(registrosComContexto.map(item => item.chamada.aula_id))];
+            const [alunosResposta, turmasResposta, cursosResposta, livesResposta] = await Promise.all([
                 idsAlunos.length ? supabaseClient.from("usuarios").select("id,nome,email").in("id", idsAlunos) : Promise.resolve({ data: [] }),
                 idsTurmas.length ? supabaseClient.from("turmas").select("id,curso_id,nome").in("id", idsTurmas) : Promise.resolve({ data: [] }),
-                supabaseClient.from("cursos").select("id,nome").order("nome")
+                supabaseClient.from("cursos").select("id,nome").order("nome"),
+                idsLives.length ? supabaseClient.from("lives").select("id,turma_id,titulo,data_live,horario_inicio").in("id", idsLives) : Promise.resolve({ data: [] })
             ]);
-            const erro = [alunosResposta, turmasResposta, cursosResposta].find(resposta => resposta.error)?.error;
+            const erro = [alunosResposta, turmasResposta, cursosResposta, livesResposta].find(resposta => resposta.error)?.error;
             if (erro) throw erro;
             cursos = cursosResposta.data || [];
             turmas = turmasResposta.data || [];
+            lives = livesResposta.data || [];
             const alunosPorId = new Map((alunosResposta.data || []).map(item => [item.id, item]));
             const turmasPorId = new Map(turmas.map(item => [item.id, item]));
             const cursosPorId = new Map(cursos.map(item => [item.id, item]));
+            const livesPorId = new Map(lives.map(item => [item.id, item]));
             const grupos = new Map();
-            registros.forEach(item => {
-                const chave = `${item.aluno_id}:${item.turma_id}`;
-                if (!grupos.has(chave)) grupos.set(chave, { alunoId:item.aluno_id, turmaId:item.turma_id, total:0, confirmadas:0 });
+            registrosComContexto.forEach(item => {
+                const turmaId = item.chamada.turma_id;
+                const liveId = item.chamada.aula_id;
+                const chave = `${item.aluno_id}:${turmaId}:${liveId}`;
+                if (!grupos.has(chave)) grupos.set(chave, { alunoId:item.aluno_id, turmaId, liveId, total:0, confirmadas:0 });
                 const grupo = grupos.get(chave); grupo.total++;
                 if (item.presente === true) grupo.confirmadas++;
             });
             dados = [...grupos.values()].map(grupo => {
                 const turma = turmasPorId.get(grupo.turmaId) || {};
-                return { aluno: alunosPorId.get(grupo.alunoId) || {}, turma, curso: cursosPorId.get(turma.curso_id) || {}, total:grupo.total, confirmadas:grupo.confirmadas, frequencia:grupo.total ? Math.round(grupo.confirmadas * 100 / grupo.total) : 0 };
+                return { aluno: alunosPorId.get(grupo.alunoId) || {}, turma, curso: cursosPorId.get(turma.curso_id) || {}, live: livesPorId.get(grupo.liveId) || { id: grupo.liveId, titulo: "Aula" }, total:grupo.total, confirmadas:grupo.confirmadas, frequencia:grupo.total ? Math.round(grupo.confirmadas * 100 / grupo.total) : 0 };
             }).sort((a, b) => String(a.aluno.nome || "").localeCompare(String(b.aluno.nome || ""), "pt-BR"));
             preencherFiltros(); atualizarResumo();
         } catch (erro) {
@@ -116,7 +154,10 @@
         const valor = (item, campo) => ({ nome:item.aluno.nome || "—", email:item.aluno.email || "—", curso:item.curso.nome || "—", turma:item.turma.nome || "—", frequencia:`${item.frequencia}%`, chamadas:`${item.confirmadas}/${item.total}` })[campo];
         const cursoSelecionado = cursos.find(c => c.id === $("relatorioCurso").value);
         const turmaSelecionada = turmas.find(t => t.id === $("relatorioTurma").value);
-        const subtitulo = turmaSelecionada ? `Turma: ${turmaSelecionada.nome}` : cursoSelecionado ? `Curso: ${cursoSelecionado.nome}` : "Todos os cursos e turmas";
+        const liveSelecionada = lives.find(live => live.id === $("relatorioLive")?.value);
+        const subtitulo = liveSelecionada
+            ? `Aula/live: ${liveSelecionada.titulo || "Aula"} · ${formatarDataLive(liveSelecionada.data_live)}`
+            : turmaSelecionada ? `Turma: ${turmaSelecionada.nome}` : cursoSelecionado ? `Curso: ${cursoSelecionado.nome}` : "Todos os cursos e turmas";
         const margem = 15, largura = 267, coluna = largura / campos.length;
         let y = 15, pagina = 1;
         function cabecalho() {
@@ -140,14 +181,15 @@
             y += 8;
         });
         rodape();
-        const sufixo = normalizar(turmaSelecionada?.nome || cursoSelecionado?.nome || "geral") || "geral";
+        const sufixo = normalizar(liveSelecionada?.titulo || turmaSelecionada?.nome || cursoSelecionado?.nome || "geral") || "geral";
         const dataArquivo = new Date().toISOString().slice(0,10).replaceAll("-", ".");
         pdf.save(`relatorio-${dataArquivo}-${sufixo}.pdf`);
     }
 
     garantirPaginaPrincipal();
-    $("relatorioCurso")?.addEventListener("change", atualizarResumo);
-    $("relatorioTurma")?.addEventListener("change", atualizarResumo);
+    $("relatorioCurso")?.addEventListener("change", () => { atualizarFiltroLives(); atualizarResumo(); });
+    $("relatorioTurma")?.addEventListener("change", () => { atualizarFiltroLives(); atualizarResumo(); });
+    $("relatorioLive")?.addEventListener("change", atualizarResumo);
     $("gerarRelatorioPdf")?.addEventListener("click", gerarPdf);
     document.querySelector('[data-page="relatorios"]')?.addEventListener("click", carregarDados);
     console.log("MEP EAD | RELATÓRIOS | JS carregado");

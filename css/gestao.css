@@ -11586,3 +11586,188 @@ body.modal-open {
     .presencas-search, .presencas-filters select { width: 100%; }
     .relatorios-layout, .relatorio-filters, .relatorio-fields { grid-template-columns: 1fr; }
 }
+
+
+/* =========================================================
+   AJUSTE FINAL | CARDS E CONTROLE DE LIVES
+   O JavaScript atual monta esta estrutura de card; as regras
+   abaixo garantem um visual compacto e consistente.
+========================================================= */
+
+#page-lives .live-card {
+    display: block;
+    overflow: hidden;
+    margin-bottom: 14px;
+    padding: 0;
+    background: #0d0d0d;
+    border: 1px solid #292929;
+    border-radius: 14px;
+    box-shadow: none;
+}
+
+#page-lives .live-card-header {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 18px;
+    border-bottom: 1px solid #222;
+}
+
+#page-lives .live-card-eyebrow {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--red);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .8px;
+}
+
+#page-lives .live-card-header h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 850;
+}
+
+#page-lives .live-card-body {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    padding: 16px 18px;
+}
+
+#page-lives .live-card-video,
+#page-lives .live-card-video-placeholder {
+    width: 100%;
+    height: 118px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #292929;
+    border-radius: 10px;
+    background: #151515;
+}
+
+#page-lives .live-card-video img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+#page-lives .live-card-info {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+}
+
+#page-lives .live-info-row span {
+    display: block;
+    margin-bottom: 3px;
+    color: #727272;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .55px;
+}
+
+#page-lives .live-info-row strong {
+    display: block;
+    overflow: hidden;
+    color: #ededed;
+    font-size: 12px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#page-lives .live-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 18px;
+    border-top: 1px solid #222;
+    background: #101010;
+}
+
+#page-lives .live-action-button,
+#gerenciarLiveModal .live-management-actions .primary-button,
+#gerenciarLiveModal .live-management-actions .secondary-button,
+#gerenciarLiveModal .live-management-actions .danger-button {
+    min-height: 34px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #333;
+    border-radius: 7px;
+    background: #191919;
+    color: #e6e6e6;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+
+#page-lives .live-action-button:hover,
+#gerenciarLiveModal .live-management-actions button:hover {
+    transform: translateY(-1px);
+    border-color: #555;
+    background: #242424;
+}
+
+#page-lives .live-action-button.primary,
+#gerenciarLiveModal .live-management-actions .primary-button {
+    border-color: var(--red);
+    background: var(--red);
+    color: #fff;
+}
+
+#page-lives .live-action-button.primary:hover,
+#gerenciarLiveModal .live-management-actions .primary-button:hover {
+    border-color: #ff4c4c;
+    background: #e31b1b;
+}
+
+#page-lives .live-action-button.danger,
+#gerenciarLiveModal .live-management-actions .danger-button {
+    border-color: rgba(255, 94, 94, .42);
+    background: transparent;
+    color: #ff8989;
+}
+
+@media (max-width: 650px) {
+    #page-lives .live-card-body {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    #page-lives .live-card-video,
+    #page-lives .live-card-video-placeholder {
+        height: 155px;
+    }
+
+    #page-lives .live-card-info {
+        grid-template-columns: 1fr;
+    }
+
+    #page-lives .live-card-actions,
+    #gerenciarLiveModal .live-management-actions {
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #page-lives .live-card-actions .live-action-button,
+    #gerenciarLiveModal .live-management-actions button {
+        width: auto;
+        flex: 1 1 110px;
+    }
+}
