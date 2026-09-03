@@ -8,10 +8,18 @@
     "use strict";
 
     const DEBUG = true;
-    const LIVE_SELECT = `
+    /* Os dados públicos da aula não incluem o link do vídeo.
+       O YouTube só é consultado depois que o status for confirmado como ao vivo. */
+    const LIVE_SELECT_BASE = `
         id, turma_id, professor_id, titulo, descricao,
-        youtube_url, youtube_video_id, data_live,
-        horario_inicio, horario_fim, status, created_at, updated_at
+        data_live, horario_inicio, horario_fim,
+        status, created_at, updated_at
+    `;
+    const LIVE_SELECT_WITH_VIDEO = `
+        id, turma_id, professor_id, titulo, descricao,
+        data_live, horario_inicio, horario_fim,
+        status, created_at, updated_at,
+        youtube_url, youtube_video_id
     `;
     const CHAT_SELECT = `
         id, live_id, aluno_id, mensagem, created_at,
@@ -22,6 +30,7 @@
         authUser: null,
         usuario: null,
         live: null,
+        financeiro: null,
         chamada: null,
         participante: null,
         liveAoVivo: false,
@@ -29,6 +38,9 @@
         timeoutPresenca: null,
         intervaloContadorPresenca: null,
         intervaloStatusLive: null,
+        timeoutStatusLive: null,
+        canalStatusLive: null,
+        atualizandoStatusLive: false,
         intervaloPresenca: null,
         canalPresenca: null,
         intervaloParticipacao: null,
@@ -59,7 +71,10 @@
 
     function formatarData(valor) {
         if (!valor) return "—";
-        const data = new Date(valor);
+        const correspondencia = String(valor).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+        const data = correspondencia
+            ? new Date(Number(correspondencia[1]), Number(correspondencia[2]) - 1, Number(correspondencia[3]))
+            : new Date(valor);
         return Number.isNaN(data.getTime()) ? String(valor) : data.toLocaleDateString("pt-BR", {
             day: "2-digit", month: "2-digit", year: "numeric"
         });
@@ -179,16 +194,31 @@
         return true;
     }
 
-    async function buscarLive(id) {
-        const { data, error } = await supabaseClient.from("lives").select(LIVE_SELECT).eq("id", id).maybeSingle();
+    async function buscarLive(id, incluirVideo = false) {
+        const campos = incluirVideo ? LIVE_SELECT_WITH_VIDEO : LIVE_SELECT_BASE;
+        const { data, error } = await supabaseClient.from("lives").select(campos).eq("id", id).maybeSingle();
         if (error) throw error;
         if (!data) throw new Error("A aula não foi encontrada na tabela lives.");
         return data;
     }
 
+    async function verificarAcessoFinanceiroLive(id) {
+        const { data, error } = await supabaseClient.rpc("aluno_status_financeiro_live", { p_live_id:id });
+        if (error) {
+            warn("Não foi possível consultar a mensalidade da aula:", error);
+            return true;
+        }
+        state.financeiro = data || null;
+        if (data?.liberado === false) {
+            throw new Error("O acesso a este curso está pausado por mensalidade pendente. Regularize pelo Portal do Aluno; sua matrícula e seu progresso continuam preservados.");
+        }
+        return true;
+    }
+
     async function carregarLive() {
         const id = obterIdDaLive();
         if (!id) throw new Error("Nenhuma aula foi informada. O endereço precisa conter ?id=ID_DA_LIVE.");
+        await verificarAcessoFinanceiroLive(id);
         const live = await buscarLive(id);
         await verificarAcessoTurma(live);
         state.live = live;
@@ -217,12 +247,10 @@
     function obterStatusLive(live = state.live) { return normalizarTexto(live?.status); }
     function liveEstaAoVivo(live = state.live) {
         const status = obterStatusLive(live);
-        if (["ao vivo", "ao_vivo", "live"].includes(status)) return true;
-        if (["encerrada", "encerrado", "finalizada", "finalizado"].includes(status)) return false;
-        const inicio = construirDataHorario(live?.data_live, live?.horario_inicio);
-        const fim = construirDataHorario(live?.data_live, live?.horario_fim);
-        const agora = new Date();
-        return Boolean(inicio && agora >= inicio && (!fim || agora <= fim));
+        /* Data e horário informam quando a aula está prevista, mas não liberam
+           a transmissão. Apenas a ação do administrador/professor que muda o
+           status para ao vivo autoriza o carregamento do player. */
+        return ["ao vivo", "ao_vivo", "ao-vivo", "live"].includes(status);
     }
 
     function atualizarStatusVisual(rotulo, descricao) {
@@ -507,7 +535,28 @@
         if (!state.live) return;
         const status = obterStatusLive();
         state.liveAoVivo = liveEstaAoVivo();
-        if (state.liveAoVivo) { await mostrarAoVivo(); return; }
+        if (state.liveAoVivo) {
+            /* Confirma novamente o status na mesma consulta que recebe o vídeo.
+               Isso evita liberar um link se o status mudar durante a atualização. */
+            const liveComVideo = await buscarLive(state.live.id, true);
+            if (!liveEstaAoVivo(liveComVideo)) {
+                state.live = liveComVideo;
+                state.liveAoVivo = false;
+                atualizarInformacoesAula();
+                pararParticipacao(); pararMonitoramentoPresenca(); pararChat();
+                const statusAtualizado = obterStatusLive(liveComVideo);
+                if (["encerrada", "encerrado", "finalizada", "finalizado"].includes(statusAtualizado)) {
+                    mostrarEncerrada();
+                } else {
+                    mostrarAgendada();
+                }
+                return;
+            }
+            state.live = liveComVideo;
+            atualizarInformacoesAula();
+            await mostrarAoVivo();
+            return;
+        }
         pararParticipacao(); pararMonitoramentoPresenca(); pararChat();
         if (["encerrada", "encerrado", "finalizada", "finalizado"].includes(status) ||
             (state.live.data_live && state.live.horario_fim && construirDataHorario(state.live.data_live, state.live.horario_fim) < new Date())) {
@@ -519,16 +568,60 @@
 
     async function atualizarStatusLive() {
         if (!state.live?.id) return;
-        state.live = await buscarLive(state.live.id);
-        atualizarInformacoesAula();
-        await atualizarEstadoDaLive();
+        if (state.atualizandoStatusLive) {
+            clearTimeout(state.timeoutStatusLive);
+            state.timeoutStatusLive = setTimeout(() => {
+                atualizarStatusLive().catch(erro => warn("Erro ao concluir atualização da live:", erro));
+            }, 300);
+            return;
+        }
+        state.atualizandoStatusLive = true;
+        try {
+            state.live = await buscarLive(state.live.id);
+            atualizarInformacoesAula();
+            await atualizarEstadoDaLive();
+        } finally {
+            state.atualizandoStatusLive = false;
+        }
+    }
+
+    function agendarAtualizacaoStatusLive() {
+        clearTimeout(state.timeoutStatusLive);
+        state.timeoutStatusLive = setTimeout(() => {
+            atualizarStatusLive().catch(erro => warn("Erro ao receber atualização da live:", erro));
+        }, 120);
+    }
+
+    function iniciarRealtimeStatusLive() {
+        if (!state.live?.id || state.canalStatusLive || !supabaseClient.channel) return;
+        state.canalStatusLive = supabaseClient
+            .channel(`status-aula-${state.live.id}`)
+            .on("postgres_changes", {
+                event: "UPDATE",
+                schema: "public",
+                table: "lives",
+                filter: `id=eq.${state.live.id}`
+            }, agendarAtualizacaoStatusLive)
+            .subscribe(status => {
+                if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                    warn("Atualização em tempo real da aula indisponível; mantendo verificação automática.", status);
+                }
+            });
     }
 
     function iniciarMonitoramentoLive() {
         pararMonitoramentoLive();
-        state.intervaloStatusLive = setInterval(() => atualizarStatusLive().catch(erro => warn("Erro ao atualizar a live:", erro)), 30000);
+        iniciarRealtimeStatusLive();
+        state.intervaloStatusLive = setInterval(() => atualizarStatusLive().catch(erro => warn("Erro ao atualizar a live:", erro)), 5000);
     }
-    function pararMonitoramentoLive() { clearInterval(state.intervaloStatusLive); state.intervaloStatusLive = null; }
+    function pararMonitoramentoLive() {
+        clearInterval(state.intervaloStatusLive);
+        clearTimeout(state.timeoutStatusLive);
+        state.intervaloStatusLive = null;
+        state.timeoutStatusLive = null;
+        if (state.canalStatusLive) supabaseClient.removeChannel?.(state.canalStatusLive);
+        state.canalStatusLive = null;
+    }
 
     function fecharOverlayPresenca() {
         clearTimeout(state.timeoutPresenca);
@@ -831,15 +924,18 @@
     }
 
     document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible" && state.liveAoVivo) {
-            atualizarParticipacao().catch(erro => warn("Erro ao atualizar participação:", erro));
-            verificarChamadaPresenca().catch(erro => warn("Erro ao verificar presença:", erro));
+        if (document.visibilityState === "visible") {
+            atualizarStatusLive().catch(erro => warn("Erro ao retomar atualização da aula:", erro));
+            if (state.liveAoVivo) {
+                atualizarParticipacao().catch(erro => warn("Erro ao atualizar participação:", erro));
+                verificarChamadaPresenca().catch(erro => warn("Erro ao verificar presença:", erro));
+            }
         }
     });
-    window.addEventListener("pagehide", () => { pararChat(); registrarSaidaLive(); });
+    window.addEventListener("pagehide", () => { pararMonitoramentoLive(); pararChat(); registrarSaidaLive(); });
 
     window.MEP_AULA = {
-        state, obterIdDaLive, carregarLive, atualizarStatusLive, verificarChamadaPresenca,
+        state, obterIdDaLive, carregarLive, atualizarStatusLive, liveEstaAoVivo, verificarChamadaPresenca,
         confirmarPresenca, iniciarParticipacao, atualizarParticipacao, iniciarChat,
         enviarMensagemChat, alternarChat, voltarParaAulas, logout
     };

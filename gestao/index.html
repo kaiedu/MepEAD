@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/gestao.css"
+        href="../css/gestao.css?v=20260903-perfil-aluno-2"
     >
 
  <link rel="icon" type="image/png" href="img/capa.png">
@@ -138,6 +138,27 @@
                     <span class="nav-icon">♟</span>
 
                     <span>Professores</span>
+
+                </button>
+
+            </div>
+
+
+            <div class="nav-section">
+
+                <span class="nav-title">
+                    FINANCEIRO
+                </span>
+
+                <button
+                    class="nav-item"
+                    data-page="mensalidades"
+                    aria-controls="page-mensalidades"
+                >
+
+                    <span class="nav-icon">$</span>
+
+                    <span>Financeiro</span>
 
                 </button>
 
@@ -3713,6 +3734,8 @@
 
 </div>
 
+</div>
+
 
         <!-- =========================================
              PRESENÇAS
@@ -3734,14 +3757,14 @@
                 </h2>
 
                 <p>
-                    Acompanhe as confirmações de presença em cada live.
+                    Acompanhe cada aluno por turma, com o consolidado das aulas e chamadas.
                 </p>
 
             </div>
 
             <div class="presencas-summary">
-                <div><span>REGISTROS</span><strong id="presencasTotal">0</strong></div>
-                <div><span>CONFIRMADAS</span><strong id="presencasConfirmadas">0</strong></div>
+                <div><span>ALUNOS / TURMAS</span><strong id="presencasTotal">0</strong></div>
+                <div><span>CONFIRMAÇÕES</span><strong id="presencasConfirmadas">0</strong></div>
                 <div><span>FREQUÊNCIA MÉDIA</span><strong id="presencasMedia">0%</strong></div>
             </div>
 
@@ -3767,15 +3790,14 @@
                         <tr>
                             <th>Aluno</th>
                             <th>Curso / turma</th>
-                            <th>Live</th>
-                            <th>Chamada</th>
-                            <th>Resposta</th>
-                            <th>Horário da resposta</th>
-                            <th>Frequência</th>
+                            <th>Aulas</th>
+                            <th>Chamadas</th>
+                            <th>Última confirmação</th>
+                            <th>Frequência na turma</th>
                         </tr>
                     </thead>
                     <tbody id="presencasLista">
-                        <tr><td colspan="7" class="presencas-loading">Carregando presenças...</td></tr>
+                        <tr><td colspan="6" class="presencas-loading">Carregando presenças...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -3801,7 +3823,7 @@
             <div class="section-header">
                 <span class="eyebrow">ACOMPANHAMENTO</span>
                 <h2>Relatórios de frequência</h2>
-                <p>Escolha os dados que deseja incluir e gere um PDF formatado.</p>
+                <p>Filtre por curso, turma ou aula e gere um PDF com presença específica e frequência acumulada.</p>
             </div>
 
             <div class="relatorios-layout">
@@ -3820,6 +3842,9 @@
                             <label for="relatorioLive">Aula / live</label>
                             <select id="relatorioLive"><option value="">Todas as aulas e lives</option></select>
                         </div>
+                    </div>
+                    <div class="relatorio-scope-note">
+                        Ao escolher uma aula, o PDF compara a presença dessa aula com a frequência completa do curso na turma do aluno.
                     </div>
                     <p class="relatorio-help" id="relatorioResumo">Carregando dados de frequência...</p>
                 </section>
@@ -3846,6 +3871,177 @@
 
         </section>
 
+
+
+        <!-- =========================================
+             MENSALIDADES
+        ========================================== -->
+
+        <section
+            class="page"
+            id="page-mensalidades"
+        >
+
+            <div class="section-header mensalidades-header">
+
+                <div>
+                    <span class="eyebrow">MENSALIDADES</span>
+                    <h2>Financeiro</h2>
+                    <p>Defina o valor e a política de acesso de cada curso e acompanhe as assinaturas dos alunos.</p>
+                </div>
+
+                <button type="button" class="secondary-button" id="atualizarMensalidadesButton">
+                    ↻ Atualizar dados
+                </button>
+
+            </div>
+
+            <div class="mensalidades-feedback" id="mensalidadesFeedback" role="status">
+                Carregando informações financeiras...
+            </div>
+
+            <div class="mensalidades-summary">
+                <div><span>CURSOS COM MENSALIDADE</span><strong id="mensalidadesCursosAtivos">0</strong></div>
+                <div><span>ASSINATURAS ATIVAS</span><strong id="mensalidadesAssinaturasAtivas">0</strong></div>
+                <div><span>PAGAMENTOS PENDENTES</span><strong id="mensalidadesPendentes">0</strong></div>
+                <div><span>RECEITA MENSAL PREVISTA</span><strong id="mensalidadesReceita">R$ 0,00</strong></div>
+            </div>
+
+            <section class="mensalidades-panel">
+                <div class="mensalidades-panel-heading">
+                    <div>
+                        <span class="eyebrow">CONFIGURAÇÃO POR CURSO</span>
+                        <h3>Planos mensais</h3>
+                    </div>
+                    <p>O bloqueio nunca apaga matrícula, presença ou progresso do aluno.</p>
+                </div>
+
+                <div class="mensalidades-table-wrap">
+                    <table class="mensalidades-table">
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                <th>Mensalidade</th>
+                                <th>Regra de acesso</th>
+                                <th>Assinaturas</th>
+                                <th>Integração</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mensalidadesCursosLista">
+                            <tr><td colspan="6" class="mensalidades-loading">Carregando configurações financeiras...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="mensalidades-panel">
+                <div class="mensalidades-panel-heading">
+                    <div>
+                        <span class="eyebrow">ACOMPANHAMENTO</span>
+                        <h3>Assinaturas dos alunos</h3>
+                    </div>
+                    <div class="mensalidades-filters">
+                        <input type="search" id="mensalidadesBusca" placeholder="Buscar aluno ou curso..." autocomplete="off">
+                        <select id="mensalidadesStatusFiltro" aria-label="Filtrar assinaturas por status">
+                            <option value="">Todos os status</option>
+                            <option value="authorized">Ativas</option>
+                            <option value="pending">Pendentes</option>
+                            <option value="paused">Pausadas</option>
+                            <option value="cancelled">Canceladas</option>
+                            <option value="atrasada">Em atraso</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mensalidades-table-wrap">
+                    <table class="mensalidades-table mensalidades-assinaturas-table">
+                        <thead>
+                            <tr>
+                                <th>Aluno</th>
+                                <th>Curso</th>
+                                <th>Status</th>
+                                <th>Último pagamento</th>
+                                <th>Próxima cobrança</th>
+                                <th>Acesso</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mensalidadesAssinaturasLista">
+                            <tr><td colspan="6" class="mensalidades-loading">Nenhuma assinatura carregada.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </section>
+
+
+        <div class="modal-overlay" id="mensalidadeCursoModal" hidden>
+            <div class="modal mensalidade-modal" role="dialog" aria-modal="true" aria-labelledby="mensalidadeCursoModalTitle">
+                <div class="modal-header">
+                    <div>
+                        <span class="eyebrow">PLANO MENSAL</span>
+                        <h2 id="mensalidadeCursoModalTitle">Configurar mensalidade</h2>
+                    </div>
+                    <button type="button" class="modal-close" id="fecharMensalidadeModal" aria-label="Fechar">×</button>
+                </div>
+
+                <form id="mensalidadeCursoForm" autocomplete="off">
+                    <input type="hidden" id="mensalidadeCursoId">
+
+                    <div class="mensalidade-course-context">
+                        <span>CURSO</span>
+                        <strong id="mensalidadeCursoNome">Curso</strong>
+                    </div>
+
+                    <div class="form-group mensalidade-tipo-cobranca">
+                        <label for="mensalidadeTipoCobranca">Tipo de cobrança</label>
+                        <select id="mensalidadeTipoCobranca">
+                            <option value="sem_cobranca">Sem cobrança</option>
+                            <option value="mensalidade">Mensalidade mensal</option>
+                        </select>
+                        <small>Em “Sem cobrança”, o aluno acessa o curso normalmente e nenhum pagamento é solicitado.</small>
+                    </div>
+
+                    <div class="form-group" id="mensalidadeValorGroup">
+                        <label for="mensalidadeValor">Valor mensal</label>
+                        <div class="mensalidade-money-input"><span>R$</span><input type="number" id="mensalidadeValor" min="0.01" step="0.01" inputmode="decimal" placeholder="50,00"></div>
+                    </div>
+
+                    <div class="form-group" id="mensalidadeBloqueioGroup">
+                        <label for="mensalidadeBloqueioModo">Em caso de atraso</label>
+                        <select id="mensalidadeBloqueioModo">
+                            <option value="nao_bloquear">Não bloquear o acesso</option>
+                            <option value="imediato">Bloquear imediatamente</option>
+                            <option value="apos_dias">Bloquear após alguns dias</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="mensalidadeCarenciaGroup" hidden>
+                        <label for="mensalidadeCarenciaDias">Prazo de tolerância</label>
+                        <select id="mensalidadeCarenciaDias">
+                            <option value="3">3 dias</option>
+                            <option value="5">5 dias</option>
+                            <option value="7" selected>7 dias</option>
+                            <option value="10">10 dias</option>
+                            <option value="15">15 dias</option>
+                            <option value="30">30 dias</option>
+                        </select>
+                    </div>
+
+                    <div class="mensalidade-policy-note" id="mensalidadePolicyNote">
+                        O aluno continuará acessando o curso mesmo que uma cobrança fique pendente.
+                    </div>
+
+                    <div class="form-message" id="mensalidadeFormMessage" hidden></div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="secondary-button" id="cancelarMensalidadeModal">Cancelar</button>
+                        <button type="submit" class="primary-button" id="salvarMensalidadeButton">Salvar configuração</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
 
         <!-- =========================================
@@ -3898,8 +4094,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../js/supabase.js"></script>
-<script src="../js/gestao.js"></script>
-<script src="../js/alunos.js"></script>
+<script src="../js/gestao.js?v=20260903-financeiro"></script>
+<script src="../js/alunos.js?v=20260903-perfil-aluno"></script>
 <script src="../js/professores.js"></script>
 <script src="../js/cursos.js"></script>
 <script src="../js/turmas.js"></script>
@@ -3907,6 +4103,7 @@
 <script src="../js/presencas.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="../js/relatorios.js"></script>
+<script src="../js/mensalidades.js?v=20260903-financeiro-4"></script>
 
 <script>
     console.log("===== MEP EAD =====");

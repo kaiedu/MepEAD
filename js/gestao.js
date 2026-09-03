@@ -194,6 +194,26 @@ async function verificarAcesso() {
         await carregarDashboard();
 
 
+        /* ================================
+           RESTAURAR PÁGINA DA URL
+        ================================= */
+
+        const paginaInicial =
+            window.location.hash
+                .replace("#", "")
+                .trim();
+
+
+        if (
+            paginaInicial &&
+            document.getElementById(`page-${paginaInicial}`)
+        ) {
+
+            mudarPagina(paginaInicial, false);
+
+        }
+
+
     }
 
     catch (erro) {
@@ -572,7 +592,17 @@ navItems.forEach(item => {
    MUDAR PÁGINA
 ========================================= */
 
-function mudarPagina(page) {
+function mudarPagina(page, atualizarUrl = true) {
+
+    const pagina =
+        document.getElementById(
+            `page-${page}`
+        );
+
+
+    if (!pagina) {
+        return;
+    }
 
     /* ================================
        BOTÕES
@@ -615,16 +645,17 @@ function mudarPagina(page) {
     });
 
 
-    const pagina =
-        document.getElementById(
-            `page-${page}`
-        );
+    pagina.classList.add(
+        "active"
+    );
 
 
-    if (pagina) {
+    if (atualizarUrl) {
 
-        pagina.classList.add(
-            "active"
+        window.history.replaceState(
+            null,
+            "",
+            `${window.location.pathname}${window.location.search}#${page}`
         );
 
     }
@@ -660,6 +691,8 @@ function mudarPagina(page) {
 
         turmas: "Turmas",
 
+        mensalidades: "Financeiro",
+
         alunos: "Alunos",
 
         professores: "Professores",
@@ -684,6 +717,24 @@ function mudarPagina(page) {
     }
 
 }
+
+
+window.addEventListener("hashchange", () => {
+
+    const page =
+        window.location.hash
+            .replace("#", "")
+            .trim();
+
+
+    if (page) {
+        mudarPagina(page, false);
+    }
+
+});
+
+
+window.mudarPaginaGestao = mudarPagina;
 
 
 /* =========================================

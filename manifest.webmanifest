@@ -1,0 +1,26 @@
+{
+  "name": "MEP EAD — Portal do Aluno",
+  "short_name": "MEP EAD",
+  "description": "Acesse seus cursos e aulas no portal MEP EAD.",
+  "lang": "pt-BR",
+  "start_url": "./aluno/",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0b0e",
+  "theme_color": "#0b0b0e",
+  "icons": [
+    {
+      "src": "./img/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./img/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

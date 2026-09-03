@@ -274,7 +274,7 @@ async function carregarAlunos() {
         } = await supabaseClient
             .from("usuarios")
             .select(
-                "id, auth_id, nome, email, perfil, ativo, primeiro_acesso"
+                "id, auth_id, nome, email, perfil, ativo, primeiro_acesso, foto_url, telefone, telefone_secundario"
             )
             .eq(
                 "perfil",
@@ -372,10 +372,16 @@ function aplicarFiltros() {
                     ).toLowerCase();
 
 
+                const telefones =
+                    `${aluno.telefone || ""} ${aluno.telefone_secundario || ""}`
+                        .toLowerCase();
+
+
                 const correspondeBusca =
                     !termo ||
                     nome.includes(termo) ||
-                    email.includes(termo);
+                    email.includes(termo) ||
+                    telefones.includes(termo);
 
 
                 if (!correspondeBusca) {
@@ -554,6 +560,26 @@ function criarCardAluno(aluno) {
         );
 
 
+    const fotoUrl =
+        /^https:\/\//i.test(String(aluno.foto_url || ""))
+            ? escaparHTML(aluno.foto_url)
+            : "";
+
+
+    const avatarHTML =
+        fotoUrl
+            ? `<img src="${fotoUrl}" alt="Foto de ${nome}">`
+            : inicial;
+
+
+    const telefone =
+        escaparHTML(
+            aluno.telefone ||
+            aluno.telefone_secundario ||
+            "Não informado"
+        );
+
+
     const status =
         aluno.ativo
             ? "ATIVO"
@@ -590,7 +616,7 @@ function criarCardAluno(aluno) {
         <div class="aluno-card-header">
 
             <div class="aluno-avatar">
-                ${inicial}
+                ${avatarHTML}
             </div>
 
             <div class="aluno-card-info">
@@ -654,6 +680,19 @@ function criarCardAluno(aluno) {
                             ? "Troca de senha pendente"
                             : "Senha atualizada"
                     }
+                </strong>
+
+            </div>
+
+
+            <div class="aluno-info aluno-contato-info">
+
+                <span>
+                    Contato
+                </span>
+
+                <strong>
+                    ${telefone}
                 </strong>
 
             </div>

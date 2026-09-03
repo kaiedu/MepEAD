@@ -1499,7 +1499,7 @@ body.modal-open {
     align-items: center;
     justify-content: center;
 
-    border-radius: 11px;
+    border-radius: 50%;
 
     background:
         linear-gradient(
@@ -11460,6 +11460,14 @@ body.modal-open {
     }
 }
 
+.aluno-avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
 /* =========================================================
    PRESENÇAS
 ========================================================= */
@@ -11568,6 +11576,58 @@ body.modal-open {
 .presenca-status.confirmada { background: rgba(40,209,124,.1); color: var(--success); }
 .presenca-status.ausente { background: rgba(255,48,48,.1); color: #ff7777; }
 
+.presencas-aulas-detail {
+    min-width: 190px;
+}
+
+.presencas-aulas-detail summary {
+    display: flex;
+    cursor: pointer;
+    list-style: none;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.presencas-aulas-detail summary::-webkit-details-marker { display: none; }
+.presencas-aulas-detail summary::after {
+    content: "Ver detalhes";
+    margin-top: 5px;
+    color: var(--red);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.presencas-aulas-detail[open] summary::after { content: "Ocultar detalhes"; }
+.presencas-aulas-detail summary small {
+    max-width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.presencas-aulas-list {
+    min-width: 275px;
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+}
+
+.presencas-aulas-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.presencas-aulas-list b { color: #ff7777; font-size: 11px; }
+.presencas-aulas-list b.completo { color: var(--success); }
+.presencas-sem-chamada { color: var(--text-muted); font-size: 11px; }
+
 /* Relatórios */
 .relatorios-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 26px; }
 .relatorio-card { padding: 22px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
@@ -11575,6 +11635,16 @@ body.modal-open {
 .relatorio-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .relatorio-card .form-group { margin: 0; }
 .relatorio-card select { width: 100%; height: 42px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); }
+.relatorio-scope-note {
+    margin-top: 14px;
+    padding: 11px 12px;
+    border: 1px solid rgba(229, 27, 35, .2);
+    border-radius: 8px;
+    background: rgba(229, 27, 35, .055);
+    color: var(--text-soft);
+    font-size: 11px;
+    line-height: 1.5;
+}
 .relatorio-help { margin-top: 15px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
 .relatorio-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
 .relatorio-fields label { display: flex; align-items: center; gap: 8px; color: var(--text-soft); font-size: 12px; }
@@ -11585,6 +11655,242 @@ body.modal-open {
     .presencas-toolbar, .presencas-filters { align-items: stretch; flex-direction: column; }
     .presencas-search, .presencas-filters select { width: 100%; }
     .relatorios-layout, .relatorio-filters, .relatorio-fields { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   MENSALIDADES
+========================================================= */
+
+.mensalidades-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--border);
+}
+
+#page-mensalidades .mensalidades-header > div {
+    max-width: 720px;
+}
+
+#page-mensalidades .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+}
+
+#page-mensalidades .eyebrow::before {
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--red);
+    content: "";
+}
+
+#page-mensalidades .mensalidades-header h2 {
+    margin-top: 9px;
+    color: #fff;
+    font-size: clamp(28px, 3vw, 38px);
+    font-weight: 850;
+    letter-spacing: -1.2px;
+    line-height: 1.05;
+}
+
+#page-mensalidades .mensalidades-header p {
+    max-width: 650px;
+    margin-top: 12px;
+    color: var(--text-soft);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+#page-mensalidades #atualizarMensalidadesButton {
+    min-width: 154px;
+    min-height: 44px;
+    padding: 0 17px;
+    border: 1px solid #303030;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #171717, #101010);
+    color: #f5f5f5;
+    font-size: 13px;
+    font-weight: 750;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .24);
+    transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+
+#page-mensalidades #atualizarMensalidadesButton:hover {
+    border-color: rgba(255, 31, 31, .65);
+    background: #191111;
+    transform: translateY(-1px);
+}
+
+#page-mensalidades.active {
+    display: block !important;
+    min-height: calc(100vh - 76px);
+}
+
+.mensalidades-feedback {
+    margin-top: 20px;
+    padding: 13px 15px;
+    border: 1px solid rgba(255, 183, 77, .24);
+    border-radius: 10px;
+    background: rgba(255, 183, 77, .07);
+    color: #ffd08a;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.mensalidades-feedback.success {
+    border-color: rgba(40, 209, 124, .22);
+    background: rgba(40, 209, 124, .06);
+    color: #7ee2ad;
+}
+
+.mensalidades-feedback.error {
+    border-color: rgba(255, 48, 48, .26);
+    background: rgba(255, 48, 48, .07);
+    color: #ff8c8c;
+}
+
+.mensalidades-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin: 24px 0 18px;
+}
+
+.mensalidades-summary > div,
+.mensalidades-panel {
+    border: 1px solid #252525;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #111, #0c0c0c);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .2);
+}
+
+.mensalidades-summary > div {
+    position: relative;
+    overflow: hidden;
+    min-height: 112px;
+    padding: 22px;
+}
+
+.mensalidades-summary > div::before {
+    position: absolute;
+    top: 0;
+    left: 22px;
+    width: 38px;
+    height: 3px;
+    border-radius: 0 0 4px 4px;
+    background: var(--red);
+    content: "";
+}
+
+.mensalidades-summary span { display: block; margin-bottom: 13px; color: #8c8c8c; font-size: 12px; font-weight: 800; letter-spacing: .6px; line-height: 1.4; }
+.mensalidades-summary strong { color: var(--white); font-size: 30px; font-weight: 850; letter-spacing: -.8px; }
+.mensalidades-panel { overflow: hidden; margin-top: 16px; }
+
+.mensalidades-panel-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.mensalidades-panel-heading h3 { margin: 7px 0 0; color: var(--text); font-size: 18px; font-weight: 800; }
+.mensalidades-panel-heading p { max-width: 440px; margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.55; text-align: right; }
+.mensalidades-table-wrap { overflow-x: auto; }
+.mensalidades-table { width: 100%; min-width: 920px; border-collapse: collapse; }
+.mensalidades-table th { padding: 14px 18px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,.015); color: #858585; font-size: 12px; font-weight: 800; letter-spacing: .45px; text-align: left; text-transform: uppercase; }
+.mensalidades-table td { padding: 17px 18px; border-bottom: 1px solid #202020; color: var(--text-soft); font-size: 13px; vertical-align: middle; }
+.mensalidades-table tbody tr { transition: background .18s ease; }
+.mensalidades-table tbody tr:hover { background: rgba(255,255,255,.018); }
+.mensalidades-table tbody tr:last-child td { border-bottom: 0; }
+.mensalidades-table td strong { display: block; color: var(--text); font-size: 14px; font-weight: 750; }
+.mensalidades-table td small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 12px; line-height: 1.4; }
+.mensalidades-loading { padding: 38px !important; color: var(--text-muted) !important; font-size: 13px !important; text-align: center; }
+
+.mensalidade-badge { display: inline-flex; align-items: center; min-height: 28px; padding: 6px 9px; border: 1px solid rgba(255,255,255,.06); border-radius: 7px; background: rgba(255,255,255,.05); color: var(--text-soft); font-size: 11px; font-weight: 800; }
+.mensalidade-badge.ativa, .mensalidade-badge.aprovada { background: rgba(40,209,124,.1); color: var(--success); }
+.mensalidade-badge.pendente { background: rgba(255,183,77,.1); color: #ffbd66; }
+.mensalidade-badge.atrasada, .mensalidade-badge.cancelada { background: rgba(255,48,48,.1); color: #ff7777; }
+.mensalidade-config-button { min-height: 36px; padding: 8px 13px; border: 1px solid #343434; border-radius: 8px; background: #171717; color: var(--text); font-size: 12px; font-weight: 750; cursor: pointer; transition: .2s ease; }
+.mensalidade-config-button:hover { border-color: rgba(229,27,35,.65); background: rgba(229,27,35,.1); color: #fff; }
+
+.mensalidades-filters { display: flex; gap: 9px; }
+.mensalidades-filters input, .mensalidades-filters select, #mensalidadeCursoForm select {
+    min-height: 43px;
+    padding: 0 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 13px;
+}
+.mensalidades-filters input { width: 260px; }
+.mensalidades-filters input:focus, .mensalidades-filters select:focus, #mensalidadeCursoForm select:focus { border-color: rgba(255,31,31,.65); box-shadow: 0 0 0 3px rgba(255,31,31,.08); }
+
+#mensalidadeCursoModal { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(0,0,0,.78); backdrop-filter: blur(8px); }
+#mensalidadeCursoModal[hidden] { display: none !important; }
+.mensalidade-modal { width: min(100%, 580px); max-height: calc(100vh - 48px); overflow-y: auto; border: 1px solid #303030; border-radius: 16px; background: #0e0e0e; box-shadow: 0 28px 80px rgba(0,0,0,.65); }
+#mensalidadeCursoModal .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 23px 24px; border-bottom: 1px solid var(--border); }
+#mensalidadeCursoModal .modal-header h2 { margin-top: 7px; color: #fff; font-size: 22px; letter-spacing: -.5px; }
+#mensalidadeCursoModal .modal-close { width: 38px; height: 38px; border: 1px solid #303030; border-radius: 9px; background: #161616; color: #aaa; font-size: 23px; line-height: 1; transition: .2s ease; }
+#mensalidadeCursoModal .modal-close:hover { border-color: rgba(255,31,31,.55); color: #fff; }
+#mensalidadeCursoForm { padding: 24px; }
+#mensalidadeCursoForm .form-group { margin-top: 17px; }
+#mensalidadeCursoForm .form-group > label { display: block; margin-bottom: 8px; color: #aaa; font-size: 13px; font-weight: 700; }
+#mensalidadeCursoForm .mensalidade-tipo-cobranca { margin-top: 0; padding: 15px; border: 1px solid #292929; border-radius: 11px; background: rgba(255,255,255,.018); }
+#mensalidadeCursoForm .mensalidade-tipo-cobranca select { width: 100%; }
+#mensalidadeCursoForm .mensalidade-tipo-cobranca > small { display: block; margin-top: 9px; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+#mensalidadeCursoForm input[type="number"] { color: #fff; font-size: 14px; outline: none; }
+.mensalidade-course-context { margin-bottom: 17px; padding: 14px 15px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
+.mensalidade-course-context span { display: block; margin-bottom: 5px; color: var(--text-muted); font-size: 12px; font-weight: 800; }
+.mensalidade-course-context strong { color: var(--text); font-size: 15px; }
+.mensalidade-toggle-field { display: flex; align-items: center; gap: 12px; margin-bottom: 17px; padding: 13px; border: 1px solid var(--border); border-radius: 9px; background: rgba(255,255,255,.018); }
+.mensalidade-toggle-field > input { position: absolute; opacity: 0; pointer-events: none; }
+.mensalidade-toggle-field .toggle { width: 38px; height: 22px; flex: 0 0 auto; position: relative; border-radius: 999px; background: #303030; transition: .2s; }
+.mensalidade-toggle-field .toggle::after { content: ""; width: 16px; height: 16px; position: absolute; top: 3px; left: 3px; border-radius: 50%; background: #aaa; transition: .2s; }
+.mensalidade-toggle-field input:checked + .toggle { background: var(--red); }
+.mensalidade-toggle-field input:checked + .toggle::after { left: 19px; background: #fff; }
+.mensalidade-toggle-field strong, .mensalidade-toggle-field small { display: block; }
+.mensalidade-toggle-field strong { color: var(--text); font-size: 13px; }
+.mensalidade-toggle-field small { margin-top: 4px; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
+.mensalidade-money-input { display: flex; align-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); }
+.mensalidade-money-input span { padding-left: 12px; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+.mensalidade-money-input input { width: 100%; height: 42px; border: 0 !important; background: transparent !important; }
+.mensalidade-policy-note { margin: 17px 0 4px; padding: 13px 14px; border: 1px solid rgba(229,27,35,.2); border-radius: 9px; background: rgba(229,27,35,.055); color: var(--text-soft); font-size: 12px; line-height: 1.55; }
+#mensalidadeCursoForm .form-message { margin-top: 14px; padding: 12px 13px; border-radius: 8px; font-size: 13px; }
+#mensalidadeCursoForm .form-message.success { background: rgba(40,209,124,.09); color: #7ee2ad; }
+#mensalidadeCursoForm .form-message.error { background: rgba(255,48,48,.09); color: #ff8c8c; }
+#mensalidadeCursoForm .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
+#mensalidadeCursoForm .modal-actions button { min-height: 42px; padding: 0 17px; border-radius: 9px; font-size: 13px; font-weight: 800; }
+#mensalidadeCursoForm .secondary-button { border: 1px solid #303030; background: #171717; color: #ddd; }
+#mensalidadeCursoForm .primary-button { border: 1px solid var(--red); background: linear-gradient(135deg,var(--red),var(--red-dark)); color: #fff; box-shadow: 0 10px 24px rgba(255,31,31,.18); }
+
+@media (max-width: 980px) {
+    .mensalidades-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    #page-mensalidades { padding: 24px 18px; }
+    .mensalidades-header { align-items: stretch; flex-direction: column; gap: 18px; }
+    #page-mensalidades #atualizarMensalidadesButton { width: 100%; }
+    .mensalidades-summary { grid-template-columns: 1fr; }
+    .mensalidades-panel-heading { align-items: stretch; flex-direction: column; }
+    .mensalidades-panel-heading p { text-align: left; }
+    .mensalidades-filters { flex-direction: column; }
+    .mensalidades-filters input, .mensalidades-filters select { width: 100%; }
+    #mensalidadeCursoModal { padding: 12px; }
+    #mensalidadeCursoForm .modal-actions { flex-direction: column-reverse; }
+    #mensalidadeCursoForm .modal-actions button { width: 100%; }
 }
 
 

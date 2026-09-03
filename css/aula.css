@@ -2448,3 +2448,312 @@ body.mep-player-expandido-ativo {
     }
 
 }
+
+/* =========================================================
+   MEP EAD — SALA DE AULA 2026
+   Camada visual: player, chat e presença mantêm a lógica atual.
+========================================================= */
+
+:root {
+    --classroom-bg: #f2f2f4;
+    --classroom-card: #ffffff;
+    --classroom-dark: #0a0a0c;
+    --classroom-dark-soft: #151518;
+    --classroom-red: #f5222d;
+    --classroom-text: #17171b;
+    --classroom-muted: #7c7c84;
+    --classroom-line: #e3e3e7;
+}
+
+body {
+    padding: 0;
+    background: var(--classroom-bg);
+    color: var(--classroom-text);
+}
+
+.portal-header {
+    position: sticky;
+    inset: auto;
+    top: 0;
+    width: 100%;
+    height: 76px;
+    min-height: 76px;
+    padding: 0 clamp(20px, 4vw, 54px);
+    flex-direction: row;
+    align-items: center;
+    background: rgba(10, 10, 12, .96);
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    backdrop-filter: blur(18px);
+    overflow: visible;
+}
+
+.portal-header-left { gap: 22px; }
+
+.aula-platform-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex: 0 0 auto;
+}
+
+.aula-platform-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .32);
+}
+
+.aula-platform-brand > div { display: flex; flex-direction: column; gap: 3px; }
+.aula-platform-brand strong { color: #fff; font-size: 13px; letter-spacing: .04em; }
+.aula-platform-brand span { color: #66666d; font-size: 7px; font-weight: 800; letter-spacing: .18em; }
+.aula-header-divider { width: 1px; height: 28px; background: rgba(255, 255, 255, .1); }
+
+.portal-back-button {
+    min-height: 38px;
+    padding: 0 12px;
+    border-color: rgba(255, 255, 255, .07);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, .035);
+    color: #8a8a91;
+    font-size: 10px;
+}
+
+.portal-back-button:hover { color: #fff; background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .11); }
+.portal-header-right { gap: 14px; }
+.portal-profile-avatar { width: 38px; height: 38px; background: linear-gradient(145deg, var(--classroom-red), #b30d15); font-size: 13px; }
+.portal-profile-info strong { color: #e5e5e8; font-size: 11px; }
+.portal-profile-info span { color: #65656c; font-size: 9px; }
+.portal-logout-button { min-height: 37px; padding: 0 13px; border-color: rgba(255,255,255,.09); border-radius: 7px; background: transparent; color: #85858c; font-size: 10px; }
+.portal-logout-button:hover { color: #fff; background: rgba(245,34,45,.1); border-color: rgba(245,34,45,.18); }
+
+.aula-page {
+    width: min(1450px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 34px 0 75px;
+}
+
+.aula-workspace-label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.aula-workspace-label span { color: var(--classroom-red); font-size: 8px; font-weight: 900; letter-spacing: .18em; }
+.aula-workspace-label strong { color: #929299; font-size: 10px; font-weight: 650; }
+
+.aula-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.aula-header-section,
+.aula-info-section { margin: 0; }
+
+.aula-header-content {
+    position: relative;
+    min-height: 245px;
+    height: 100%;
+    padding: 42px 46px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    border-color: rgba(255,255,255,.07);
+    border-radius: 12px;
+    background:
+        radial-gradient(circle at 90% 20%, rgba(245,34,45,.22), transparent 28%),
+        linear-gradient(135deg, #131316, #09090b);
+    box-shadow: 0 18px 50px rgba(24,24,29,.13);
+}
+
+.aula-header-content::after {
+    content: "AULA";
+    position: absolute;
+    right: 3%;
+    bottom: -34px;
+    color: rgba(255,255,255,.035);
+    font-size: clamp(7rem, 12vw, 11rem);
+    font-weight: 900;
+    letter-spacing: -.08em;
+}
+
+.aula-header-content .eyebrow { position: relative; z-index: 1; color: var(--classroom-red); font-size: 8px; letter-spacing: .19em; }
+.aula-header-content h1 { position: relative; z-index: 1; max-width: 840px; color: #fff; font-size: clamp(2.2rem, 4vw, 4rem); line-height: 1.02; letter-spacing: -.055em; }
+.aula-header-content > p { position: relative; z-index: 1; max-width: 680px; margin-top: 13px; color: #85858c; font-size: 11px; line-height: 1.65; }
+
+.aula-status {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 22px;
+    padding: 10px 13px;
+    gap: 10px;
+    border-color: rgba(255,255,255,.08);
+    border-radius: 7px;
+    background: rgba(255,255,255,.035);
+}
+
+.aula-status-dot { width: 7px; height: 7px; box-shadow: 0 0 12px currentColor; }
+.aula-status-dot[data-status="ao vivo"] { color: var(--classroom-red); background: var(--classroom-red); animation: aulaLivePulse 1.4s infinite; }
+.aula-status-dot[data-status="agendada"] { color: #e5a20b; background: #e5a20b; }
+.aula-status-dot[data-status="encerrada"] { color: #77777e; background: #77777e; }
+.aula-status-dot[data-status="indisponivel"] { color: #77777e; background: #77777e; }
+.aula-status strong { color: #d9d9dd; font-size: 8px; }
+.aula-status p { color: #77777f; font-size: 9px; }
+
+.aula-info-grid { height: 100%; grid-template-columns: 1fr; gap: 8px; }
+.aula-info-card {
+    min-height: 0;
+    padding: 18px 21px;
+    border-color: var(--classroom-line);
+    border-radius: 9px;
+    background: var(--classroom-card);
+    box-shadow: 0 7px 22px rgba(24,24,29,.035);
+}
+.aula-info-card::before { content: ""; width: 24px; height: 2px; margin-bottom: 12px; background: var(--classroom-red); }
+.aula-info-label { margin-bottom: 5px; color: #9a9aa1; font-size: 8px; letter-spacing: .14em; }
+.aula-info-card strong { color: var(--classroom-text); font-size: 14px; }
+
+.live-player-section {
+    margin-bottom: 24px;
+    padding: 25px;
+    border-color: var(--classroom-line);
+    border-radius: 12px;
+    background: var(--classroom-card);
+    box-shadow: 0 13px 38px rgba(24,24,29,.065);
+}
+
+.live-player-header { margin-bottom: 18px; }
+.live-player-header .eyebrow { color: var(--classroom-red); font-size: 8px; letter-spacing: .18em; }
+.live-player-header h2 { font-size: 18px; letter-spacing: -.03em; }
+.live-player-badge { padding: 7px 10px; border-radius: 999px; background: rgba(245,34,45,.08); color: var(--classroom-red); font-size: 8px; }
+.live-player-badge::before { background: var(--classroom-red); box-shadow: 0 0 9px rgba(245,34,45,.6); }
+
+.live-player-layout { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: 14px; }
+.live-player { border-radius: 9px; background: #050506; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); }
+.live-player-placeholder { background: radial-gradient(circle at 50% 40%, #252529, #08080a 68%); }
+.live-player-placeholder-icon { width: 56px; height: 56px; border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.07); color: #fff; font-size: 17px; }
+.live-player-placeholder h3 { font-size: 16px; }
+.live-player-placeholder p { color: #77777e; font-size: 11px; }
+.live-fullscreen-button { width: 38px; height: 38px; right: 12px; bottom: 12px; border: 1px solid rgba(255,255,255,.13); border-radius: 7px; background: rgba(8,8,10,.78); font-size: 17px; }
+
+.live-chat {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    border-color: var(--classroom-line);
+    border-radius: 9px;
+    background: #fafafa;
+}
+.live-chat-header { min-height: 67px; padding: 13px 15px; border-color: var(--classroom-line); }
+.live-chat-header .eyebrow { color: var(--classroom-red); font-size: 7px; }
+.live-chat-header h3 { font-size: 13px; }
+.live-chat-close-button { width: 30px; height: 30px; border-radius: 6px; font-size: 21px; }
+.live-chat-messages { padding: 15px; }
+.live-chat-empty { padding: 28px 12px; color: #98989f; font-size: 10px; }
+.live-chat-message-avatar { background: var(--classroom-dark); }
+.live-chat-message-author { font-size: 10px; }
+.live-chat-message-text { color: #55555c; font-size: 11px; }
+.live-chat-form { padding: 12px; border-color: var(--classroom-line); background: #fff; }
+.live-chat-form textarea { min-height: 45px; border-color: var(--classroom-line); border-radius: 6px; background: #f7f7f8; font-size: 11px; }
+.live-chat-form textarea:focus { border-color: rgba(245,34,45,.45); box-shadow: 0 0 0 3px rgba(245,34,45,.07); }
+.live-chat-send-button { border-radius: 5px; background: var(--classroom-dark); font-size: 9px; }
+.live-chat-send-button:hover:not(:disabled) { background: var(--classroom-red); }
+.live-chat-toggle-button { border-radius: 7px; font-size: 10px; }
+
+.aula-locked-section,
+.aula-unavailable-section {
+    min-height: 390px;
+    margin-bottom: 24px;
+    padding: 55px;
+    justify-content: center;
+    border-color: var(--classroom-line);
+    border-radius: 12px;
+    background: var(--classroom-card);
+    box-shadow: 0 13px 38px rgba(24,24,29,.055);
+}
+.aula-locked-icon, .aula-unavailable-icon { width: 52px; height: 52px; margin-bottom: 24px; display: grid; place-items: center; border-radius: 9px; background: #111114; color: #fff; font-size: 18px; }
+.aula-locked-section .eyebrow, .aula-unavailable-section .eyebrow { color: var(--classroom-red); font-size: 8px; }
+.aula-locked-section h2, .aula-unavailable-section h2 { font-size: clamp(1.8rem,3vw,2.8rem); letter-spacing: -.045em; }
+.aula-locked-section p, .aula-unavailable-section p { color: var(--classroom-muted); font-size: 11px; }
+.aula-locked-section strong { margin-top: 20px; padding: 11px 14px; border: 1px solid var(--classroom-line); border-radius: 6px; background: #f7f7f8; font-size: 11px; }
+
+.aula-details-section { margin-top: 24px; }
+.aula-details-card { padding: 34px; border-color: var(--classroom-line); border-radius: 10px; background: var(--classroom-card); box-shadow: 0 8px 24px rgba(24,24,29,.035); }
+.aula-details-card .eyebrow { color: var(--classroom-red); font-size: 8px; }
+.aula-details-card h2 { font-size: 21px; letter-spacing: -.035em; }
+.aula-details-card p { max-width: 900px; color: var(--classroom-muted); font-size: 11px; line-height: 1.7; }
+
+.aula-footer { margin-top: 35px; padding-top: 25px; border-top: 1px solid var(--classroom-line); }
+.aula-footer-back-button { min-height: 40px; border-color: var(--classroom-line); border-radius: 6px; background: #fff; font-size: 10px; }
+
+.presenca-overlay-backdrop { background: rgba(3,3,4,.84); backdrop-filter: blur(10px); }
+.presenca-modal { width: min(450px, calc(100% - 32px)); padding: 38px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #121215; color: #fff; box-shadow: 0 35px 90px rgba(0,0,0,.65); }
+.presenca-modal-icon { width: 50px; height: 50px; border-radius: 8px; background: rgba(245,34,45,.12); color: var(--classroom-red); }
+.presenca-modal-content .eyebrow { color: var(--classroom-red); font-size: 8px; }
+.presenca-modal h2 { color: #fff; font-size: 28px; letter-spacing: -.04em; }
+.presenca-modal p { color: #aaaab0; }
+.presenca-modal-status { border-color: rgba(255,255,255,.08); border-radius: 7px; background: rgba(255,255,255,.04); color: #8e8e95; font-size: 10px; }
+.presenca-confirm-button { border-radius: 6px; background: var(--classroom-red); box-shadow: 0 12px 26px rgba(245,34,45,.22); }
+.presenca-confirm-button:hover:not(:disabled) { background: #d81822; }
+
+.portal-toast { border-radius: 8px; }
+
+@media (max-width: 1050px) {
+    .aula-page { width: min(100% - 40px, 1180px); }
+    .aula-overview { grid-template-columns: minmax(0, 1fr) 285px; }
+    .live-player-layout { grid-template-columns: 1fr; }
+    .live-chat { height: 390px; }
+}
+
+@media (max-width: 760px) {
+    body { padding: 0; }
+    .portal-header { height: 68px; min-height: 68px; padding: 0 16px; }
+    .aula-platform-logo { width: 36px; height: 36px; }
+    .aula-platform-brand > div, .aula-header-divider, .portal-profile-info { display: none; }
+    .portal-header-left { gap: 8px; }
+    .portal-back-button { padding: 0 9px; }
+    .portal-header-right { gap: 7px; }
+    .portal-profile-avatar { width: 36px; height: 36px; }
+    .portal-logout-button { min-height: 36px; padding: 0 10px; }
+    .aula-page { width: calc(100% - 28px); padding-top: 24px; }
+    .aula-overview { grid-template-columns: 1fr; }
+    .aula-header-content { min-height: 280px; padding: 38px 28px; }
+    .aula-header-content h1 { font-size: 2.7rem; }
+    .aula-info-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .aula-info-card { min-height: 92px; padding: 16px; }
+    .aula-info-card::before { margin-bottom: 10px; }
+    .live-player-section { padding: 15px; }
+    .live-player-header { align-items: center; flex-direction: row; }
+    .aula-locked-section, .aula-unavailable-section { min-height: 340px; padding: 35px 27px; }
+}
+
+@media (max-width: 520px) {
+    .portal-back-button span:last-child { display: none; }
+    .portal-profile { display: none; }
+    .portal-logout-button { font-size: 9px; }
+    .aula-page { width: calc(100% - 22px); padding-top: 20px; }
+    .aula-workspace-label { margin-bottom: 17px; }
+    .aula-header-content { min-height: 300px; padding: 34px 22px; border-radius: 10px; }
+    .aula-header-content h1 { font-size: 2.25rem; }
+    .aula-header-content > p { font-size: 10px; }
+    .aula-status { align-items: flex-start; }
+    .aula-info-grid { grid-template-columns: 1fr; }
+    .aula-info-card { min-height: 80px; }
+    .live-player-section { padding: 12px; border-radius: 10px; }
+    .live-player-header { align-items: flex-start; flex-direction: column; }
+    .live-player { border-radius: 7px; }
+    .live-chat { height: 360px; }
+    .aula-details-card { padding: 26px 21px; }
+    .presenca-modal { padding: 30px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .live-player-badge::before, .live-chat-message { animation: none; }
+}

@@ -11,7 +11,14 @@
         content="width=device-width, initial-scale=1.0"
     >
 
- <link rel="icon" type="image/png" href="img/capa.png">
+    <link rel="icon" type="image/png" href="../img/capa.png">
+
+    <link rel="manifest" href="../manifest.webmanifest">
+    <link rel="apple-touch-icon" href="../img/app-icon-192.png">
+    <meta name="theme-color" content="#0b0b0e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <meta
         name="description"
@@ -24,8 +31,12 @@
 
     <link
         rel="stylesheet"
-        href="../css/portal.css"
+        href="../css/portal.css?v=20260903-instalacao-pwa"
     >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 </head>
 
@@ -47,6 +58,14 @@
 
         <div class="portal-brand">
 
+            <img
+                src="../img/capa.png"
+                alt=""
+                class="portal-brand-logo"
+            >
+
+            <div class="portal-brand-copy">
+
             <strong>
                 MEP EAD
             </strong>
@@ -55,7 +74,42 @@
                 Ministério de Ensino no Propósito
             </span>
 
+            </div>
+
         </div>
+
+
+        <nav class="portal-navigation" aria-label="Navegação do aluno">
+
+            <a href="#portalHomeView" class="portal-nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="1.7"/></svg>
+                <span>Visão geral</span>
+            </a>
+
+            <a href="#cursosSection" class="portal-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20" stroke="currentColor" stroke-width="1.7"/></svg>
+                <span>Meus cursos</span>
+            </a>
+
+            <a href="#perfilAlunoView" class="portal-nav-item" id="abrirPerfilNav">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4.5 20c.8-4 3.3-6 7.5-6s6.7 2 7.5 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Seu perfil</span>
+            </a>
+
+            <div class="portal-nav-item portal-nav-item-muted" aria-disabled="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v4l2.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span>Minha jornada</span>
+            </div>
+
+        </nav>
+
+
+        <div class="portal-sidebar-footer">
+
+            <div class="portal-security-note">
+                <span>✓</span>
+                <div><strong>Ambiente seguro</strong><small>Sessão protegida</small></div>
+            </div>
 
 
         <button
@@ -63,8 +117,11 @@
             class="logout-button"
             id="logoutButton"
         >
-            Sair
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M10 12h11m-3-3 3 3-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Sair da plataforma
         </button>
+
+        </div>
 
     </header>
 
@@ -75,6 +132,11 @@
     ====================================================== -->
 
     <section class="portal-content">
+
+        <div class="portal-mobile-bar">
+            <div><span>MEP EAD</span><strong>Área do aluno</strong></div>
+            <div class="portal-mobile-actions"><a href="#cursosSection">Meus cursos</a><a href="#perfilAlunoView" id="abrirPerfilMobile">Perfil</a></div>
+        </div>
 
 
         <!-- =================================================
@@ -119,6 +181,10 @@
                     Carregando...
                 </strong>
 
+                <a href="#perfilAlunoView" class="profile-edit-shortcut" id="abrirPerfilButton">
+                    Editar meu perfil
+                </a>
+
             </div>
 
         </div>
@@ -155,6 +221,12 @@
                     Acompanhe suas aulas e participe das
                     transmissões do MEP EAD.
                 </p>
+
+                <div class="welcome-badges" aria-label="Recursos disponíveis">
+                    <span><i></i> Cursos e conteúdos</span>
+                    <span><i></i> Aulas ao vivo</span>
+                    <span><i></i> Progresso acompanhado</span>
+                </div>
 
             </div>
 
@@ -336,6 +408,101 @@
 
 
         <!-- =================================================
+             PERFIL DO ALUNO
+        ================================================== -->
+
+        <section class="portal-view perfil-aluno-view" id="perfilAlunoView" hidden>
+
+            <div class="perfil-view-header">
+                <div>
+                    <span class="eyebrow">SEUS DADOS</span>
+                    <h2>Seu perfil</h2>
+                    <p>Mantenha seus dados de contato atualizados e escolha a foto exibida na plataforma.</p>
+                </div>
+                <button type="button" class="perfil-voltar-button" id="fecharPerfilButton">← Voltar para o portal</button>
+            </div>
+
+            <form class="perfil-form" id="perfilAlunoForm" autocomplete="off">
+
+                <aside class="perfil-foto-card">
+                    <div class="perfil-foto-preview" id="perfilFotoPreview">
+                        <span id="perfilFotoInicial">A</span>
+                        <img id="perfilFotoImagem" src="" alt="Prévia da foto de perfil" hidden>
+                    </div>
+                    <div class="perfil-foto-copy">
+                        <h3>Foto de perfil</h3>
+                        <p>Use uma imagem JPG, PNG ou WebP de até 5 MB.</p>
+                    </div>
+                    <input type="file" id="perfilFotoArquivo" accept="image/jpeg,image/png,image/webp" hidden>
+                    <button type="button" class="perfil-foto-button" id="selecionarPerfilFoto">Escolher foto</button>
+                    <button type="button" class="perfil-foto-remove" id="removerPerfilFoto">Remover foto</button>
+                </aside>
+
+                <div class="perfil-dados-card">
+                    <div class="perfil-card-heading">
+                        <span>INFORMAÇÕES PESSOAIS</span>
+                        <h3>Dados do aluno</h3>
+                    </div>
+
+                    <div class="perfil-fields">
+                        <div class="perfil-field perfil-field-full">
+                            <label for="perfilNome">Nome completo</label>
+                            <input type="text" id="perfilNome" minlength="2" maxlength="120" required autocomplete="name">
+                        </div>
+
+                        <div class="perfil-field perfil-field-full">
+                            <label for="perfilEmail">E-mail de acesso</label>
+                            <input type="email" id="perfilEmail" readonly aria-readonly="true">
+                            <small>O e-mail é vinculado ao seu acesso e não pode ser alterado aqui.</small>
+                        </div>
+
+                        <div class="perfil-field">
+                            <label for="perfilTelefone">Telefone principal</label>
+                            <input type="tel" id="perfilTelefone" maxlength="15" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric">
+                        </div>
+
+                        <div class="perfil-field">
+                            <label for="perfilTelefoneSecundario">Outro telefone</label>
+                            <input type="tel" id="perfilTelefoneSecundario" maxlength="15" placeholder="(00) 00000-0000" inputmode="numeric">
+                        </div>
+                    </div>
+
+                    <div class="perfil-form-message" id="perfilFormMessage" hidden role="status"></div>
+
+                    <div class="perfil-form-actions">
+                        <button type="button" class="perfil-cancelar-button" id="cancelarPerfilButton">Cancelar</button>
+                        <button type="submit" class="perfil-salvar-button" id="salvarPerfilButton">Salvar alterações</button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="perfil-recorte-overlay" id="perfilRecorteModal" hidden>
+                <div class="perfil-recorte-modal" role="dialog" aria-modal="true" aria-labelledby="perfilRecorteTitulo">
+                    <div class="perfil-recorte-header">
+                        <div><span>AJUSTAR FOTO</span><h3 id="perfilRecorteTitulo">Escolha o enquadramento</h3></div>
+                        <button type="button" id="cancelarRecorteFoto" aria-label="Fechar ajuste da foto">×</button>
+                    </div>
+                    <div class="perfil-recorte-body">
+                        <p>Arraste a imagem e use o controle para aproximar. A área dentro do círculo será exibida no seu perfil.</p>
+                        <div class="perfil-recorte-stage" id="perfilRecorteStage">
+                            <canvas id="perfilRecorteCanvas" width="420" height="420"></canvas>
+                            <div class="perfil-recorte-mask" aria-hidden="true"></div>
+                        </div>
+                        <label class="perfil-zoom-control" for="perfilFotoZoom"><span>Menos</span><input type="range" id="perfilFotoZoom" min="1" max="3" step="0.01" value="1"><span>Mais</span></label>
+                    </div>
+                    <div class="perfil-recorte-actions">
+                        <button type="button" class="perfil-recorte-cancelar" id="voltarRecorteFoto">Cancelar</button>
+                        <button type="button" class="perfil-recorte-confirmar" id="confirmarRecorteFoto">Usar esta foto</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
              VISÃO DO CURSO
 
              A HOME fica oculta quando esta view é aberta.
@@ -460,6 +627,17 @@
 
                 </div>
 
+            </div>
+
+
+
+            <div class="curso-financeiro-card" id="cursoFinanceiroCard" hidden>
+                <div>
+                    <span id="cursoFinanceiroStatus">MENSALIDADE</span>
+                    <strong id="cursoFinanceiroTitulo">Situação financeira do curso</strong>
+                    <small id="cursoFinanceiroDescricao">Consulte a situação da sua mensalidade.</small>
+                </div>
+                <button type="button" id="cursoFinanceiroAcao">Regularizar mensalidade</button>
             </div>
 
 
@@ -1153,6 +1331,34 @@
 
 
 <!-- =========================================================
+     INSTALAÇÃO NA TELA INICIAL
+========================================================== -->
+
+<div class="instalacao-overlay" id="instalacaoOverlay" hidden aria-hidden="true">
+    <div class="instalacao-backdrop" id="instalacaoBackdrop"></div>
+
+    <section class="instalacao-card" role="dialog" aria-modal="true" aria-labelledby="instalacaoTitulo" aria-describedby="instalacaoDescricao">
+        <div class="instalacao-logo" aria-hidden="true">
+            <img src="../img/capa.png" alt="">
+        </div>
+
+        <span class="instalacao-eyebrow">ACESSO MAIS RÁPIDO</span>
+        <h2 id="instalacaoTitulo">Adicione o MEP EAD à sua tela inicial</h2>
+        <p id="instalacaoDescricao">Entre nas suas aulas como se fosse um aplicativo, direto pela tela inicial do celular.</p>
+
+        <div class="instalacao-ios-instrucao" id="instalacaoIosInstrucao" hidden>
+            Toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.
+        </div>
+
+        <div class="instalacao-actions">
+            <button type="button" class="instalacao-depois" id="instalacaoDepoisButton">Agora não</button>
+            <button type="button" class="instalacao-confirmar" id="instalacaoConfirmarButton">Adicionar à tela inicial</button>
+        </div>
+    </section>
+</div>
+
+
+<!-- =========================================================
      TOAST / NOTIFICAÇÕES
 ========================================================== -->
 
@@ -1197,7 +1403,7 @@
 
 <script src="../js/supabase.js"></script>
 
-<script src="../js/portal.js"></script>
+<script src="../js/portal.js?v=20260903-instalacao-pwa"></script>
 
 
 </body>
