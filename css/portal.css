@@ -5767,6 +5767,27 @@ a:focus-visible {
 .portal:has(#cursoViewSection:not([hidden])) .portal-nav-item[href="#cursosSection"] svg { color: var(--portal-red); }
 .curso-aula-acessar-button { border-radius: 6px; }
 
+.curso-aula-acessar-button:disabled {
+    min-width: 190px;
+    border: 1px solid #dedee3;
+    background: #f2f2f4;
+    color: #85858d;
+    cursor: not-allowed;
+    opacity: 1;
+    box-shadow: none;
+}
+
+.curso-aula-acessar-button.is-agendada:disabled {
+    border-color: #ead8aa;
+    background: #fff9e9;
+    color: #9a6b00;
+}
+
+.curso-aula-acessar-button:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 .portal-toast { border-radius: 9px; }
 
 @keyframes portalViewIn {

@@ -46,6 +46,18 @@ const turmasEmpty =
 const turmasCount =
     document.getElementById("turmasCount");
 
+const resumoTotalTurmas =
+    document.getElementById("resumoTotalTurmas");
+
+const resumoTurmasAtivas =
+    document.getElementById("resumoTurmasAtivas");
+
+const resumoAlunosTurmas =
+    document.getElementById("resumoAlunosTurmas");
+
+const resumoProfessoresTurmas =
+    document.getElementById("resumoProfessoresTurmas");
+
 const novaTurmaButton =
     document.getElementById("novaTurmaButton");
 
@@ -211,6 +223,24 @@ const gerenciarTurmaMensagem =
     document.getElementById(
         "gerenciarTurmaMensagem"
     );
+
+const relatorioTurmaAlunos =
+    document.getElementById("relatorioTurmaAlunos");
+
+const relatorioTurmaAulas =
+    document.getElementById("relatorioTurmaAulas");
+
+const relatorioTurmaChamadas =
+    document.getElementById("relatorioTurmaChamadas");
+
+const relatorioTurmaAlunosTotal =
+    document.getElementById("relatorioTurmaAlunosTotal");
+
+const relatorioTurmaMedia =
+    document.getElementById("relatorioTurmaMedia");
+
+const imprimirRelatorioTurma =
+    document.getElementById("imprimirRelatorioTurma");
 
 
 /* =========================================================
@@ -397,6 +427,16 @@ function configurarEventosTurmas() {
         pesquisarProfessoresTurma.addEventListener(
             "input",
             renderizarProfessoresDisponiveis
+        );
+
+    }
+
+
+    if (imprimirRelatorioTurma) {
+
+        imprimirRelatorioTurma.addEventListener(
+            "click",
+            () => window.print()
         );
 
     }
@@ -740,6 +780,9 @@ async function carregarTurmas() {
                 : [];
 
 
+        await carregarResumoTurmas();
+
+
         renderizarTurmasFiltradas();
 
     }
@@ -909,7 +952,7 @@ function renderizarTurmas(lista) {
     lista.forEach(turma => {
 
         listaTurmas.appendChild(
-            criarCardTurma(turma)
+            criarLinhaTurma(turma)
         );
 
     });
@@ -1178,6 +1221,125 @@ async function abrirModalNovaTurma() {
 }
 
 
+function criarLinhaTurma(turma) {
+
+    const linha = document.createElement("article");
+    linha.className = "turma-row";
+    linha.dataset.id = turma.id;
+
+    const ativa = turma.ativa === true;
+    const cursoNome = turma.cursos?.nome || "Curso não informado";
+    const imagem = turma.cursos?.imagem_url || "";
+    const resumo = turma.resumo || { alunos: 0, professores: 0 };
+    const periodo = formatarPeriodo(turma.data_inicio, turma.data_fim);
+    const nome = turma.nome || "Turma sem nome";
+
+    const capa = imagem
+        ? `<div class="turma-row-cover"><img src="${escaparHTML(imagem)}" alt="" loading="lazy"><span></span></div>`
+        : `<div class="turma-row-cover turma-row-cover-placeholder"><b>MEP</b><span></span></div>`;
+
+    linha.innerHTML = `
+        ${capa}
+        <div class="turma-row-content">
+            <div class="turma-row-main">
+                <span class="turma-row-label">${escaparHTML(cursoNome)}</span>
+                <h3>${escaparHTML(nome)}</h3>
+                <p>${escaparHTML(turma.descricao || turma.codigo || "Nenhuma descrição cadastrada.")}</p>
+            </div>
+            <div class="turma-row-structure">
+                <span><strong>${resumo.alunos}</strong><small>${resumo.alunos === 1 ? "aluno" : "alunos"}</small></span>
+                <span><strong>${resumo.professores}</strong><small>${resumo.professores === 1 ? "professor" : "professores"}</small></span>
+            </div>
+            <div class="turma-row-period"><strong>${escaparHTML(periodo)}</strong><small>${escaparHTML(turma.codigo || "Sem código")}</small></div>
+            <div class="turma-row-status"><span class="turma-status ${ativa ? "ativa" : "inativa"}">${ativa ? "ATIVA" : "INATIVA"}</span></div>
+            <div class="turma-row-actions">
+                <button type="button" class="turma-action primary" data-action="gerenciar" data-id="${escaparHTML(turma.id)}"><span>↗</span> Gerenciar turma</button>
+                <button type="button" class="turma-action" data-action="status" data-id="${escaparHTML(turma.id)}">${ativa ? "Desativar" : "Ativar"}</button>
+            </div>
+        </div>`;
+
+    linha.querySelector("img")?.addEventListener("error", evento => {
+        const cover = evento.currentTarget.closest(".turma-row-cover");
+        if (!cover) return;
+        cover.classList.add("turma-row-cover-placeholder");
+        cover.innerHTML = "<b>MEP</b><span></span>";
+    });
+
+    linha.querySelectorAll("[data-action]").forEach(button => {
+        button.addEventListener("click", evento => {
+            evento.stopPropagation();
+            if (button.dataset.action === "gerenciar") abrirGerenciamentoTurma(button.dataset.id);
+            if (button.dataset.action === "status") alterarStatusTurma(button.dataset.id);
+        });
+    });
+
+    linha.addEventListener("dblclick", () => abrirGerenciamentoTurma(String(turma.id)));
+
+    return linha;
+}
+
+
+async function carregarResumoTurmas() {
+
+    const idsTurmas = turmas.map(turma => turma.id).filter(Boolean);
+
+    if (!idsTurmas.length) {
+        atualizarResumoTurmas();
+        return;
+    }
+
+    const [alunosResposta, professoresResposta] = await Promise.all([
+        supabaseClient
+            .from("turma_alunos")
+            .select("turma_id, aluno_id, ativo")
+            .in("turma_id", idsTurmas)
+            .eq("ativo", true),
+        supabaseClient
+            .from("turma_professores")
+            .select("turma_id, professor_id")
+            .in("turma_id", idsTurmas)
+    ]);
+
+    if (alunosResposta.error) {
+        console.warn("MEP EAD | Não foi possível resumir alunos das turmas:", alunosResposta.error);
+    }
+
+    if (professoresResposta.error) {
+        console.warn("MEP EAD | Não foi possível resumir professores das turmas:", professoresResposta.error);
+    }
+
+    const alunos = alunosResposta.data || [];
+    const professores = professoresResposta.data || [];
+
+    turmas.forEach(turma => {
+        const turmaId = String(turma.id);
+        turma.resumo = {
+            alunos: new Set(
+                alunos
+                    .filter(item => String(item.turma_id) === turmaId)
+                    .map(item => String(item.aluno_id))
+            ).size,
+            professores: new Set(
+                professores
+                    .filter(item => String(item.turma_id) === turmaId)
+                    .map(item => String(item.professor_id))
+            ).size
+        };
+    });
+
+    atualizarResumoTurmas(alunos, professores);
+}
+
+
+function atualizarResumoTurmas(alunos = [], professores = []) {
+
+    if (resumoTotalTurmas) resumoTotalTurmas.textContent = turmas.length;
+    if (resumoTurmasAtivas) resumoTurmasAtivas.textContent = turmas.filter(turma => turma.ativa === true).length;
+    if (resumoAlunosTurmas) resumoAlunosTurmas.textContent = new Set(alunos.map(item => String(item.aluno_id))).size;
+    if (resumoProfessoresTurmas) resumoProfessoresTurmas.textContent = new Set(professores.map(item => String(item.professor_id))).size;
+}
+
+
 function fecharModalNovaTurma() {
 
     if (!turmaModal) {
@@ -1429,7 +1591,7 @@ async function alterarStatusTurma(id) {
     const turma =
         turmas.find(
             item =>
-                item.id === id
+                String(item.id) === String(id)
         );
 
 
@@ -1539,10 +1701,165 @@ async function abrirGerenciamentoTurma(id) {
         carregarProfessoresTurmas()
     ]);
 
-    // Depois carrega quem já está vinculado à turma
-    await carregarRelacionamentosTurma(
-        id
-    );
+    // Depois carrega vínculos e relatório da turma em paralelo
+    await Promise.all([
+        carregarRelacionamentosTurma(id),
+        carregarRelatorioTurma(id)
+    ]);
+}
+
+
+/* =========================================================
+   RELATÓRIO E FREQUÊNCIA DA TURMA
+========================================================= */
+
+async function carregarRelatorioTurma(turmaId) {
+
+    prepararRelatorioTurma();
+
+    try {
+        const [matriculasResposta, chamadasResposta] = await Promise.all([
+            supabaseClient
+                .from("turma_alunos")
+                .select("aluno_id, ativo, data_matricula")
+                .eq("turma_id", turmaId)
+                .eq("ativo", true),
+            supabaseClient
+                .from("presencas_chamadas")
+                .select("id, aula_id, turma_id, numero, aberta_em, created_at")
+                .eq("turma_id", turmaId)
+        ]);
+
+        const erroBase = matriculasResposta.error || chamadasResposta.error;
+        if (erroBase) throw erroBase;
+
+        const matriculas = matriculasResposta.data || [];
+        const chamadas = chamadasResposta.data || [];
+        const idsAlunos = [...new Set(matriculas.map(item => item.aluno_id).filter(Boolean))];
+        const idsChamadas = chamadas.map(item => item.id).filter(Boolean);
+
+        const [alunosResposta, presencasResposta] = await Promise.all([
+            idsAlunos.length
+                ? supabaseClient
+                    .from("usuarios")
+                    .select("id, nome, email, foto_url, telefone, ativo")
+                    .in("id", idsAlunos)
+                : Promise.resolve({ data: [], error: null }),
+            idsChamadas.length && idsAlunos.length
+                ? supabaseClient
+                    .from("presencas")
+                    .select("chamada_id, aluno_id, presente, respondido_em, created_at")
+                    .in("chamada_id", idsChamadas)
+                    .in("aluno_id", idsAlunos)
+                    .eq("presente", true)
+                : Promise.resolve({ data: [], error: null })
+        ]);
+
+        const erroDetalhe = alunosResposta.error || presencasResposta.error;
+        if (erroDetalhe) throw erroDetalhe;
+
+        const usuariosPorId = new Map(
+            (alunosResposta.data || []).map(aluno => [String(aluno.id), aluno])
+        );
+        const confirmacoes = new Set(
+            (presencasResposta.data || []).map(item => `${item.chamada_id}:${item.aluno_id}`)
+        );
+        const chamadasPorAula = new Map();
+
+        chamadas.forEach(chamada => {
+            const aulaId = String(chamada.aula_id || `chamada-${chamada.id}`);
+            if (!chamadasPorAula.has(aulaId)) chamadasPorAula.set(aulaId, []);
+            chamadasPorAula.get(aulaId).push(chamada);
+        });
+
+        const alunos = idsAlunos.map(alunoId => {
+            let aulasComPresenca = 0;
+            let chamadasRespondidas = 0;
+
+            chamadasPorAula.forEach(chamadasAula => {
+                const respondidas = chamadasAula.filter(chamada =>
+                    confirmacoes.has(`${chamada.id}:${alunoId}`)
+                ).length;
+                chamadasRespondidas += respondidas;
+                if (respondidas / chamadasAula.length >= 0.6) aulasComPresenca++;
+            });
+
+            const totalAulas = chamadasPorAula.size;
+            return {
+                aluno: usuariosPorId.get(String(alunoId)) || { id: alunoId, nome: "Aluno", email: "" },
+                aulasComPresenca,
+                totalAulas,
+                chamadasRespondidas,
+                totalChamadas: chamadas.length,
+                frequencia: totalAulas ? Math.round(aulasComPresenca * 100 / totalAulas) : null
+            };
+        }).sort((a, b) => String(a.aluno.nome || "").localeCompare(String(b.aluno.nome || ""), "pt-BR"));
+
+        renderizarRelatorioTurma(alunos, chamadasPorAula.size, chamadas.length);
+    }
+    catch (erro) {
+        console.error("MEP EAD | Erro ao carregar relatório da turma:", erro);
+        if (relatorioTurmaAlunos) {
+            relatorioTurmaAlunos.innerHTML = `<tr><td colspan="4"><div class="turma-relatorio-empty erro">Não foi possível carregar o relatório: ${escaparHTML(erro.message || "erro inesperado")}</div></td></tr>`;
+        }
+    }
+}
+
+
+function prepararRelatorioTurma() {
+    if (relatorioTurmaAulas) relatorioTurmaAulas.textContent = "—";
+    if (relatorioTurmaChamadas) relatorioTurmaChamadas.textContent = "—";
+    if (relatorioTurmaAlunosTotal) relatorioTurmaAlunosTotal.textContent = "—";
+    if (relatorioTurmaMedia) relatorioTurmaMedia.textContent = "—";
+    if (relatorioTurmaAlunos) {
+        relatorioTurmaAlunos.innerHTML = `<tr><td colspan="4"><div class="turma-relatorio-loading"><span></span>Calculando frequência...</div></td></tr>`;
+    }
+}
+
+
+function renderizarRelatorioTurma(alunos, totalAulas, totalChamadas) {
+    const frequencias = alunos.map(item => item.frequencia).filter(valor => valor !== null);
+    const media = frequencias.length
+        ? Math.round(frequencias.reduce((soma, valor) => soma + valor, 0) / frequencias.length)
+        : null;
+
+    if (relatorioTurmaAulas) relatorioTurmaAulas.textContent = totalAulas;
+    if (relatorioTurmaChamadas) relatorioTurmaChamadas.textContent = totalChamadas;
+    if (relatorioTurmaAlunosTotal) relatorioTurmaAlunosTotal.textContent = alunos.length;
+    if (relatorioTurmaMedia) {
+        relatorioTurmaMedia.textContent = media === null ? "—" : `${media}%`;
+        relatorioTurmaMedia.className = media === null ? "" : media >= 60 ? "frequencia-aprovada" : "frequencia-abaixo";
+    }
+
+    if (!relatorioTurmaAlunos) return;
+
+    if (!alunos.length) {
+        relatorioTurmaAlunos.innerHTML = `<tr><td colspan="4"><div class="turma-relatorio-empty">Nenhum aluno ativo está matriculado nesta turma.</div></td></tr>`;
+        return;
+    }
+
+    relatorioTurmaAlunos.innerHTML = alunos.map(item => criarLinhaRelatorioTurma(item)).join("");
+}
+
+
+function criarLinhaRelatorioTurma(item) {
+    const aluno = item.aluno;
+    const nome = aluno.nome || "Aluno";
+    const avatar = aluno.foto_url
+        ? `<img src="${escaparHTML(aluno.foto_url)}" alt="">`
+        : `<span>${escaparHTML(nome.trim().charAt(0).toUpperCase() || "A")}</span>`;
+    const classe = item.frequencia === null
+        ? "sem-dados"
+        : item.frequencia >= 60 ? "aprovada" : "abaixo";
+    const porcentagem = item.frequencia === null ? 0 : item.frequencia;
+    const textoFrequencia = item.frequencia === null ? "Sem chamadas" : `${item.frequencia}%`;
+
+    return `<tr>
+        <td><div class="turma-relatorio-aluno"><div class="turma-relatorio-avatar">${avatar}</div><div><strong>${escaparHTML(nome)}</strong><small>${escaparHTML(aluno.email || "E-mail não informado")}</small></div></div></td>
+        <td><strong>${item.totalAulas ? `${item.aulasComPresenca}/${item.totalAulas}` : "—"}</strong><small>${item.totalAulas ? "aulas computadas" : "Nenhuma aula avaliada"}</small></td>
+        <td><strong>${item.totalChamadas ? `${item.chamadasRespondidas}/${item.totalChamadas}` : "—"}</strong><small>${item.totalChamadas ? "confirmações" : "Sem chamadas"}</small></td>
+        <td><div class="turma-frequencia ${classe}"><div><span style="width:${porcentagem}%"></span></div><strong>${textoFrequencia}</strong></div></td>
+    </tr>`;
 }
 
 /* =========================================================
@@ -2196,9 +2513,13 @@ async function adicionarAlunoNaTurma(
     }
 
 
-    await carregarAlunosDaTurma(
-        turmaId
-    );
+    await Promise.all([
+        carregarAlunosDaTurma(turmaId),
+        carregarRelatorioTurma(turmaId)
+    ]);
+
+    await carregarResumoTurmas();
+    renderizarTurmasFiltradas();
 
 }
 
@@ -2261,9 +2582,13 @@ async function removerAlunoDaTurma(
     }
 
 
-    await carregarAlunosDaTurma(
-        turmaSelecionada.id
-    );
+    await Promise.all([
+        carregarAlunosDaTurma(turmaSelecionada.id),
+        carregarRelatorioTurma(turmaSelecionada.id)
+    ]);
+
+    await carregarResumoTurmas();
+    renderizarTurmasFiltradas();
 
 }
 

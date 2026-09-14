@@ -61,6 +61,15 @@ const alunosEmpty =
 const contadorAlunos =
     document.getElementById("contadorAlunos");
 
+const contadorAlunosAtivos =
+    document.getElementById("contadorAlunosAtivos");
+
+const contadorAlunosInativos =
+    document.getElementById("contadorAlunosInativos");
+
+const contadorPrimeiroAcesso =
+    document.getElementById("contadorPrimeiroAcesso");
+
 const alunoNome =
     document.getElementById("alunoNome");
 
@@ -274,7 +283,7 @@ async function carregarAlunos() {
         } = await supabaseClient
             .from("usuarios")
             .select(
-                "id, auth_id, nome, email, perfil, ativo, primeiro_acesso, foto_url, telefone, telefone_secundario"
+                "id, auth_id, nome, email, matricula, perfil, ativo, primeiro_acesso, foto_url, telefone, telefone_secundario"
             )
             .eq(
                 "perfil",
@@ -377,10 +386,19 @@ function aplicarFiltros() {
                         .toLowerCase();
 
 
+                const matricula =
+                    String(
+                        aluno.matricula ||
+                        aluno.numero_matricula ||
+                        ""
+                    ).toLowerCase();
+
+
                 const correspondeBusca =
                     !termo ||
                     nome.includes(termo) ||
                     email.includes(termo) ||
+                    matricula.includes(termo) ||
                     telefones.includes(termo);
 
 
@@ -417,7 +435,7 @@ function aplicarFiltros() {
         );
 
 
-    atualizarContador();
+    atualizarResumoIndicadoresAlunosGestao();
 
     renderizarAlunos();
 
@@ -428,17 +446,12 @@ function aplicarFiltros() {
    CONTADOR
 ========================================= */
 
-function atualizarContador() {
+function atualizarResumoIndicadoresAlunosGestao() {
 
-    if (!contadorAlunos) {
-
-        return;
-
-    }
-
-
-    contadorAlunos.textContent =
-        alunosFiltrados.length;
+    if (contadorAlunos) contadorAlunos.textContent = alunosFiltrados.length;
+    if (contadorAlunosAtivos) contadorAlunosAtivos.textContent = alunos.filter(aluno => aluno.ativo === true).length;
+    if (contadorAlunosInativos) contadorAlunosInativos.textContent = alunos.filter(aluno => aluno.ativo !== true).length;
+    if (contadorPrimeiroAcesso) contadorPrimeiroAcesso.textContent = alunos.filter(aluno => aluno.primeiro_acesso === true).length;
 
 }
 
@@ -516,7 +529,7 @@ function renderizarAlunos() {
         aluno => {
 
             const card =
-                criarCardAluno(aluno);
+                criarLinhaAluno(aluno);
 
             listaAlunos.appendChild(card);
 
@@ -527,7 +540,61 @@ function renderizarAlunos() {
 
 
 /* =========================================
-   CRIAR CARD
+   CRIAR LINHA
+========================================= */
+
+function criarLinhaAluno(aluno) {
+
+    const linha = document.createElement("article");
+    linha.className = "aluno-row";
+    linha.dataset.id = aluno.id;
+
+    const nome = escaparHTML(aluno.nome || "Aluno sem nome");
+    const email = escaparHTML(aluno.email || "E-mail não informado");
+    const matricula = obterMatricula(aluno);
+    const telefone = escaparHTML(aluno.telefone || aluno.telefone_secundario || "Não informado");
+    const ativo = aluno.ativo === true;
+    const primeiroAcesso = aluno.primeiro_acesso === true;
+    const fotoUrl = /^https:\/\//i.test(String(aluno.foto_url || ""))
+        ? escaparHTML(aluno.foto_url)
+        : "";
+    const avatar = fotoUrl
+        ? `<img src="${fotoUrl}" alt="Foto de ${nome}" loading="lazy">`
+        : `<span>${obterInicial(aluno.nome)}</span>`;
+
+    linha.innerHTML = `
+        <div class="aluno-row-profile">
+            <div class="aluno-row-avatar">${avatar}</div>
+            <div><span class="aluno-row-label">ALUNO</span><h3>${nome}</h3><small>${email}</small></div>
+        </div>
+        <div class="aluno-row-matricula"><span>Matrícula institucional</span><strong>${matricula}</strong></div>
+        <div class="aluno-row-contact"><span>Telefone</span><strong>${telefone}</strong></div>
+        <div class="aluno-row-access"><span>Acesso</span><strong>${primeiroAcesso ? "Primeiro acesso pendente" : "Senha atualizada"}</strong>${primeiroAcesso ? '<em>Requer troca de senha</em>' : '<em>Conta configurada</em>'}</div>
+        <div class="aluno-row-status"><span class="aluno-status ${ativo ? "ativo" : "inativo"}">${ativo ? "ATIVO" : "INATIVO"}</span></div>
+        <div class="aluno-row-actions">
+            <button type="button" class="aluno-action" data-action="status" data-id="${escaparHTML(aluno.id)}">${ativo ? "Desativar" : "Ativar"}</button>
+            <button type="button" class="aluno-action primary" data-action="editar" data-id="${escaparHTML(aluno.id)}">Editar aluno</button>
+        </div>`;
+
+    linha.querySelector("img")?.addEventListener("error", evento => {
+        evento.currentTarget.closest(".aluno-row-avatar").innerHTML = `<span>${obterInicial(aluno.nome)}</span>`;
+    });
+
+    linha.querySelectorAll("[data-action]").forEach(botao => {
+        botao.addEventListener("click", () => {
+            if (botao.dataset.action === "status") alternarStatusAluno(botao.dataset.id);
+            if (botao.dataset.action === "editar") editarAluno(botao.dataset.id);
+        });
+    });
+
+    linha.addEventListener("dblclick", () => editarAluno(String(aluno.id)));
+
+    return linha;
+}
+
+
+/* =========================================
+   CARD LEGADO
 ========================================= */
 
 function criarCardAluno(aluno) {

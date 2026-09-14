@@ -219,7 +219,10 @@ serve(async (req) => {
 
             JSON.stringify({
                 success: true,
+                sucesso: true,
                 message:
+                    "Aluno criado com sucesso.",
+                mensagem:
                     "Aluno criado com sucesso.",
                 usuario: perfil,
             }),
@@ -248,7 +251,12 @@ serve(async (req) => {
 
             JSON.stringify({
                 success: false,
+                sucesso: false,
                 message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao criar aluno.",
+                mensagem:
                     error instanceof Error
                         ? error.message
                         : "Erro ao criar aluno.",

@@ -65,6 +65,15 @@
     const contadorProfessores =
         document.getElementById("contadorProfessores");
 
+    const contadorProfessoresAtivos =
+        document.getElementById("contadorProfessoresAtivos");
+
+    const contadorProfessoresInativos =
+        document.getElementById("contadorProfessoresInativos");
+
+    const contadorProfessoresPrimeiroAcesso =
+        document.getElementById("contadorProfessoresPrimeiroAcesso");
+
     const buscarProfessor =
         document.getElementById("buscarProfessor");
 
@@ -830,6 +839,30 @@
         }
 
 
+        if (contadorProfessoresAtivos) {
+            contadorProfessoresAtivos.textContent =
+                professores.filter(function (professor) {
+                    return professor.ativo === true;
+                }).length;
+        }
+
+
+        if (contadorProfessoresInativos) {
+            contadorProfessoresInativos.textContent =
+                professores.filter(function (professor) {
+                    return professor.ativo !== true;
+                }).length;
+        }
+
+
+        if (contadorProfessoresPrimeiroAcesso) {
+            contadorProfessoresPrimeiroAcesso.textContent =
+                professores.filter(function (professor) {
+                    return professor.primeiro_acesso === true;
+                }).length;
+        }
+
+
         if (!lista.length) {
 
             if (listaProfessores) {
@@ -877,7 +910,7 @@
 
 
     /* =====================================================
-       CARD DO PROFESSOR
+       LINHA DO PROFESSOR
     ===================================================== */
 
     function criarCardProfessor(
@@ -916,62 +949,42 @@
                 : "inativo";
 
 
+        const primeiroAcesso =
+            professor.primeiro_acesso === true;
+
+
         return (
-
-            '<article ' +
-                'class="professor-card" ' +
-                'data-professor-id="' +
-                    escaparHtml(
-                        professor.id ||
-                        ""
-                    ) +
-                '">' +
-
-                '<div class="professor-card-avatar">' +
-
-                    inicial +
-
+            '<article class="professor-row" data-professor-id="' +
+                escaparHtml(professor.id || "") + '">' +
+                '<div class="professor-row-profile">' +
+                    '<div class="professor-row-avatar"><span>' + inicial + '</span></div>' +
+                    '<div><span class="professor-row-label">PROFESSOR</span><h3>' + nome + '</h3><small>Equipe acadêmica MEP EAD</small></div>' +
                 '</div>' +
-
-                '<div class="professor-card-content">' +
-
-                    '<div class="professor-card-header">' +
-
-                        '<div>' +
-
-                            '<h3>' +
-                                nome +
-                            '</h3>' +
-
-                            '<span>' +
-                                email +
-                            '</span>' +
-
-                        '</div>' +
-
-                        '<span class="professor-status ' +
-                            classeStatus +
-                        '">' +
-
-                            status +
-
-                        '</span>' +
-
-                    '</div>' +
-
-                    '<div class="professor-card-footer">' +
-
-                        '<span>' +
-                            '👨‍🏫 Professor' +
-                        '</span>' +
-
-                    '</div>' +
-
-                '</div>' +
-
+                '<div class="professor-row-contact"><span>E-mail de acesso</span><strong>' + email + '</strong></div>' +
+                '<div class="professor-row-created"><span>Cadastrado em</span><strong>' + formatarDataCadastro(professor.created_at) + '</strong></div>' +
+                '<div class="professor-row-access"><span>Acesso</span><strong>' +
+                    (primeiroAcesso ? 'Primeiro acesso pendente' : 'Senha atualizada') +
+                    '</strong><em>' + (primeiroAcesso ? 'Requer troca de senha' : 'Conta configurada') + '</em></div>' +
+                '<div class="professor-row-status"><span class="professor-status ' + classeStatus + '">' + status + '</span></div>' +
             '</article>'
-
         );
+
+    }
+
+
+    function formatarDataCadastro(valor) {
+
+        if (!valor) {
+            return "Não informado";
+        }
+
+        const data = new Date(valor);
+
+        if (Number.isNaN(data.getTime())) {
+            return "Não informado";
+        }
+
+        return data.toLocaleDateString("pt-BR");
 
     }
 

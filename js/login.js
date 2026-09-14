@@ -662,12 +662,38 @@ function traduzirErroRecuperacao(
    REALIZAR LOGIN
 ========================================= */
 
+async function resolverEmailDeAcesso(identificador) {
+
+    const valor = String(identificador || "").trim();
+
+    if (valor.includes("@")) {
+        return valor.toLowerCase();
+    }
+
+    const {
+        data,
+        error
+    } = await supabaseClient.rpc(
+        "resolver_email_por_matricula",
+        {
+            p_matricula: valor
+        }
+    );
+
+    if (error) {
+        console.error("Erro ao localizar matrícula:", error);
+        throw new Error("Não foi possível validar a matrícula agora.");
+    }
+
+    return String(data || "").trim().toLowerCase();
+}
+
 async function realizarLogin(event) {
 
     event.preventDefault();
 
 
-    const email =
+    const identificador =
         inputUsuario
             ? inputUsuario.value.trim()
             : "";
@@ -683,10 +709,10 @@ async function realizarLogin(event) {
        VALIDAÇÃO
     ===================================== */
 
-    if (!email || !senha) {
+    if (!identificador || !senha) {
 
         mostrarMensagem(
-            "Preencha seu e-mail e sua senha.",
+            "Preencha seu e-mail ou matrícula e sua senha.",
             "error"
         );
 
@@ -700,9 +726,22 @@ async function realizarLogin(event) {
 
     try {
 
+        const email = await resolverEmailDeAcesso(
+            identificador
+        );
+
+        if (!email) {
+            mostrarMensagem(
+                "E-mail, matrícula ou senha incorretos.",
+                "error"
+            );
+            alterarEstadoBotao(false);
+            if (inputSenha) inputSenha.value = "";
+            return;
+        }
+
         console.log(
-            "Tentando entrar:",
-            email
+            "Tentando entrar com credencial informada."
         );
 
 
@@ -2088,7 +2127,7 @@ function traduzirErroLogin(
     ) {
 
         return (
-            "E-mail ou senha incorretos."
+            "E-mail, matrícula ou senha incorretos."
         );
 
     }

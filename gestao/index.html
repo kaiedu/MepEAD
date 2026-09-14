@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/gestao.css?v=20260903-perfil-aluno-2"
+        href="../css/gestao.css?v=20260904-presencas-chamadas-2"
     >
 
  <link rel="icon" type="image/png" href="img/capa.png">
@@ -618,20 +618,34 @@
 
             <!-- CONTADOR -->
 
-            <div class="courses-summary">
-
-                <span>
-                    Cursos cadastrados
-                </span>
-
-                <strong id="contadorCursos">
-                    0
-                </strong>
-
+            <div class="courses-summary" aria-label="Resumo dos cursos">
+                <article class="courses-summary-card courses-summary-primary">
+                    <span class="courses-summary-icon">▦</span>
+                    <div><small>Total de cursos</small><strong id="contadorCursos">0</strong></div>
+                </article>
+                <article class="courses-summary-card">
+                    <span class="courses-summary-icon success">●</span>
+                    <div><small>Cursos ativos</small><strong id="contadorCursosAtivos">0</strong></div>
+                </article>
+                <article class="courses-summary-card">
+                    <span class="courses-summary-icon muted">○</span>
+                    <div><small>Cursos inativos</small><strong id="contadorCursosInativos">0</strong></div>
+                </article>
+                <article class="courses-summary-card">
+                    <span class="courses-summary-icon">◎</span>
+                    <div><small>Matrículas ativas</small><strong id="contadorMatriculasCursos">0</strong></div>
+                </article>
             </div>
 
 
             <!-- LISTA -->
+
+            <div class="courses-list-heading" aria-hidden="true">
+                <span>Curso</span>
+                <span>Estrutura</span>
+                <span>Situação</span>
+                <span>Ações</span>
+            </div>
 
             <div
                 class="courses-grid"
@@ -1001,19 +1015,23 @@
             <!-- RESUMO -->
 
             <div class="alunos-summary">
-
-                <span>
-                    Alunos cadastrados
-                </span>
-
-                <strong id="contadorAlunos">
-                    0
-                </strong>
-
+                <article class="alunos-summary-card alunos-summary-primary"><span class="alunos-summary-icon">♙</span><div><small>Alunos exibidos</small><strong id="contadorAlunos">0</strong></div></article>
+                <article class="alunos-summary-card"><span class="alunos-summary-icon success">●</span><div><small>Alunos ativos</small><strong id="contadorAlunosAtivos">0</strong></div></article>
+                <article class="alunos-summary-card"><span class="alunos-summary-icon muted">○</span><div><small>Alunos inativos</small><strong id="contadorAlunosInativos">0</strong></div></article>
+                <article class="alunos-summary-card"><span class="alunos-summary-icon warning">◇</span><div><small>Primeiro acesso</small><strong id="contadorPrimeiroAcesso">0</strong></div></article>
             </div>
 
 
             <!-- LISTA -->
+
+            <div class="alunos-list-heading" aria-hidden="true">
+                <span>Aluno</span>
+                <span>Matrícula</span>
+                <span>Contato</span>
+                <span>Acesso</span>
+                <span>Situação</span>
+                <span>Ações</span>
+            </div>
 
             <div
                 class="alunos-grid"
@@ -1321,6 +1339,26 @@
     </div>
 
 
+    <div class="turmas-summary" aria-label="Resumo das turmas">
+        <article class="turmas-summary-card turmas-summary-primary">
+            <span class="turmas-summary-icon">▦</span>
+            <div><small>Total de turmas</small><strong id="resumoTotalTurmas">0</strong></div>
+        </article>
+        <article class="turmas-summary-card">
+            <span class="turmas-summary-icon success">●</span>
+            <div><small>Turmas ativas</small><strong id="resumoTurmasAtivas">0</strong></div>
+        </article>
+        <article class="turmas-summary-card">
+            <span class="turmas-summary-icon">♙</span>
+            <div><small>Alunos matriculados</small><strong id="resumoAlunosTurmas">0</strong></div>
+        </article>
+        <article class="turmas-summary-card">
+            <span class="turmas-summary-icon muted">◎</span>
+            <div><small>Professores vinculados</small><strong id="resumoProfessoresTurmas">0</strong></div>
+        </article>
+    </div>
+
+
     <!-- =========================================
          FERRAMENTAS
     ========================================== -->
@@ -1385,28 +1423,15 @@
          CABEÇALHO DA LISTA
     ========================================== -->
 
-    <div class="turmas-list-header">
-
-        <div>
-
-            <span class="eyebrow">
-                TURMAS CADASTRADAS
-            </span>
-
-            <h3>
-                Suas turmas
-            </h3>
-
-        </div>
-
-        <span
-            class="turmas-count"
-            id="turmasCount"
-        >
-            0 turmas
-        </span>
-
+    <div class="turmas-list-heading" aria-hidden="true">
+        <span>Turma</span>
+        <span>Estrutura</span>
+        <span>Período</span>
+        <span>Situação</span>
+        <span>Ações</span>
     </div>
+
+    <span class="turmas-count" id="turmasCount">0 turmas</span>
 
 
     <!-- =========================================
@@ -1905,8 +1930,7 @@
                 </div>
 
                 <p>
-                    Gerencie professores e alunos
-                    desta turma.
+                    Acompanhe o relatório, a frequência, os professores e os alunos desta turma.
                 </p>
 
             </div>
@@ -2086,6 +2110,38 @@
 
                 </div>
 
+            </section>
+
+
+            <section class="turma-relatorio-section">
+                <div class="turma-relatorio-header">
+                    <div>
+                        <span class="eyebrow">RELATÓRIO DA TURMA</span>
+                        <h3>Frequência dos alunos</h3>
+                        <p>Uma aula conta como presença quando o aluno responde a pelo menos 60% das chamadas realizadas.</p>
+                    </div>
+                    <button type="button" class="secondary-button turma-relatorio-print" id="imprimirRelatorioTurma">
+                        Imprimir / salvar PDF
+                    </button>
+                </div>
+
+                <div class="turma-relatorio-kpis">
+                    <article><small>Aulas avaliadas</small><strong id="relatorioTurmaAulas">0</strong></article>
+                    <article><small>Chamadas realizadas</small><strong id="relatorioTurmaChamadas">0</strong></article>
+                    <article><small>Alunos avaliados</small><strong id="relatorioTurmaAlunosTotal">0</strong></article>
+                    <article class="turma-relatorio-kpi-destaque"><small>Frequência média</small><strong id="relatorioTurmaMedia">—</strong></article>
+                </div>
+
+                <div class="turma-relatorio-table-wrap">
+                    <table class="turma-relatorio-table">
+                        <thead>
+                            <tr><th>Aluno</th><th>Aulas com presença</th><th>Chamadas respondidas</th><th>Frequência</th></tr>
+                        </thead>
+                        <tbody id="relatorioTurmaAlunos">
+                            <tr><td colspan="4"><div class="turma-relatorio-loading"><span></span>Carregando relatório...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
 
@@ -2571,19 +2627,22 @@
     <!-- RESUMO -->
 
     <div class="professores-summary">
-
-        <span>
-            Professores cadastrados
-        </span>
-
-        <strong id="contadorProfessores">
-            0
-        </strong>
-
+        <article class="professores-summary-card professores-summary-primary"><span class="professores-summary-icon">♙</span><div><small>Professores exibidos</small><strong id="contadorProfessores">0</strong></div></article>
+        <article class="professores-summary-card"><span class="professores-summary-icon success">●</span><div><small>Professores ativos</small><strong id="contadorProfessoresAtivos">0</strong></div></article>
+        <article class="professores-summary-card"><span class="professores-summary-icon muted">○</span><div><small>Professores inativos</small><strong id="contadorProfessoresInativos">0</strong></div></article>
+        <article class="professores-summary-card"><span class="professores-summary-icon warning">◇</span><div><small>Primeiro acesso</small><strong id="contadorProfessoresPrimeiroAcesso">0</strong></div></article>
     </div>
 
 
     <!-- LISTA -->
+
+    <div class="professores-list-heading" aria-hidden="true">
+        <span>Professor</span>
+        <span>Contato</span>
+        <span>Cadastro</span>
+        <span>Acesso</span>
+        <span>Situação</span>
+    </div>
 
     <div
         class="professores-grid"
@@ -3746,7 +3805,7 @@
             id="page-presencas"
         >
 
-            <div class="section-header">
+            <div class="section-header presencas-header">
 
                 <span class="eyebrow">
                     ACOMPANHAMENTO
@@ -3757,21 +3816,22 @@
                 </h2>
 
                 <p>
-                    Acompanhe cada aluno por turma, com o consolidado das aulas e chamadas.
+                    Visualize os alunos e acompanhe a frequência em cada turma cadastrada.
                 </p>
 
             </div>
 
             <div class="presencas-summary">
-                <div><span>ALUNOS / TURMAS</span><strong id="presencasTotal">0</strong></div>
-                <div><span>CONFIRMAÇÕES</span><strong id="presencasConfirmadas">0</strong></div>
-                <div><span>FREQUÊNCIA MÉDIA</span><strong id="presencasMedia">0%</strong></div>
+                <div class="presencas-summary-card presencas-summary-primary"><span class="presencas-summary-icon">◎</span><div><small>ALUNOS EXIBIDOS</small><strong id="presencasTotal">0</strong></div></div>
+                <div class="presencas-summary-card"><span class="presencas-summary-icon neutral">▤</span><div><small>TURMAS ACOMPANHADAS</small><strong id="presencasTurmas">0</strong></div></div>
+                <div class="presencas-summary-card"><span class="presencas-summary-icon success">✓</span><div><small>FREQUÊNCIAS ≥ 60%</small><strong id="presencasAptos">0</strong></div></div>
+                <div class="presencas-summary-card"><span class="presencas-summary-icon warning">%</span><div><small>FREQUÊNCIA MÉDIA</small><strong id="presencasMedia">0%</strong></div></div>
             </div>
 
             <div class="presencas-toolbar">
                 <div class="presencas-search">
                     <span>⌕</span>
-                    <input type="search" id="presencasBusca" placeholder="Pesquisar aluno, live, curso ou turma..." autocomplete="off">
+                    <input type="search" id="presencasBusca" placeholder="Pesquisar aluno, matrícula, curso ou turma..." autocomplete="off">
                 </div>
 
                 <div class="presencas-filters">
@@ -3784,22 +3844,17 @@
                 </div>
             </div>
 
-            <div class="presencas-table-wrap">
-                <table class="presencas-table">
-                    <thead>
-                        <tr>
-                            <th>Aluno</th>
-                            <th>Curso / turma</th>
-                            <th>Aulas</th>
-                            <th>Chamadas</th>
-                            <th>Última confirmação</th>
-                            <th>Frequência na turma</th>
-                        </tr>
-                    </thead>
-                    <tbody id="presencasLista">
-                        <tr><td colspan="6" class="presencas-loading">Carregando presenças...</td></tr>
-                    </tbody>
-                </table>
+            <div class="presencas-list-heading" aria-hidden="true">
+                <span>Aluno</span>
+                <span>Matrícula</span>
+                <span>Turmas</span>
+                <span>Frequência geral</span>
+                <span>Situação</span>
+                <span>Ação</span>
+            </div>
+
+            <div class="presencas-students-list" id="presencasLista">
+                <div class="presencas-loading">Carregando alunos e frequências...</div>
             </div>
 
             <div class="empty-state" id="presencasEmpty" hidden>
@@ -3975,6 +4030,39 @@
 
         </section>
 
+        <div class="modal-overlay presenca-aluno-overlay" id="presencaAlunoModal" hidden>
+            <section class="presenca-aluno-modal" role="dialog" aria-modal="true" aria-labelledby="presencaAlunoNome">
+                <header class="presenca-aluno-modal-header">
+                    <div>
+                        <span class="eyebrow">FREQUÊNCIA DO ALUNO</span>
+                        <h2 id="presencaAlunoNome">Gerenciar presença</h2>
+                        <p>Resultado consolidado em todas as turmas ativas.</p>
+                    </div>
+                    <button type="button" class="presenca-modal-close" id="fecharPresencaAluno" aria-label="Fechar">×</button>
+                </header>
+
+                <div class="presenca-aluno-modal-body">
+                    <div class="presenca-aluno-profile">
+                        <div class="presenca-aluno-avatar" id="presencaAlunoAvatar">A</div>
+                        <div><strong id="presencaAlunoEmail">—</strong><span id="presencaAlunoMatricula">Matrícula —</span></div>
+                    </div>
+
+                    <div class="presenca-aluno-kpis">
+                        <div><small>TURMAS ATIVAS</small><strong id="presencaAlunoTurmasTotal">0</strong></div>
+                        <div><small>FREQUÊNCIA MÉDIA</small><strong id="presencaAlunoMedia">0%</strong></div>
+                        <div><small>CHAMADAS RESPONDIDAS</small><strong id="presencaAlunoAulas">0/0</strong></div>
+                    </div>
+
+                    <div class="presenca-aluno-turmas" id="presencaAlunoTurmas"></div>
+                </div>
+
+                <footer class="presenca-aluno-modal-footer">
+                    <span>A frequência é calculada pelas chamadas respondidas. Com 60% ou mais, a situação fica regular.</span>
+                    <button type="button" id="fecharPresencaAlunoFooter">Fechar</button>
+                </footer>
+            </section>
+        </div>
+
 
         <div class="modal-overlay" id="mensalidadeCursoModal" hidden>
             <div class="modal mensalidade-modal" role="dialog" aria-modal="true" aria-labelledby="mensalidadeCursoModalTitle">
@@ -4095,12 +4183,12 @@
 
 <script src="../js/supabase.js"></script>
 <script src="../js/gestao.js?v=20260903-financeiro"></script>
-<script src="../js/alunos.js?v=20260903-perfil-aluno"></script>
-<script src="../js/professores.js"></script>
-<script src="../js/cursos.js"></script>
-<script src="../js/turmas.js"></script>
+<script src="../js/alunos.js?v=20260904-contadores-alunos-3"></script>
+<script src="../js/professores.js?v=20260904-professores-rebrand-1"></script>
+<script src="../js/cursos.js?v=20260904-cursos-rebrand-2"></script>
+<script src="../js/turmas.js?v=20260904-relatorio-turma-1"></script>
 <script src="../js/lives.js"></script>
-<script src="../js/presencas.js"></script>
+<script src="../js/presencas.js?v=20260904-presencas-chamadas-2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="../js/relatorios.js"></script>
 <script src="../js/mensalidades.js?v=20260903-financeiro-4"></script>

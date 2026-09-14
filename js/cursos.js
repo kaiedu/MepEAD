@@ -69,6 +69,15 @@ const filtroCursos =
 const contadorCursos =
     document.getElementById("contadorCursos");
 
+const contadorCursosAtivos =
+    document.getElementById("contadorCursosAtivos");
+
+const contadorCursosInativos =
+    document.getElementById("contadorCursosInativos");
+
+const contadorMatriculasCursos =
+    document.getElementById("contadorMatriculasCursos");
+
 const salvarCursoButton =
     document.getElementById("salvarCursoButton");
 
@@ -80,7 +89,6 @@ const salvarCursoButton =
 let cursos = [];
 
 let cursoEditandoId = null;
-
 
 /* =========================================
    INICIALIZAÇÃO
@@ -718,7 +726,11 @@ async function carregarCursos() {
                     ativo,
                     criado_por,
                     created_at,
-                    updated_at
+                    updated_at,
+                    mensalidade_ativa,
+                    mensalidade_valor,
+                    mensalidade_bloqueio_modo,
+                    mensalidade_carencia_dias
                 `)
 
                 .order(
@@ -753,6 +765,9 @@ async function carregarCursos() {
                 : [];
 
 
+        await carregarResumoDosCursos();
+
+
         console.log(
             "MEP EAD | Cursos carregados:",
             cursos
@@ -780,6 +795,56 @@ async function carregarCursos() {
 
     }
 
+}
+
+
+/* =========================================
+   RESUMO OPERACIONAL DOS CURSOS
+========================================= */
+
+async function carregarResumoDosCursos() {
+
+    cursos.forEach(curso => {
+        curso.resumo = { turmas: 0, alunos: 0, professores: 0 };
+    });
+
+    if (!cursos.length) return;
+
+    try {
+        const idsCursos = cursos.map(curso => curso.id);
+        const { data: turmasData, error: turmasErro } = await supabaseClient
+            .from("turmas")
+            .select("id, curso_id, ativa")
+            .in("curso_id", idsCursos);
+        if (turmasErro) throw turmasErro;
+
+        const turmasResumo = turmasData || [];
+        const idsTurmas = turmasResumo.map(turma => turma.id);
+        let matriculasData = [];
+        let professoresData = [];
+
+        if (idsTurmas.length) {
+            const [matriculasResposta, professoresResposta] = await Promise.all([
+                supabaseClient.from("turma_alunos").select("turma_id, aluno_id, ativo").in("turma_id", idsTurmas).eq("ativo", true),
+                supabaseClient.from("turma_professores").select("turma_id, professor_id").in("turma_id", idsTurmas)
+            ]);
+            if (matriculasResposta.error) throw matriculasResposta.error;
+            if (professoresResposta.error) throw professoresResposta.error;
+            matriculasData = matriculasResposta.data || [];
+            professoresData = professoresResposta.data || [];
+        }
+
+        const cursoPorTurma = new Map(turmasResumo.map(turma => [String(turma.id), String(turma.curso_id)]));
+        cursos.forEach(curso => {
+            const cursoId = String(curso.id);
+            const turmasCurso = turmasResumo.filter(turma => String(turma.curso_id) === cursoId);
+            const alunos = new Set(matriculasData.filter(item => cursoPorTurma.get(String(item.turma_id)) === cursoId).map(item => item.aluno_id));
+            const professores = new Set(professoresData.filter(item => cursoPorTurma.get(String(item.turma_id)) === cursoId).map(item => item.professor_id));
+            curso.resumo = { turmas: turmasCurso.length, alunos: alunos.size, professores: professores.size };
+        });
+    } catch (erro) {
+        console.warn("MEP EAD | Não foi possível carregar o resumo dos cursos:", erro);
+    }
 }
 
 
@@ -917,7 +982,7 @@ function renderizarCursos(lista) {
         curso => {
 
             const card =
-                criarCardCurso(
+                criarLinhaCurso(
                     curso
                 );
 
@@ -935,6 +1000,56 @@ function renderizarCursos(lista) {
 /* =========================================
    CRIAR CARD
 ========================================= */
+
+function criarLinhaCurso(curso) {
+    const card = document.createElement("article");
+    card.className = "curso-card curso-row";
+    card.dataset.id = curso.id;
+
+    const nome = escaparHTML(curso.nome || "Curso sem nome");
+    const descricao = escaparHTML(curso.descricao || "Nenhuma descrição cadastrada.");
+    const imagem = curso.imagem_url ? escaparHTML(curso.imagem_url) : "";
+    const ativo = curso.ativo === true;
+    const resumo = curso.resumo || { turmas: 0, alunos: 0, professores: 0 };
+    const capa = imagem
+        ? `<div class="curso-card-cover"><img src="${imagem}" alt="Capa do curso ${nome}" class="curso-card-image" loading="lazy"><div class="curso-card-overlay"></div></div>`
+        : `<div class="curso-card-cover curso-sem-capa"><div class="curso-sem-imagem"><span>MEP</span></div><div class="curso-card-overlay"></div></div>`;
+
+    card.innerHTML = `
+        ${capa}
+        <div class="curso-card-content">
+            <div class="curso-card-main">
+                <span class="curso-card-label">CURSO · CADASTRADO EM ${formatarData(curso.created_at)}</span>
+                <h3 class="curso-card-title">${nome}</h3>
+                <p class="curso-card-description">${descricao}</p>
+            </div>
+            <div class="curso-row-structure" aria-label="Estrutura do curso">
+                <span><strong>${resumo.turmas}</strong><small>${resumo.turmas === 1 ? "turma" : "turmas"}</small></span>
+                <span><strong>${resumo.alunos}</strong><small>${resumo.alunos === 1 ? "aluno" : "alunos"}</small></span>
+                <span><strong>${resumo.professores}</strong><small>${resumo.professores === 1 ? "professor" : "professores"}</small></span>
+            </div>
+            <div class="curso-row-status"><span class="curso-status ${ativo ? "ativo" : "inativo"}"><span class="status-dot"></span>${ativo ? "Ativo" : "Inativo"}</span></div>
+            <div class="curso-card-actions">
+                <button type="button" class="curso-action curso-editar" data-action="editar" data-id="${curso.id}" title="Editar curso"><span class="action-icon">✎</span><span>Editar</span></button>
+                <button type="button" class="curso-action curso-status-button" data-action="status" data-id="${curso.id}" title="${ativo ? "Desativar curso" : "Ativar curso"}"><span class="action-icon">${ativo ? "−" : "+"}</span><span>${ativo ? "Desativar" : "Ativar"}</span></button>
+                <button type="button" class="curso-action curso-excluir" data-action="excluir" data-id="${curso.id}" title="Excluir curso" aria-label="Excluir ${nome}"><span class="action-icon">×</span></button>
+            </div>
+        </div>`;
+
+    const imagemElement = card.querySelector(".curso-card-image");
+    imagemElement?.addEventListener("error", () => {
+        const cover = imagemElement.closest(".curso-card-cover");
+        if (!cover) return;
+        imagemElement.remove();
+        cover.classList.add("curso-sem-capa");
+        const fallback = document.createElement("div");
+        fallback.className = "curso-sem-imagem";
+        fallback.innerHTML = "<span>MEP</span>";
+        cover.prepend(fallback);
+    }, { once: true });
+
+    return card;
+}
 
 function criarCardCurso(curso) {
 
@@ -1958,6 +2073,18 @@ function atualizarContador() {
 
     contadorCursos.textContent =
         cursos.length;
+
+    if (contadorCursosAtivos) {
+        contadorCursosAtivos.textContent = cursos.filter(curso => curso.ativo === true).length;
+    }
+
+    if (contadorCursosInativos) {
+        contadorCursosInativos.textContent = cursos.filter(curso => curso.ativo === false).length;
+    }
+
+    if (contadorMatriculasCursos) {
+        contadorMatriculasCursos.textContent = cursos.reduce((total, curso) => total + Number(curso.resumo?.alunos || 0), 0);
+    }
 
 }
 

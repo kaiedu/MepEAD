@@ -12,7 +12,11 @@
         youtube_url, youtube_video_id, data_live,
         horario_inicio, horario_fim, status, created_at, updated_at
     `;
-    const state = { authUser: null, usuario: null, cursos: [], cursoAtual: null, turmaAtual: null, aulas: [], assinaturaProcessando:false, fotoPerfilArquivo:null, removerFotoPerfil:false, fotoPreviewUrl:null };
+    const state = {
+        authUser: null, usuario: null, cursos: [], cursoAtual: null, turmaAtual: null, aulas: [],
+        assinaturaProcessando:false, fotoPerfilArquivo:null, removerFotoPerfil:false, fotoPreviewUrl:null,
+        canalStatusAulas:null, intervaloStatusAulas:null, timeoutStatusAulas:null, atualizandoStatusAulas:false
+    };
     const recorte = { imagem:null, escalaBase:1, zoom:1, x:0, y:0, arrastando:false, ponteiroId:null, inicioX:0, inicioY:0, origemX:0, origemY:0 };
     const $ = (id) => document.getElementById(id);
     const INSTALACAO_CONCLUIDA_KEY = "mep_ead_pwa_instalado_v1";
@@ -58,10 +62,24 @@
     function formatarDinheiro(valor) { return Number(valor || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" }); }
     function statusTexto(status) {
         const valor = normalizarTexto(status);
-        if (["ao vivo", "live"].includes(valor)) return "AO VIVO";
+        if (["ao vivo", "ao-vivo", "live"].includes(valor)) return "AO VIVO";
         if (["agendada", "agendado"].includes(valor)) return "AGENDADA";
         if (["encerrada", "encerrado", "finalizada", "finalizado"].includes(valor)) return "ENCERRADA";
         return status ? texto(status).replaceAll("_", " ").toUpperCase() : "LIVE";
+    }
+
+    function acessoDaAula(live) {
+        const status = normalizarTexto(live?.status);
+        if (["ao vivo", "ao-vivo", "live"].includes(status) && live?.id) {
+            return { liberado: true, classe: "ao-vivo", texto: "Acessar aula →" };
+        }
+        if (["agendada", "agendado"].includes(status)) {
+            return { liberado: false, classe: "agendada", texto: "A aula já vai começar" };
+        }
+        if (["encerrada", "encerrado", "finalizada", "finalizado"].includes(status)) {
+            return { liberado: false, classe: "encerrada", texto: "A aula já foi encerrada" };
+        }
+        return { liberado: false, classe: "indisponivel", texto: "Aula indisponível" };
     }
 
     function mostrarToast(titulo, mensagem, tipo = "success") {
@@ -637,12 +655,73 @@
             if (error) throw error;
             state.aulas = data || [];
             renderizarAulas();
+            iniciarMonitoramentoAulas();
             await atualizarIndicadoresCurso();
         } catch (erro) {
             state.aulas = [];
             renderizarAulas();
+            pararMonitoramentoAulas();
             mostrarErro("Erro ao carregar aulas", erro);
         } finally { if (loading) loading.hidden = true; }
+    }
+
+    async function atualizarStatusAulas() {
+        if (state.atualizandoStatusAulas || !state.turmaAtual?.id || !state.aulas.length) return;
+        state.atualizandoStatusAulas = true;
+        try {
+            const ids = state.aulas.map(live => live.id).filter(Boolean);
+            if (!ids.length) return;
+            const { data, error } = await supabaseClient.from("lives").select("id,status,updated_at").in("id", ids);
+            if (error) throw error;
+            const atualizacoes = new Map((data || []).map(live => [String(live.id), live]));
+            let mudou = false;
+            state.aulas = state.aulas.map(live => {
+                const atualizada = atualizacoes.get(String(live.id));
+                if (!atualizada || normalizarTexto(atualizada.status) === normalizarTexto(live.status)) return live;
+                mudou = true;
+                return { ...live, status: atualizada.status, updated_at: atualizada.updated_at };
+            });
+            if (mudou) renderizarAulas();
+        } catch (erro) {
+            console.warn("MEP EAD | Não foi possível atualizar o status das aulas:", erro);
+        } finally {
+            state.atualizandoStatusAulas = false;
+        }
+    }
+
+    function agendarAtualizacaoStatusAulas() {
+        clearTimeout(state.timeoutStatusAulas);
+        state.timeoutStatusAulas = setTimeout(() => atualizarStatusAulas(), 120);
+    }
+
+    function pararMonitoramentoAulas() {
+        clearInterval(state.intervaloStatusAulas);
+        clearTimeout(state.timeoutStatusAulas);
+        state.intervaloStatusAulas = null;
+        state.timeoutStatusAulas = null;
+        if (state.canalStatusAulas) supabaseClient.removeChannel?.(state.canalStatusAulas);
+        state.canalStatusAulas = null;
+    }
+
+    function iniciarMonitoramentoAulas() {
+        pararMonitoramentoAulas();
+        if (!state.turmaAtual?.id) return;
+        if (supabaseClient.channel) {
+            state.canalStatusAulas = supabaseClient
+                .channel(`status-aulas-portal-${state.turmaAtual.id}`)
+                .on("postgres_changes", {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "lives",
+                    filter: `turma_id=eq.${state.turmaAtual.id}`
+                }, agendarAtualizacaoStatusAulas)
+                .subscribe(status => {
+                    if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                        console.warn("MEP EAD | Atualização em tempo real indisponível; mantendo verificação automática.");
+                    }
+                });
+        }
+        state.intervaloStatusAulas = setInterval(atualizarStatusAulas, 5000);
     }
 
     function renderizarAulas() {
@@ -657,12 +736,13 @@
             const card = document.createElement("article");
             card.className = "curso-aula-card";
             const horario = live.horario_inicio ? ` • ${escapeHtml(formatarHorario(live.horario_inicio))}` : "";
+            const acesso = acessoDaAula(live);
             card.innerHTML = `<div class="curso-aula-number">${String(indice + 1).padStart(2, "0")}</div>
                 <div class="curso-aula-content"><span class="eyebrow">${escapeHtml(statusTexto(live.status))}</span>
                 <h3>${escapeHtml(live.titulo || "Aula")}</h3><p>${escapeHtml(live.descricao || "Acesse para acompanhar esta aula.")}</p>
                 <span class="curso-aula-date">${escapeHtml(formatarData(live.data_live))}${horario}</span></div>
-                <button type="button" class="curso-aula-acessar-button" ${live.id ? "" : "disabled"}>Acessar aula →</button>`;
-            card.querySelector(".curso-aula-acessar-button").addEventListener("click", () => abrirAula(live));
+                <button type="button" class="curso-aula-acessar-button is-${acesso.classe}" ${acesso.liberado ? "" : "disabled"}>${escapeHtml(acesso.texto)}</button>`;
+            if (acesso.liberado) card.querySelector(".curso-aula-acessar-button").addEventListener("click", () => abrirAula(live));
             lista.appendChild(card);
         });
     }
@@ -670,6 +750,8 @@
     function abrirAula(live) {
         if (state.cursoAtual?.financeiro?.liberado === false) { mostrarToast("Acesso bloqueado", "Regularize a mensalidade deste curso para acessar a aula.", "error"); return; }
         if (!live?.id) { mostrarToast("Aula indisponível", "Não foi possível identificar a aula selecionada.", "error"); return; }
+        const acesso = acessoDaAula(live);
+        if (!acesso.liberado) { mostrarToast("Aula indisponível", acesso.texto, "warning"); return; }
         window.location.href = `./aula.html?id=${encodeURIComponent(String(live.id).trim())}`;
     }
 
@@ -699,6 +781,7 @@
     }
 
     function voltarParaCursos() {
+        pararMonitoramentoAulas();
         state.cursoAtual = null; state.turmaAtual = null; state.aulas = [];
         $("cursoViewSection").hidden = true;
         $("aulaViewSection").hidden = true;
@@ -758,6 +841,10 @@
     }
 
     window.addEventListener("hashchange", sincronizarViewPeloHash);
+    window.addEventListener("beforeunload", pararMonitoramentoAulas);
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && state.turmaAtual?.id) atualizarStatusAulas();
+    });
 
     async function inicializar() {
         try {
@@ -771,7 +858,7 @@
         } catch (erro) { mostrarErro("Erro ao carregar portal", erro); }
     }
 
-    window.MEPPortal = { state, abrirCurso, abrirAula, abrirPerfil, carregarCursos, carregarAulas, iniciarAssinatura, realizarLogout };
+    window.MEPPortal = { state, abrirCurso, abrirAula, abrirPerfil, carregarCursos, carregarAulas, atualizarStatusAulas, iniciarAssinatura, realizarLogout };
     registrarAplicativo();
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", inicializar);
     else inicializar();
