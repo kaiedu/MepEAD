@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/gestao.css?v=20260904-presencas-chamadas-2"
+        href="../css/gestao.css?v=20260914-lives-4"
     >
 
  <link rel="icon" type="image/png" href="img/capa.png">
@@ -49,9 +49,7 @@
 
         <div class="brand">
 
-            <div class="brand-logo">
-                M
-            </div>
+            <div class="brand-logo"><span>M</span><i></i></div>
 
             <div class="brand-text">
 
@@ -60,6 +58,8 @@
                 <span>
                     Ministério de Ensino
                 </span>
+
+                <small>PAINEL DE GESTÃO</small>
 
             </div>
 
@@ -79,7 +79,7 @@
                     data-page="dashboard"
                 >
 
-                    <span class="nav-icon">⌂</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3l8.5 7.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M9 21v-7h6v7"/></svg></span>
 
                     <span>Dashboard</span>
 
@@ -99,7 +99,7 @@
                     data-page="cursos"
                 >
 
-                    <span class="nav-icon">▣</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H4z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H14v18a3 3 0 0 1 3-3h3z"/></svg></span>
 
                     <span>Cursos</span>
 
@@ -111,7 +111,7 @@
                     data-page="turmas"
                 >
 
-                    <span class="nav-icon">▤</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg></span>
 
                     <span>Turmas</span>
 
@@ -123,7 +123,7 @@
                     data-page="alunos"
                 >
 
-                    <span class="nav-icon">♙</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span>
 
                     <span>Alunos</span>
 
@@ -135,7 +135,7 @@
                     data-page="professores"
                 >
 
-                    <span class="nav-icon">♟</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5z"/><path d="M6 10.2V16c3.3 2.7 8.7 2.7 12 0v-5.8M22 8v7"/></svg></span>
 
                     <span>Professores</span>
 
@@ -156,7 +156,7 @@
                     aria-controls="page-mensalidades"
                 >
 
-                    <span class="nav-icon">$</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2h13"/><path d="M16 12h5M17.5 15h.01"/></svg></span>
 
                     <span>Financeiro</span>
 
@@ -177,7 +177,7 @@
                     data-page="lives"
                 >
 
-                    <span class="nav-icon">◉</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"/><path d="m17 10 4-2v8l-4-2z"/><circle cx="10" cy="12" r="2.5"/></svg></span>
 
                     <span>Lives</span>
 
@@ -189,7 +189,7 @@
                     data-page="presencas"
                 >
 
-                    <span class="nav-icon">✓</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7.5 12 3 3 6-7"/></svg></span>
 
                     <span>Presenças</span>
 
@@ -201,7 +201,7 @@
                     data-page="relatorios"
                 >
 
-                    <span class="nav-icon">▥</span>
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 16v-3M12 16V9M16 16v-5"/></svg></span>
 
                     <span>Relatórios</span>
 
@@ -214,12 +214,17 @@
 
         <div class="sidebar-bottom">
 
+            <div class="sidebar-system-status">
+                <i></i>
+                <div><strong>Área administrativa</strong><span>Sistema conectado</span></div>
+            </div>
+
             <button
                 class="nav-item"
                 data-page="configuracoes"
             >
 
-                <span class="nav-icon">⚙</span>
+                <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63a1.7 1.7 0 0 0 1-1.55V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9a1.7 1.7 0 0 0 1.55 1H21v4h-.08A1.7 1.7 0 0 0 19.4 15z"/></svg></span>
 
                 <span>Configurações</span>
 
@@ -231,7 +236,7 @@
                 class="logout-button"
             >
 
-                <span>↪</span>
+                <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3"/><path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/></svg></span>
 
                 <span>Sair da conta</span>
 
@@ -304,222 +309,83 @@
             id="page-dashboard"
         >
 
-            <div class="welcome-card">
-
-                <div>
-
-                    <span class="eyebrow">
-                        VISÃO GERAL
-                    </span>
-
-                    <h2>
-                        Bem-vindo ao MEP EAD.
-                    </h2>
-
-                    <p>
-                        Gerencie o ensino, acompanhe
-                        seus alunos e organize as
-                        transmissões do Ministério
-                        de Ensino no Propósito.
-                    </p>
-
+            <section class="dashboard-hero">
+                <div class="dashboard-hero-copy">
+                    <span class="eyebrow">CENTRAL DE GESTÃO</span>
+                    <h2 id="dashboardSaudacao">Visão geral do MEP EAD.</h2>
+                    <p>Acompanhe a operação acadêmica, as aulas ao vivo e os pontos que precisam da sua atenção.</p>
+                    <div class="dashboard-hero-actions">
+                        <button type="button" class="dashboard-primary-action" data-page="alunos">Gerenciar alunos <span>→</span></button>
+                        <button type="button" class="dashboard-secondary-action" data-page="lives">Acessar lives</button>
+                    </div>
                 </div>
-
-                <div class="welcome-decoration">
-                    MEP
+                <div class="dashboard-hero-side">
+                    <span id="dashboardHoje">Carregando data...</span>
+                    <div class="dashboard-operation-status"><i></i><div><small>STATUS DA PLATAFORMA</small><strong>Operação ativa</strong></div></div>
+                    <button type="button" id="dashboardRefreshButton">↻ Atualizar indicadores</button>
                 </div>
+            </section>
 
+            <div class="dashboard-stats-grid">
+                <button type="button" class="dashboard-stat-card primary" data-page="cursos">
+                    <span class="dashboard-stat-icon">▦</span>
+                    <span class="dashboard-stat-copy"><small>CURSOS CADASTRADOS</small><strong id="totalCursos">0</strong><em id="dashboardCursosAtivos">0 ativos</em></span>
+                    <b>→</b>
+                </button>
+                <button type="button" class="dashboard-stat-card" data-page="alunos">
+                    <span class="dashboard-stat-icon success">♙</span>
+                    <span class="dashboard-stat-copy"><small>ALUNOS ATIVOS</small><strong id="totalAlunos">0</strong><em id="dashboardAlunosTotal">0 cadastrados</em></span>
+                    <b>→</b>
+                </button>
+                <button type="button" class="dashboard-stat-card" data-page="professores">
+                    <span class="dashboard-stat-icon violet">◇</span>
+                    <span class="dashboard-stat-copy"><small>PROFESSORES ATIVOS</small><strong id="totalProfessores">0</strong><em id="dashboardProfessoresTotal">0 cadastrados</em></span>
+                    <b>→</b>
+                </button>
+                <button type="button" class="dashboard-stat-card" data-page="lives">
+                    <span class="dashboard-stat-icon live">●</span>
+                    <span class="dashboard-stat-copy"><small>TRANSMISSÕES</small><strong id="totalLives">0</strong><em id="dashboardLivesResumo">Nenhuma ao vivo</em></span>
+                    <b>→</b>
+                </button>
             </div>
 
-
-            <!-- ESTATÍSTICAS -->
-
-            <div class="stats-grid">
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon red">
-                        📚
+            <div class="dashboard-main-grid">
+                <section class="dashboard-panel dashboard-live-panel">
+                    <header class="dashboard-panel-header">
+                        <div><span class="eyebrow">TRANSMISSÕES</span><h3 id="dashboardLiveHeading">Próxima aula</h3></div>
+                        <span class="dashboard-live-status offline" id="dashboardLiveStatus">CARREGANDO</span>
+                    </header>
+                    <div class="dashboard-live-content" id="dashboardLiveContent">
+                        <div class="dashboard-skeleton"></div><div class="dashboard-skeleton short"></div>
                     </div>
+                    <footer><button type="button" data-page="lives">Gerenciar transmissões <span>→</span></button></footer>
+                </section>
 
-                    <div class="stat-content">
-
-                        <span>
-                            Cursos
-                        </span>
-
-                        <strong id="totalCursos">
-                            0
-                        </strong>
-
+                <section class="dashboard-panel dashboard-operation-panel">
+                    <header class="dashboard-panel-header">
+                        <div><span class="eyebrow">ACADÊMICO</span><h3>Resumo operacional</h3></div>
+                        <span class="dashboard-updated" id="dashboardAtualizado">Atualizando...</span>
+                    </header>
+                    <div class="dashboard-operation-list">
+                        <button type="button" data-page="turmas"><span class="dashboard-operation-icon">▤</span><span><small>TURMAS ATIVAS</small><strong id="totalTurmasDashboard">0</strong></span><em id="dashboardTurmasTotal">0 no total</em><b>→</b></button>
+                        <button type="button" data-page="alunos"><span class="dashboard-operation-icon">◎</span><span><small>MATRÍCULAS ATIVAS</small><strong id="dashboardMatriculas">0</strong></span><em>Vínculos em turmas</em><b>→</b></button>
+                        <button type="button" data-page="presencas"><span class="dashboard-operation-icon green">✓</span><span><small>FREQUÊNCIA GERAL</small><strong id="dashboardFrequencia">0%</strong></span><em id="dashboardChamadasResumo">0 confirmações</em><b>→</b></button>
+                        <button type="button" data-page="alunos"><span class="dashboard-operation-icon warning">!</span><span><small>PRIMEIRO ACESSO</small><strong id="dashboardPrimeiroAcesso">0</strong></span><em>Alunos com troca pendente</em><b>→</b></button>
                     </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon blue">
-                        👥
-                    </div>
-
-                    <div class="stat-content">
-
-                        <span>
-                            Alunos
-                        </span>
-
-                        <strong id="totalAlunos">
-                            0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon purple">
-                        👨‍🏫
-                    </div>
-
-                    <div class="stat-content">
-
-                        <span>
-                            Professores
-                        </span>
-
-                        <strong id="totalProfessores">
-                            0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon green">
-                        🔴
-                    </div>
-
-                    <div class="stat-content">
-
-                        <span>
-                            Lives
-                        </span>
-
-                        <strong id="totalLives">
-                            0
-                        </strong>
-
-                    </div>
-
-                </div>
-
+                </section>
             </div>
 
-
-
-            <!-- GRID INFERIOR -->
-
-            <div class="content-grid">
-
-
-                <!-- PRÓXIMA LIVE -->
-
-                <div class="content-card">
-
-                    <div class="card-header">
-
-                        <div>
-
-                            <span class="eyebrow">
-                                TRANSMISSÕES
-                            </span>
-
-                            <h3>
-                                Próxima aula
-                            </h3>
-
-                        </div>
-
-                        <span class="live-status">
-                            OFFLINE
-                        </span>
-
-                    </div>
-
-
-                    <div class="empty-content">
-
-                        <div class="empty-icon">
-                            ◉
-                        </div>
-
-                        <strong>
-                            Nenhuma live cadastrada
-                        </strong>
-
-                        <p>
-                            Quando uma transmissão
-                            for cadastrada, ela
-                            aparecerá aqui.
-                        </p>
-
-                        <button
-                            class="primary-button"
-                            data-page="lives"
-                        >
-                            Gerenciar lives
-                        </button>
-
-                    </div>
-
+            <section class="dashboard-shortcuts">
+                <div class="dashboard-shortcuts-heading"><div><span class="eyebrow">ATALHOS</span><h3>Acesso rápido</h3></div><p>Continue diretamente na área que deseja administrar.</p></div>
+                <div class="dashboard-shortcuts-grid">
+                    <button type="button" data-page="cursos"><span>01</span><strong>Cursos</strong><small>Conteúdo e estrutura</small></button>
+                    <button type="button" data-page="turmas"><span>02</span><strong>Turmas</strong><small>Vínculos e relatórios</small></button>
+                    <button type="button" data-page="alunos"><span>03</span><strong>Alunos</strong><small>Cadastros e acessos</small></button>
+                    <button type="button" data-page="lives"><span>04</span><strong>Lives</strong><small>Aulas e chamadas</small></button>
+                    <button type="button" data-page="presencas"><span>05</span><strong>Presenças</strong><small>Frequência e correções</small></button>
+                    <button type="button" data-page="mensalidades"><span>06</span><strong>Financeiro</strong><small>Planos e pagamentos</small></button>
                 </div>
-
-
-
-                <!-- ATIVIDADE -->
-
-                <div class="content-card">
-
-                    <div class="card-header">
-
-                        <div>
-
-                            <span class="eyebrow">
-                                SISTEMA
-                            </span>
-
-                            <h3>
-                                Atividade recente
-                            </h3>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="activity-empty">
-
-                        <div class="empty-icon">
-                            ✓
-                        </div>
-
-                        <p>
-                            Nenhuma atividade registrada
-                            ainda.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </section>
 
         </section>
 
@@ -3821,6 +3687,17 @@
 
             </div>
 
+            <div class="presencas-view-tabs" role="tablist" aria-label="Áreas de presença">
+                <button type="button" class="active" id="presencasTabResumo" role="tab" aria-selected="true" aria-controls="presencasVisaoGeral">
+                    <span>◎</span> Visão geral
+                </button>
+                <button type="button" id="presencasTabCorrecao" role="tab" aria-selected="false" aria-controls="presencasCorrecao">
+                    <span>✓</span> Corrigir presenças
+                </button>
+            </div>
+
+            <div id="presencasVisaoGeral" role="tabpanel" aria-labelledby="presencasTabResumo">
+
             <div class="presencas-summary">
                 <div class="presencas-summary-card presencas-summary-primary"><span class="presencas-summary-icon">◎</span><div><small>ALUNOS EXIBIDOS</small><strong id="presencasTotal">0</strong></div></div>
                 <div class="presencas-summary-card"><span class="presencas-summary-icon neutral">▤</span><div><small>TURMAS ACOMPANHADAS</small><strong id="presencasTurmas">0</strong></div></div>
@@ -3862,6 +3739,55 @@
                 <h3>Nenhum registro encontrado</h3>
                 <p>Ajuste os filtros ou aguarde as chamadas de presença das lives.</p>
             </div>
+
+            </div>
+
+            <section class="presencas-correcao" id="presencasCorrecao" role="tabpanel" aria-labelledby="presencasTabCorrecao" hidden>
+                <div class="presencas-correcao-heading">
+                    <div>
+                        <span class="eyebrow">AJUSTE MANUAL</span>
+                        <h3>Lista de chamadas da aula</h3>
+                        <p>Escolha a turma e a aula. Cada quadradinho representa uma chamada aberta pelo gestor.</p>
+                    </div>
+                    <span class="presencas-correcao-regra"><b>60%</b> mínimo para presença</span>
+                </div>
+
+                <div class="presencas-correcao-filtros">
+                    <label>
+                        <span>1. Turma</span>
+                        <select id="correcaoPresencaTurma">
+                            <option value="">Selecione uma turma</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>2. Aula / live</span>
+                        <select id="correcaoPresencaAula" disabled>
+                            <option value="">Selecione primeiro a turma</option>
+                        </select>
+                    </label>
+                    <button type="button" id="atualizarCorrecaoPresenca" disabled>↻ Atualizar lista</button>
+                </div>
+
+                <div class="presencas-correcao-contexto" id="correcaoPresencaContexto" hidden>
+                    <div><span>AULA SELECIONADA</span><strong id="correcaoPresencaTitulo">—</strong><small id="correcaoPresencaDetalhes">—</small></div>
+                    <div class="presencas-correcao-indicadores">
+                        <span><small>CHAMADAS</small><strong id="correcaoPresencaChamadas">0</strong></span>
+                        <span><small>ALUNOS</small><strong id="correcaoPresencaAlunos">0</strong></span>
+                        <span><small>ALTERAÇÕES</small><strong id="correcaoPresencaAlteracoes">0</strong></span>
+                    </div>
+                </div>
+
+                <div class="presencas-correcao-feedback" id="correcaoPresencaFeedback" role="status">
+                    Selecione uma turma e uma aula para abrir a lista de presença.
+                </div>
+
+                <div class="presencas-ponto-wrap" id="correcaoPresencaTabela" hidden></div>
+
+                <div class="presencas-correcao-footer" id="correcaoPresencaFooter" hidden>
+                    <p><span></span> Marcado significa chamada confirmada para o aluno.</p>
+                    <button type="button" id="salvarCorrecaoPresenca" disabled>Salvar alterações</button>
+                </div>
+            </section>
 
         </section>
 
@@ -4182,13 +4108,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../js/supabase.js"></script>
-<script src="../js/gestao.js?v=20260903-financeiro"></script>
+<script src="../js/gestao.js?v=20260914-dashboard-2"></script>
 <script src="../js/alunos.js?v=20260904-contadores-alunos-3"></script>
 <script src="../js/professores.js?v=20260904-professores-rebrand-1"></script>
 <script src="../js/cursos.js?v=20260904-cursos-rebrand-2"></script>
 <script src="../js/turmas.js?v=20260904-relatorio-turma-1"></script>
 <script src="../js/lives.js"></script>
-<script src="../js/presencas.js?v=20260904-presencas-chamadas-2"></script>
+<script src="../js/presencas.js?v=20260914-correcao-presencas-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="../js/relatorios.js"></script>
 <script src="../js/mensalidades.js?v=20260903-financeiro-4"></script>

@@ -264,29 +264,7 @@ function carregarUsuario(usuario) {
 ========================================= */
 
 async function carregarDashboard() {
-
-    console.log(
-        "Carregando informações do Dashboard..."
-    );
-
-
-    await Promise.all([
-
-        carregarTotalCursos(),
-
-        carregarTotalAlunos(),
-
-        carregarTotalProfessores(),
-
-        carregarTotalLives()
-
-    ]);
-
-
-    console.log(
-        "Dashboard carregado."
-    );
-
+    await carregarDashboardCompleto();
 }
 
 
@@ -678,6 +656,18 @@ function mudarPagina(page, atualizarUrl = true) {
 
     }
 
+    if (
+        page === "dashboard" &&
+        typeof carregarDashboardCompleto === "function"
+    ) {
+        carregarDashboardCompleto().catch(
+            erro => console.error(
+                "MEP EAD | Não foi possível atualizar o Dashboard:",
+                erro
+            )
+        );
+    }
+
 
     /* ================================
        TÍTULOS
@@ -717,6 +707,142 @@ function mudarPagina(page, atualizarUrl = true) {
     }
 
 }
+
+
+/* =========================================
+   DASHBOARD OPERACIONAL
+========================================= */
+
+let dashboardCarregando = false;
+
+function definirTextoDashboard(id, valor) {
+    const elemento = document.getElementById(id);
+    if (elemento) elemento.textContent = String(valor ?? "");
+}
+
+function escaparDashboard(valor) {
+    return String(valor ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function normalizarStatusDashboard(valor) {
+    return String(valor || "").trim().toLowerCase().replaceAll("_", " ").replaceAll("-", " ");
+}
+
+function formatarDataDashboard(valor) {
+    const partes = String(valor || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!partes) return "Data não informada";
+    return `${partes[3]}/${partes[2]}/${partes[1]}`;
+}
+
+function instanteDashboard(live) {
+    const data = String(live?.data_live || "").slice(0, 10);
+    const horario = String(live?.horario_inicio || "00:00").slice(0, 5);
+    const instante = new Date(`${data}T${horario}:00`);
+    return Number.isNaN(instante.getTime()) ? Number.MAX_SAFE_INTEGER : instante.getTime();
+}
+
+function atualizarSaudacaoDashboard() {
+    const hora = new Date().getHours();
+    const periodo = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
+    const primeiroNome = String(userName?.textContent || "Gestor").trim().split(/\s+/)[0];
+    definirTextoDashboard("dashboardSaudacao", `${periodo}, ${primeiroNome}.`);
+    definirTextoDashboard("dashboardHoje", new Date().toLocaleDateString("pt-BR", {
+        weekday: "long", day: "2-digit", month: "long", year: "numeric"
+    }));
+}
+
+function renderizarLiveDashboard(lives, turmas) {
+    const conteudo = document.getElementById("dashboardLiveContent");
+    const statusElemento = document.getElementById("dashboardLiveStatus");
+    const tituloElemento = document.getElementById("dashboardLiveHeading");
+    if (!conteudo || !statusElemento) return;
+    const aoVivo = lives.find(live => normalizarStatusDashboard(live.status) === "ao vivo");
+    const agendadas = lives.filter(live => ["agendada", "agendado"].includes(normalizarStatusDashboard(live.status)))
+        .sort((a, b) => instanteDashboard(a) - instanteDashboard(b));
+    const proxima = agendadas.find(live => instanteDashboard(live) >= Date.now()) || agendadas[0] || null;
+    const destaque = aoVivo || proxima;
+
+    if (!destaque) {
+        if (tituloElemento) tituloElemento.textContent = "Próxima aula";
+        statusElemento.textContent = "SEM AGENDA";
+        statusElemento.className = "dashboard-live-status offline";
+        conteudo.innerHTML = `<div class="dashboard-live-empty"><span>◉</span><strong>Nenhuma transmissão agendada</strong><p>Cadastre uma live para que ela apareça em destaque no Dashboard.</p></div>`;
+        return;
+    }
+
+    const estaAoVivo = destaque === aoVivo;
+    const turma = turmas.find(item => String(item.id) === String(destaque.turma_id));
+    if (tituloElemento) tituloElemento.textContent = estaAoVivo ? "Acontecendo agora" : "Próxima aula";
+    statusElemento.textContent = estaAoVivo ? "AO VIVO" : "AGENDADA";
+    statusElemento.className = `dashboard-live-status ${estaAoVivo ? "ao-vivo" : "agendada"}`;
+    conteudo.innerHTML = `<div class="dashboard-live-mark ${estaAoVivo ? "active" : ""}"><span>${estaAoVivo ? "LIVE" : formatarDataDashboard(destaque.data_live).slice(0,5)}</span></div>
+        <div class="dashboard-live-details"><span>${escaparDashboard(turma?.nome || "Turma não informada")}</span><h4>${escaparDashboard(destaque.titulo || "Aula ao vivo")}</h4><p>${escaparDashboard(destaque.descricao || (estaAoVivo ? "A transmissão está disponível para os alunos." : "Aula preparada e aguardando o início."))}</p>
+        <div><b>${formatarDataDashboard(destaque.data_live)}</b><i></i><b>${escaparDashboard(String(destaque.horario_inicio || "Horário não informado").slice(0,5))}</b></div></div>`;
+}
+
+async function carregarDashboardCompleto() {
+    if (dashboardCarregando) return;
+    dashboardCarregando = true;
+    const botaoAtualizar = document.getElementById("dashboardRefreshButton");
+    if (botaoAtualizar) { botaoAtualizar.disabled = true; botaoAtualizar.textContent = "↻ Atualizando..."; }
+    definirTextoDashboard("dashboardAtualizado", "Atualizando...");
+    atualizarSaudacaoDashboard();
+
+    try {
+        const respostas = await Promise.all([
+            supabaseClient.from("cursos").select("id,nome,ativo"),
+            supabaseClient.from("usuarios").select("id,nome,perfil,ativo,primeiro_acesso"),
+            supabaseClient.from("turmas").select("id,nome,curso_id,ativa"),
+            supabaseClient.from("lives").select("id,turma_id,titulo,descricao,data_live,horario_inicio,status"),
+            supabaseClient.from("turma_alunos").select("aluno_id,turma_id,ativo"),
+            supabaseClient.from("presencas_chamadas").select("id"),
+            supabaseClient.from("presencas").select("id,presente")
+        ]);
+        const erro = respostas.find(resposta => resposta.error)?.error;
+        if (erro) throw erro;
+        const [cursos, usuarios, turmas, lives, matriculas, chamadas, presencas] = respostas.map(resposta => resposta.data || []);
+        const alunos = usuarios.filter(usuario => usuario.perfil === "aluno");
+        const professores = usuarios.filter(usuario => usuario.perfil === "professor");
+        const alunosAtivos = alunos.filter(usuario => usuario.ativo === true).length;
+        const professoresAtivos = professores.filter(usuario => usuario.ativo === true).length;
+        const cursosAtivos = cursos.filter(curso => curso.ativo === true).length;
+        const turmasAtivas = turmas.filter(turma => turma.ativa === true).length;
+        const matriculasAtivas = matriculas.filter(matricula => matricula.ativo === true).length;
+        const confirmadas = presencas.filter(presenca => presenca.presente === true).length;
+        const frequencia = presencas.length ? Math.round(confirmadas * 100 / presencas.length) : 0;
+        const livesAoVivo = lives.filter(live => normalizarStatusDashboard(live.status) === "ao vivo").length;
+        const livesAgendadas = lives.filter(live => ["agendada", "agendado"].includes(normalizarStatusDashboard(live.status))).length;
+
+        definirTextoDashboard("totalCursos", cursos.length);
+        definirTextoDashboard("dashboardCursosAtivos", `${cursosAtivos} ${cursosAtivos === 1 ? "ativo" : "ativos"}`);
+        definirTextoDashboard("totalAlunos", alunosAtivos);
+        definirTextoDashboard("dashboardAlunosTotal", `${alunos.length} cadastrados`);
+        definirTextoDashboard("totalProfessores", professoresAtivos);
+        definirTextoDashboard("dashboardProfessoresTotal", `${professores.length} cadastrados`);
+        definirTextoDashboard("totalLives", lives.length);
+        definirTextoDashboard("dashboardLivesResumo", livesAoVivo ? `${livesAoVivo} ao vivo agora` : `${livesAgendadas} agendadas`);
+        definirTextoDashboard("totalTurmasDashboard", turmasAtivas);
+        definirTextoDashboard("dashboardTurmasTotal", `${turmas.length} no total`);
+        definirTextoDashboard("dashboardMatriculas", matriculasAtivas);
+        definirTextoDashboard("dashboardFrequencia", `${frequencia}%`);
+        definirTextoDashboard("dashboardChamadasResumo", `${confirmadas}/${presencas.length} confirmações`);
+        definirTextoDashboard("dashboardPrimeiroAcesso", alunos.filter(aluno => aluno.ativo === true && aluno.primeiro_acesso === true).length);
+        definirTextoDashboard("dashboardAtualizado", `Atualizado às ${new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })}`);
+        renderizarLiveDashboard(lives, turmas);
+        console.log("MEP EAD | Dashboard operacional atualizado:", { cursos:cursos.length, alunos:alunosAtivos, turmas:turmasAtivas, chamadas:chamadas.length });
+    } catch (erro) {
+        console.error("MEP EAD | Erro ao carregar Dashboard:", erro);
+        definirTextoDashboard("dashboardAtualizado", "Não foi possível atualizar");
+        const status = document.getElementById("dashboardLiveStatus");
+        if (status) { status.textContent = "INDISPONÍVEL"; status.className = "dashboard-live-status offline"; }
+    } finally {
+        dashboardCarregando = false;
+        if (botaoAtualizar) { botaoAtualizar.disabled = false; botaoAtualizar.textContent = "↻ Atualizar indicadores"; }
+    }
+}
+
+document.getElementById("dashboardRefreshButton")?.addEventListener("click", carregarDashboardCompleto);
 
 
 window.addEventListener("hashchange", () => {
