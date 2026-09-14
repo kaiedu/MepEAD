@@ -921,6 +921,34 @@ async function realizarLogin(event) {
 
 
         /* =================================
+           REGISTRAR ACESSO
+        ================================= */
+
+        try {
+
+            const { error: erroRegistroAcesso } =
+                await supabaseClient.rpc(
+                    "registrar_acesso_plataforma"
+                );
+
+            if (erroRegistroAcesso) {
+                console.warn(
+                    "Não foi possível registrar este acesso:",
+                    erroRegistroAcesso
+                );
+            }
+
+        }
+
+        catch (erroRegistroAcesso) {
+            console.warn(
+                "Falha não bloqueante ao registrar acesso:",
+                erroRegistroAcesso
+            );
+        }
+
+
+        /* =================================
            PRIMEIRO ACESSO
         ================================= */
 

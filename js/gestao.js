@@ -781,6 +781,109 @@ function renderizarLiveDashboard(lives, turmas) {
         <div><b>${formatarDataDashboard(destaque.data_live)}</b><i></i><b>${escaparDashboard(String(destaque.horario_inicio || "Horário não informado").slice(0,5))}</b></div></div>`;
 }
 
+function formatarAcessoDashboard(valor) {
+    const data = new Date(valor);
+    if (Number.isNaN(data.getTime())) return { data:"Data indisponível", horario:"--:--" };
+    const hoje = new Date();
+    const ontem = new Date();
+    ontem.setDate(hoje.getDate() - 1);
+    const chave = instante => `${instante.getFullYear()}-${instante.getMonth()}-${instante.getDate()}`;
+    const prefixo = chave(data) === chave(hoje) ? "Hoje" : chave(data) === chave(ontem) ? "Ontem" : null;
+    const dataFormatada = data.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric" });
+    return {
+        data: prefixo ? `${prefixo}, ${dataFormatada}` : dataFormatada,
+        horario: data.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })
+    };
+}
+
+function rotuloPerfilDashboard(perfil) {
+    const normalizado = String(perfil || "usuário").trim().toLowerCase();
+    return ({ aluno:"Aluno", professor:"Professor", gestor:"Gestor" })[normalizado] || "Usuário";
+}
+
+function renderizarAcessosDashboard(acessos, listaId = "dashboardAccessList") {
+    const lista = document.getElementById(listaId);
+    if (!lista) return;
+    if (!acessos.length) {
+        lista.innerHTML = `<div class="dashboard-access-empty"><span>◎</span><strong>Nenhum acesso registrado</strong><p>Os próximos logins autenticados aparecerão aqui.</p></div>`;
+        return;
+    }
+
+    lista.innerHTML = acessos.map(acesso => {
+        const nome = String(acesso.nome || "Usuário").trim();
+        const iniciais = nome.split(/\s+/).slice(0,2).map(parte => parte.charAt(0)).join("").toUpperCase() || "U";
+        const instante = formatarAcessoDashboard(acesso.acessado_em);
+        const foto = acesso.foto_url
+            ? `<img src="${escaparDashboard(acesso.foto_url)}" alt="" loading="lazy">`
+            : `<span>${escaparDashboard(iniciais)}</span>`;
+        const classePerfil = String(acesso.perfil || "usuario").toLowerCase().replace(/[^a-z0-9-]/g, "");
+        return `<article class="dashboard-access-row">
+            <div class="dashboard-access-avatar">${foto}</div>
+            <div class="dashboard-access-user"><strong>${escaparDashboard(nome)}</strong><span class="${classePerfil}">${escaparDashboard(rotuloPerfilDashboard(acesso.perfil))}</span></div>
+            <div class="dashboard-access-date"><small>DATA DO ACESSO</small><strong>${escaparDashboard(instante.data)}</strong></div>
+            <div class="dashboard-access-time"><small>HORÁRIO</small><strong>${escaparDashboard(instante.horario)}</strong></div>
+            <i class="dashboard-access-confirmed" title="Login autenticado">✓</i>
+        </article>`;
+    }).join("");
+}
+
+let dashboardAcessosCarregando = false;
+
+async function carregarAcessosDashboard() {
+    const lista = document.getElementById("dashboardAccessList");
+    if (!lista || dashboardAcessosCarregando) return;
+    dashboardAcessosCarregando = true;
+    const atualizado = document.getElementById("dashboardAcessosAtualizado");
+    try {
+        const { data, error } = await supabaseClient.rpc("listar_acessos_plataforma", { p_limite:3 });
+        if (error) throw error;
+        renderizarAcessosDashboard(Array.isArray(data) ? data : []);
+        if (atualizado) atualizado.textContent = `Atualizado às ${new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })}`;
+    } catch (erro) {
+        console.error("MEP EAD | Erro ao carregar histórico de acessos:", erro);
+        lista.innerHTML = `<div class="dashboard-access-empty error"><span>!</span><strong>Histórico indisponível</strong><p>Não foi possível consultar os acessos neste momento.</p></div>`;
+        if (atualizado) atualizado.textContent = "Não foi possível atualizar";
+    } finally {
+        dashboardAcessosCarregando = false;
+    }
+}
+
+async function carregarHistoricoAcessosCompleto() {
+    const lista = document.getElementById("accessHistoryList");
+    const botao = document.getElementById("accessHistoryRefresh");
+    if (!lista) return;
+    lista.innerHTML = `<div class="dashboard-access-loading"><i></i><span>Carregando histórico...</span></div>`;
+    if (botao) botao.disabled = true;
+    try {
+        const { data, error } = await supabaseClient.rpc("listar_acessos_plataforma", { p_limite:1000 });
+        if (error) throw error;
+        renderizarAcessosDashboard(Array.isArray(data) ? data : [], "accessHistoryList");
+    } catch (erro) {
+        console.error("MEP EAD | Erro ao carregar histórico completo:", erro);
+        lista.innerHTML = `<div class="dashboard-access-empty error"><span>!</span><strong>Histórico indisponível</strong><p>Não foi possível carregar os eventos.</p></div>`;
+    } finally {
+        if (botao) botao.disabled = false;
+    }
+}
+
+function fecharHistoricoAcessos() {
+    const modal = document.getElementById("accessHistoryModal");
+    if (!modal) return;
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("access-history-open");
+    carregarAcessosDashboard();
+}
+
+function abrirHistoricoAcessos() {
+    const modal = document.getElementById("accessHistoryModal");
+    if (!modal) return;
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("access-history-open");
+    carregarHistoricoAcessosCompleto();
+}
+
 async function carregarDashboardCompleto() {
     if (dashboardCarregando) return;
     dashboardCarregando = true;
@@ -830,6 +933,7 @@ async function carregarDashboardCompleto() {
         definirTextoDashboard("dashboardPrimeiroAcesso", alunos.filter(aluno => aluno.ativo === true && aluno.primeiro_acesso === true).length);
         definirTextoDashboard("dashboardAtualizado", `Atualizado às ${new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })}`);
         renderizarLiveDashboard(lives, turmas);
+        await carregarAcessosDashboard();
         console.log("MEP EAD | Dashboard operacional atualizado:", { cursos:cursos.length, alunos:alunosAtivos, turmas:turmasAtivas, chamadas:chamadas.length });
     } catch (erro) {
         console.error("MEP EAD | Erro ao carregar Dashboard:", erro);
@@ -843,6 +947,25 @@ async function carregarDashboardCompleto() {
 }
 
 document.getElementById("dashboardRefreshButton")?.addEventListener("click", carregarDashboardCompleto);
+document.getElementById("dashboardAccessDetailsButton")?.addEventListener("click", abrirHistoricoAcessos);
+document.getElementById("accessHistoryClose")?.addEventListener("click", fecharHistoricoAcessos);
+document.getElementById("accessHistoryBackdrop")?.addEventListener("click", fecharHistoricoAcessos);
+document.getElementById("accessHistoryRefresh")?.addEventListener("click", carregarHistoricoAcessosCompleto);
+document.addEventListener("keydown", evento => {
+    if (evento.key === "Escape" && !document.getElementById("accessHistoryModal")?.hidden) fecharHistoricoAcessos();
+});
+
+window.setInterval(() => {
+    if (document.visibilityState === "visible" && document.getElementById("page-dashboard")?.classList.contains("active")) {
+        carregarAcessosDashboard();
+    }
+}, 5000);
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && document.getElementById("page-dashboard")?.classList.contains("active")) {
+        carregarAcessosDashboard();
+    }
+});
 
 
 window.addEventListener("hashchange", () => {

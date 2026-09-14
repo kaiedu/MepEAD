@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/gestao.css?v=20260914-lives-4"
+        href="../css/gestao.css?v=20260914-historico-login-7"
     >
 
  <link rel="icon" type="image/png" href="img/capa.png">
@@ -375,6 +375,23 @@
                 </section>
             </div>
 
+            <section class="dashboard-panel dashboard-access-panel">
+                <header class="dashboard-panel-header">
+                    <div><span class="eyebrow">ATIVIDADE DA PLATAFORMA</span><h3>Últimos acessos</h3></div>
+                    <div class="dashboard-access-heading-meta">
+                        <span class="dashboard-access-live"><i></i> HISTÓRICO DE LOGIN</span>
+                        <small id="dashboardAcessosAtualizado">Carregando...</small>
+                    </div>
+                </header>
+                <div class="dashboard-access-list" id="dashboardAccessList">
+                    <div class="dashboard-access-loading"><i></i><span>Carregando os acessos recentes...</span></div>
+                </div>
+                <footer class="dashboard-access-footer">
+                    <p>Exibindo os três logins autenticados mais recentes da plataforma.</p>
+                    <button type="button" id="dashboardAccessDetailsButton">Ver histórico completo <span>→</span></button>
+                </footer>
+            </section>
+
             <section class="dashboard-shortcuts">
                 <div class="dashboard-shortcuts-heading"><div><span class="eyebrow">ATALHOS</span><h3>Acesso rápido</h3></div><p>Continue diretamente na área que deseja administrar.</p></div>
                 <div class="dashboard-shortcuts-grid">
@@ -386,6 +403,24 @@
                     <button type="button" data-page="mensalidades"><span>06</span><strong>Financeiro</strong><small>Planos e pagamentos</small></button>
                 </div>
             </section>
+
+            <div class="access-history-overlay" id="accessHistoryModal" hidden aria-hidden="true">
+                <button type="button" class="access-history-backdrop" id="accessHistoryBackdrop" aria-label="Fechar histórico"></button>
+                <section class="access-history-dialog" role="dialog" aria-modal="true" aria-labelledby="accessHistoryTitle">
+                    <header class="access-history-header">
+                        <div><span class="eyebrow">ATIVIDADE DA PLATAFORMA</span><h2 id="accessHistoryTitle">Histórico completo</h2><p>Logins registrados por usuário.</p></div>
+                        <button type="button" class="access-history-close" id="accessHistoryClose" aria-label="Fechar">×</button>
+                    </header>
+                    <div class="access-history-toolbar">
+                        <span><i></i> ACESSOS AUTENTICADOS</span>
+                        <button type="button" id="accessHistoryRefresh">↻ Atualizar histórico</button>
+                    </div>
+                    <div class="dashboard-access-list access-history-list" id="accessHistoryList">
+                        <div class="dashboard-access-loading"><i></i><span>Carregando histórico...</span></div>
+                    </div>
+                    <footer class="access-history-footer">Cada novo login cria um registro próprio sem apagar os acessos anteriores.</footer>
+                </section>
+            </div>
 
         </section>
 
@@ -4103,12 +4138,10 @@
 
     </main>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../js/supabase.js"></script>
-<script src="../js/gestao.js?v=20260914-dashboard-2"></script>
+<script src="../js/gestao.js?v=20260914-historico-login-6"></script>
 <script src="../js/alunos.js?v=20260904-contadores-alunos-3"></script>
 <script src="../js/professores.js?v=20260904-professores-rebrand-1"></script>
 <script src="../js/cursos.js?v=20260904-cursos-rebrand-2"></script>
