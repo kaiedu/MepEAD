@@ -4,7 +4,7 @@
     if (typeof supabaseClient === "undefined") return;
 
     const DURATION = 15;
-    const state = { usuario:null, live:null, turma:null, curso:null, materia:null, chamadas:[], presencas:[], ativa:null, timer:null, channels:[], chatIds:new Set(), chatOpen:false, unread:0, finalizando:false };
+    const state = { usuario:null, live:null, turma:null, curso:null, materia:null, chamadas:[], presencas:[], ativa:null, totalAlunos:0, timer:null, channels:[], chatIds:new Set(), chatOpen:false, unread:0, finalizando:false };
     const $ = id => document.getElementById(id);
     const esc = value => String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
     const norm = value => String(value || "").trim().toLowerCase().replaceAll("-","_").replaceAll(" ","_");
@@ -26,14 +26,18 @@
 
     async function loadClass() {
         const id=new URLSearchParams(location.search).get("id"); if(!id)throw new Error("A aula não foi informada.");
-        const {data,error}=await supabaseClient.from("lives").select("id,turma_id,materia_id,professor_id,titulo,descricao,data_live,horario_inicio,horario_fim,status,updated_at").eq("id",id).maybeSingle();
-        if(error)throw error;if(!data)throw new Error("Aula não encontrada ou não vinculada ao seu perfil.");state.live=data;
-        const {data:classData,error:classError}=await supabaseClient.from("turmas").select("id,curso_id,nome,codigo,descricao,ativa").eq("id",data.turma_id).maybeSingle(); if(classError)throw classError;state.turma=classData;
-        const [courseResult,subjectResult]=await Promise.all([
-            classData?.curso_id?supabaseClient.from("cursos").select("id,nome").eq("id",classData.curso_id).maybeSingle():Promise.resolve({data:null}),
-            data.materia_id?supabaseClient.from("materias").select("id,nome").eq("id",data.materia_id).maybeSingle():Promise.resolve({data:null})
-        ]); if(courseResult.error)throw courseResult.error;if(subjectResult.error)throw subjectResult.error;state.curso=courseResult.data;state.materia=subjectResult.data;
-        renderClass();
+        const {data,error}=await supabaseClient.rpc("professor_sala_dados",{p_live_id:id});
+        if(error)throw error;if(!data?.live)throw new Error("Aula não encontrada ou não vinculada ao seu perfil.");
+        state.live=data.live;state.turma=data.turma;state.curso=data.curso;state.materia=data.materia;
+        state.chamadas=Array.isArray(data.chamadas)?data.chamadas:[];
+        state.presencas=Array.isArray(data.presencas)?data.presencas:[];
+        state.ativa=state.chamadas.find(item=>item.ativa)||null;
+        state.totalAlunos=Number(data.total_alunos)||0;
+        $("summaryStudents").textContent=state.totalAlunos;
+        renderClass();renderPresence();if(state.ativa)startTimer();else stopTimer();
+        $("chatMessages").replaceChildren();state.chatIds.clear();
+        (Array.isArray(data.chat)?data.chat:[]).forEach(message=>addMessage(message));
+        if(!state.chatIds.size)showChatEmpty();
     }
 
     function renderClass() {
@@ -79,6 +83,6 @@
     function subscribeRealtime(){const calls=supabaseClient.channel(`professor-calls-${state.live.id}`).on("postgres_changes",{event:"*",schema:"public",table:"presencas_chamadas",filter:`aula_id=eq.${state.live.id}`},()=>loadPresence().catch(console.error)).on("postgres_changes",{event:"*",schema:"public",table:"presencas",filter:`aula_id=eq.${state.live.id}`},()=>loadPresence().catch(console.error)).subscribe();const chat=supabaseClient.channel(`professor-chat-${state.live.id}`).on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_mensagens",filter:`live_id=eq.${state.live.id}`},async payload=>addMessage(await completeAuthor(payload.new),{newMessage:true})).subscribe();const live=supabaseClient.channel(`professor-live-${state.live.id}`).on("postgres_changes",{event:"UPDATE",schema:"public",table:"lives",filter:`id=eq.${state.live.id}`},payload=>{state.live={...state.live,...payload.new};renderClass();renderPresence();}).subscribe();state.channels.push(calls,chat,live);}
     function cleanup(){stopTimer();state.channels.forEach(channel=>supabaseClient.removeChannel?.(channel));state.channels=[];}
     function bindEvents(){$("openPresenceButton")?.addEventListener("click",openCall);$("refreshPresenceButton")?.addEventListener("click",()=>loadPresence().catch(error=>toast("Erro ao atualizar",error.message,"error")));$("openChatButton")?.addEventListener("click",openChat);$("closeChatButton")?.addEventListener("click",closeChat);$("chatBackdrop")?.addEventListener("click",closeChat);$("chatInput")?.addEventListener("input",updateChatForm);$("chatForm")?.addEventListener("submit",sendChat);document.addEventListener("keydown",event=>{if(event.key==="Escape"&&state.chatOpen)closeChat();});window.addEventListener("beforeunload",cleanup);}
-    async function init(){bindEvents();if(!await authenticate()){location.replace("../index.html");return;}try{await loadClass();await Promise.all([loadPresence(),loadStudentTotal(),loadChat()]);subscribeRealtime();}catch(error){console.error("MEP EAD | Sala do professor:",error);toast("Não foi possível abrir a sala",error.message||"Tente novamente.","error");$("classroomTitle").textContent="Sala indisponível";$("classroomDescription").textContent=error.message||"A aula não pôde ser carregada.";}}
+    async function init(){bindEvents();if(!await authenticate()){location.replace("../index.html");return;}try{await loadClass();subscribeRealtime();}catch(error){console.error("MEP EAD | Sala do professor:",error);toast("Não foi possível abrir a sala",error.message||"Tente novamente.","error");$("classroomTitle").textContent="Sala indisponível";$("classroomDescription").textContent=error.message||"A aula não pôde ser carregada.";}}
     document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();
 })();

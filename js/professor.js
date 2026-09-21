@@ -3,7 +3,7 @@
     "use strict";
     if (typeof supabaseClient === "undefined") return;
 
-    const state = { usuario:null, vinculos:[], cursos:[], turmas:[], matriculas:[], lives:[], materias:[], chamadas:[] };
+    const state = { usuario:null, vinculos:[], cursos:[], turmas:[], matriculas:[], lives:[], materias:[], chamadas:[], carregando:false, atualizadoEm:null };
     const $ = id => document.getElementById(id);
     const esc = value => String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
     const norm = value => String(value || "").trim().toLowerCase().replaceAll("-","_").replaceAll(" ","_");
@@ -50,50 +50,68 @@
         if (error || !data || norm(data.perfil) !== "professor" || data.ativo !== true) return false;
         state.usuario = data;
         const first = (data.nome || "Professor").trim().split(/\s+/)[0];
-        $("userName").textContent = data.nome || "Professor"; $("userAvatar").textContent = first.charAt(0).toUpperCase();
+        $("userName").textContent = data.nome || "Professor";
+        $("userAvatar").textContent = first.charAt(0).toUpperCase();
+        if (data.foto_url) {
+            $("userAvatar").style.backgroundImage = `url("${String(data.foto_url).replaceAll('"','%22')}")`;
+            $("userAvatar").classList.add("has-photo");
+        }
         $("welcomeTitle").textContent = `Bem-vindo, ${first}.`;
         return true;
     }
 
     async function loadData() {
-        const { data: links, error: linksError } = await supabaseClient.from("turma_professores").select("turma_id").eq("professor_id",state.usuario.id);
-        if (linksError) throw linksError;
-        state.vinculos = links || [];
-        const linkedIds = [...new Set(state.vinculos.map(item => item.turma_id).filter(Boolean))];
-
-        let liveQuery = supabaseClient.from("lives").select("id,turma_id,materia_id,professor_id,titulo,descricao,data_live,horario_inicio,horario_fim,status,created_at,updated_at").order("data_live",{ascending:false}).order("horario_inicio",{ascending:false});
-        liveQuery = linkedIds.length ? liveQuery.or(`professor_id.eq.${state.usuario.id},turma_id.in.(${linkedIds.join(",")})`) : liveQuery.eq("professor_id",state.usuario.id);
-        const { data: lives, error: livesError } = await liveQuery; if (livesError) throw livesError;
-        state.lives = lives || [];
-
-        const classIds = [...new Set([...linkedIds,...state.lives.map(item => item.turma_id)].filter(Boolean))];
-        if (!classIds.length) { state.turmas=[]; state.cursos=[]; state.matriculas=[]; state.materias=[]; state.chamadas=[]; return; }
-        const [classesResult,enrollmentsResult] = await Promise.all([
-            supabaseClient.from("turmas").select("id,curso_id,nome,codigo,descricao,data_inicio,data_fim,ativa").in("id",classIds).order("nome"),
-            supabaseClient.from("turma_alunos").select("turma_id,aluno_id,ativo,data_matricula,usuarios(id,nome,email,foto_url)").in("turma_id",classIds).eq("ativo",true)
-        ]);
-        if (classesResult.error || enrollmentsResult.error) throw (classesResult.error || enrollmentsResult.error);
-        state.turmas = classesResult.data || []; state.matriculas = enrollmentsResult.data || [];
-        const courseIds = [...new Set(state.turmas.map(item => item.curso_id).filter(Boolean))];
-        const liveIds = state.lives.map(item => item.id);
-        const [coursesResult,subjectsResult,callsResult] = await Promise.all([
-            courseIds.length ? supabaseClient.from("cursos").select("id,nome,descricao,imagem_url,ativo").in("id",courseIds) : Promise.resolve({data:[]}),
-            courseIds.length ? supabaseClient.from("materias").select("id,curso_id,nome,descricao,ativa").in("curso_id",courseIds) : Promise.resolve({data:[]}),
-            liveIds.length ? supabaseClient.from("presencas_chamadas").select("id,aula_id,numero,ativa,aberta_em,fechada_em").in("aula_id",liveIds) : Promise.resolve({data:[]})
-        ]);
-        if (coursesResult.error || subjectsResult.error || callsResult.error) throw (coursesResult.error || subjectsResult.error || callsResult.error);
-        state.cursos=coursesResult.data||[]; state.materias=subjectsResult.data||[]; state.chamadas=callsResult.data||[];
+        const { data, error } = await supabaseClient.rpc("professor_portal_dados");
+        if (error) throw error;
+        if (!data?.professor) throw new Error("O Supabase não retornou o perfil do professor.");
+        state.usuario = { ...state.usuario, ...data.professor };
+        state.vinculos = Array.isArray(data.vinculos) ? data.vinculos : [];
+        state.cursos = Array.isArray(data.cursos) ? data.cursos : [];
+        state.turmas = Array.isArray(data.turmas) ? data.turmas : [];
+        state.matriculas = Array.isArray(data.matriculas) ? data.matriculas : [];
+        state.lives = Array.isArray(data.lives) ? data.lives : [];
+        state.materias = Array.isArray(data.materias) ? data.materias : [];
+        state.chamadas = Array.isArray(data.chamadas) ? data.chamadas : [];
+        state.atualizadoEm = data.atualizado_em || new Date().toISOString();
     }
 
     function roomUrl(live) { return `./aula.html?id=${encodeURIComponent(live.id)}`; }
 
     function nextRelevantClass() {
-        const ranking = {ao_vivo:0,agendada:1};
-        return [...state.lives].sort((a,b) => {
-            const ra=ranking[norm(a.status)]??2, rb=ranking[norm(b.status)]??2;
-            if (ra!==rb) return ra-rb;
-            return `${a.data_live||""}T${a.horario_inicio||""}`.localeCompare(`${b.data_live||""}T${b.horario_inicio||""}`);
-        })[0];
+        const now = new Date();
+        const withDate = state.lives.map(item => ({
+            item,
+            moment: new Date(`${item.data_live || "1970-01-01"}T${String(item.horario_inicio || "00:00:00").slice(0,8)}-03:00`)
+        }));
+        const live = withDate.find(entry => norm(entry.item.status) === "ao_vivo");
+        if (live) return live.item;
+        const future = withDate.filter(entry => norm(entry.item.status) === "agendada" && entry.moment >= now)
+            .sort((a,b) => a.moment - b.moment)[0];
+        if (future) return future.item;
+        return withDate.sort((a,b) => b.moment - a.moment)[0]?.item;
+    }
+
+    function renderAll() {
+        renderDashboard();
+        renderClasses();
+        renderClassesGroups();
+        renderStudents();
+    }
+
+    async function refreshData({ silencioso = false } = {}) {
+        if (state.carregando) return;
+        state.carregando = true;
+        try {
+            await loadData();
+            renderAll();
+            if (!silencioso) toast("Dados atualizados", "As informações mais recentes do Supabase já estão na tela.");
+        } catch (error) {
+            console.error("MEP EAD | Atualização do portal do professor:", error);
+            if (!silencioso) toast("Não foi possível atualizar", error.message || "Tente novamente.", "error");
+            throw error;
+        } finally {
+            state.carregando = false;
+        }
     }
 
     function renderDashboard() {
@@ -143,12 +161,18 @@
         $("buscarAula")?.addEventListener("input",renderClasses); $("filtroAulaStatus")?.addEventListener("change",renderClasses); $("buscarTurma")?.addEventListener("input",renderClassesGroups); $("buscarAluno")?.addEventListener("input",renderStudents);
         $("logoutButton")?.addEventListener("click",async()=>{await supabaseClient.auth.signOut();location.replace("../index.html");});
         window.addEventListener("hashchange",()=>openPage(location.hash.slice(1)||"inicio"));
+        document.addEventListener("visibilitychange",()=>{
+            if (document.visibilityState === "visible" && state.usuario) refreshData({silencioso:true}).catch(()=>{});
+        });
+        window.setInterval(()=>{
+            if (document.visibilityState === "visible" && state.usuario) refreshData({silencioso:true}).catch(()=>{});
+        },60000);
     }
 
     async function init() {
         bindEvents();
         if (!await authenticate()) { location.replace("../index.html"); return; }
-        try { await loadData(); renderDashboard(); renderClasses(); renderClassesGroups(); renderStudents(); openPage(location.hash.slice(1)||"inicio"); }
+        try { await loadData(); renderAll(); openPage(location.hash.slice(1)||"inicio"); }
         catch(error){ console.error("MEP EAD | Portal do professor:",error); toast("Não foi possível carregar o portal",error.message||"Tente novamente.","error"); $("nextClassContent").innerHTML=empty("Dados indisponíveis","Atualize a página em alguns instantes.","!"); }
     }
     document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();
