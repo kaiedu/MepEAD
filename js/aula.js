@@ -21,11 +21,6 @@
         status, created_at, updated_at,
         youtube_url, youtube_video_id
     `;
-    const CHAT_SELECT = `
-        id, live_id, aluno_id, mensagem, created_at,
-        aluno:usuarios!chat_mensagens_aluno_id_fkey(nome, foto_url, perfil)
-    `;
-
     const state = {
         authUser: null,
         usuario: null,
@@ -300,13 +295,11 @@
     }
 
     function obterAutorChat(mensagem) {
-        const aluno = Array.isArray(mensagem?.aluno) ? mensagem.aluno[0] : mensagem?.aluno;
+        const dadosAutor = mensagem?.autor || mensagem?.aluno;
+        const aluno = Array.isArray(dadosAutor) ? dadosAutor[0] : dadosAutor;
         const professor = normalizarTexto(aluno?.perfil) === "professor";
         const nomeBase = aluno?.nome || (mensagem?.aluno_id === state.usuario?.id ? state.usuario?.nome : "Aluno");
-        const nome = professor
-            ? `${resumirNomeChat(nomeBase)} · Professor`
-            : resumirNomeChat(nomeBase);
-        return { nome, fotoUrl: aluno?.foto_url || null };
+        return { nome: resumirNomeChat(nomeBase), fotoUrl: aluno?.foto_url || null, professor };
     }
 
     function atualizarContadorChat() {
@@ -332,7 +325,7 @@
         const aviso = $("liveChatNotification");
         if (!aviso) return;
         const autor = obterAutorChat(mensagem);
-        if ($("liveChatNotificationAuthor")) $("liveChatNotificationAuthor").textContent = `${autor.nome}:`;
+        if ($("liveChatNotificationAuthor")) $("liveChatNotificationAuthor").textContent = `${autor.nome}${autor.professor ? " · Professor" : ""}:`;
         if ($("liveChatNotificationText")) $("liveChatNotificationText").textContent = String(mensagem.mensagem || "");
         mostrar(aviso);
         clearTimeout(state.timeoutAvisoChat);
@@ -349,6 +342,7 @@
         const autor = obterAutorChat(mensagem);
         const item = document.createElement("article");
         item.className = "live-chat-message";
+        item.classList.toggle("is-professor", autor.professor);
         item.dataset.messageId = mensagem.id;
 
         const avatar = document.createElement("div");
@@ -358,7 +352,15 @@
         const conteudo = document.createElement("div");
         const nome = document.createElement("strong");
         nome.className = "live-chat-message-author";
-        nome.textContent = `${autor.nome}${formatarHoraChat(mensagem.created_at) ? ` · ${formatarHoraChat(mensagem.created_at)}` : ""}`;
+        nome.append(document.createTextNode(autor.nome));
+        if (autor.professor) {
+            const selo = document.createElement("b");
+            selo.className = "live-chat-professor-badge";
+            selo.textContent = "PROFESSOR";
+            nome.append(selo);
+        }
+        const hora = formatarHoraChat(mensagem.created_at);
+        if (hora) nome.append(document.createTextNode(` · ${hora}`));
         const texto = document.createElement("p");
         texto.className = "live-chat-message-text";
         texto.textContent = mensagem.mensagem || "";
@@ -383,11 +385,10 @@
 
     async function carregarMensagensChat() {
         if (!state.live?.id) return;
-        const { data, error } = await supabaseClient.from("chat_mensagens")
-            .select(CHAT_SELECT)
-            .eq("live_id", state.live.id)
-            .order("created_at", { ascending: true })
-            .limit(200);
+        const { data, error } = await supabaseClient.rpc("chat_mensagens_com_autores", {
+            p_live_id: state.live.id,
+            p_limite: 200
+        });
         if (error) throw error;
         limparMensagensChat();
         (data || []).forEach(mensagem => adicionarMensagemChat(mensagem));
@@ -395,13 +396,12 @@
     }
 
     async function completarAutorChat(mensagem) {
-        if (mensagem?.aluno_id === state.usuario?.id) return { ...mensagem, aluno: state.usuario };
-        const { data, error } = await supabaseClient.from("usuarios")
-            .select("nome, foto_url")
-            .eq("id", mensagem.aluno_id)
-            .maybeSingle();
+        if (mensagem?.aluno_id === state.usuario?.id) return { ...mensagem, autor: state.usuario };
+        const { data, error } = await supabaseClient.rpc("chat_mensagem_com_autor", {
+            p_mensagem_id: mensagem.id
+        });
         if (error) warn("Não foi possível identificar o autor da mensagem:", error);
-        return { ...mensagem, aluno: data || null };
+        return data || mensagem;
     }
 
     function iniciarRealtimeChat() {

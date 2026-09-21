@@ -1009,6 +1009,22 @@ body {
 
 }
 
+.live-chat-professor-badge {
+    margin: 0 5px;
+    padding: 2px 5px;
+    border-radius: 999px;
+    background: #f5222d;
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    vertical-align: 1px;
+}
+
+.live-chat-message.is-professor .live-chat-message-avatar {
+    background: #f5222d;
+}
+
 .live-chat-message-text {
 
     margin: 0;
