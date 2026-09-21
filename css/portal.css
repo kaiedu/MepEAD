@@ -23,6 +23,7 @@ body {
     background: var(--gray-1);
     color: #151519;
     min-height: 100vh;
+    min-height: var(--mep-app-height, 100dvh);
 }
 
 button,
@@ -81,6 +82,7 @@ img {
 .portal {
 
     min-height: 100vh;
+    min-height: var(--mep-app-height, 100dvh);
 
     display: flex;
 
@@ -5435,6 +5437,7 @@ a:focus-visible {
 .portal {
     display: block;
     min-height: 100vh;
+    min-height: var(--mep-app-height, 100dvh);
 }
 
 .portal-header {
@@ -5443,6 +5446,7 @@ a:focus-visible {
     inset: 0 auto 0 0;
     width: var(--portal-sidebar-width);
     height: 100vh;
+    height: var(--mep-app-height, 100dvh);
     padding: 28px 22px 24px;
     display: flex;
     flex-direction: column;

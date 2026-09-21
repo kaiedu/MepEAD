@@ -653,6 +653,13 @@
         } catch (_) {
             /* Alguns navegadores, como o Safari, não expõem esta API. */
         }
+        if (window.matchMedia?.("(display-mode: standalone)")?.matches) {
+            try {
+                screen.orientation?.lock?.("any")?.catch?.(() => {});
+            } catch (_) {
+                /* O manifesto continua sendo a alternativa quando a API não está disponível. */
+            }
+        }
     }
 
     async function solicitarPaisagem() {

@@ -3,6 +3,7 @@
   "short_name": "MEP EAD",
   "description": "Acesse seus cursos e aulas no portal MEP EAD.",
   "lang": "pt-BR",
+  "id": "./aluno/",
   "start_url": "./aluno/",
   "scope": "./",
   "display": "standalone",

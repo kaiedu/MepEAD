@@ -177,7 +177,10 @@
 
     function registrarAplicativo() {
         if (!("serviceWorker" in navigator)) return;
-        navigator.serviceWorker.register("../sw.js", { scope:"../" })
+        navigator.serviceWorker.register("../sw.js?v=20260921-android-pwa-2", {
+            scope:"../",
+            updateViaCache:"none"
+        })
             .catch(erro => console.warn("MEP EAD | Não foi possível registrar o aplicativo:", erro));
     }
 

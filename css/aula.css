@@ -1316,6 +1316,7 @@ body {
     width: 100vw;
 
     height: 100vh;
+    height: var(--mep-app-height, 100dvh);
 
     aspect-ratio: auto;
 
@@ -1330,6 +1331,7 @@ body {
     width: 100vw;
 
     height: 100vh;
+    height: var(--mep-app-height, 100dvh);
 
     aspect-ratio: auto;
 
@@ -2308,6 +2310,7 @@ body.mep-player-expandido-ativo {
     z-index: 1000;
     width: 100vw;
     height: 100dvh;
+    height: var(--mep-app-height, 100dvh);
     aspect-ratio: auto;
     border-radius: 0;
     background: #000;
