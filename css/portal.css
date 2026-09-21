@@ -6303,6 +6303,99 @@ body.instalacao-aberta { overflow: hidden; }
 }
 
 /* =========================================================
+   NAVEGAÇÃO INFERIOR | PORTAL DO ALUNO NO CELULAR
+========================================================= */
+@media (max-width: 980px) {
+    .portal-content { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }
+
+    .portal-mobile-bar {
+        position: fixed;
+        z-index: 900;
+        right: 14px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        left: 14px;
+        width: auto;
+        max-width: 430px;
+        min-height: 70px;
+        margin: 0 auto;
+        padding: 7px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+        border: 1px solid rgba(25, 25, 30, .11);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, .94);
+        box-shadow: 0 18px 48px rgba(15, 15, 20, .2), 0 2px 8px rgba(15, 15, 20, .08);
+        -webkit-backdrop-filter: blur(18px);
+        backdrop-filter: blur(18px);
+    }
+
+    .portal-mobile-bar a {
+        position: relative;
+        min-width: 0;
+        min-height: 56px;
+        padding: 7px 5px 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 4px;
+        border: 0;
+        border-radius: 14px;
+        background: transparent;
+        color: #777780;
+        font-size: 10px;
+        font-weight: 750;
+        letter-spacing: 0;
+        line-height: 1;
+        text-decoration: none;
+        transition: color .2s ease, background .2s ease, transform .2s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .portal-mobile-bar a svg {
+        width: 21px;
+        height: 21px;
+        flex: 0 0 21px;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .portal-mobile-bar a span {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        letter-spacing: 0;
+    }
+
+    .portal-mobile-bar a.active {
+        background: linear-gradient(145deg, rgba(245, 34, 45, .13), rgba(245, 34, 45, .06));
+        color: var(--portal-red);
+    }
+
+    .portal-mobile-bar a.active::before {
+        position: absolute;
+        top: 4px;
+        width: 22px;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--portal-red);
+        box-shadow: 0 3px 10px rgba(245, 34, 45, .3);
+        content: "";
+    }
+
+    .portal-mobile-bar a:active { transform: scale(.96); }
+    .portal-mobile-bar a:focus-visible { outline: 3px solid rgba(245, 34, 45, .22); outline-offset: -2px; }
+}
+
+@media (max-width: 380px) {
+    .portal-mobile-bar { right: 9px; bottom: calc(8px + env(safe-area-inset-bottom)); left: 9px; }
+    .portal-mobile-bar a { font-size: 9px; }
+}
+
+/* =========================================================
    CURSO | MATÉRIAS CONCLUÍDAS E PRÓXIMAS AULAS
 ========================================================= */
 

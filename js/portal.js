@@ -236,6 +236,15 @@
         destino?.classList.add("active");
     }
 
+    function atualizarNavegacaoMobile(destino) {
+        document.querySelectorAll("[data-mobile-view]").forEach(item => {
+            const ativo = item.dataset.mobileView === destino;
+            item.classList.toggle("active", ativo);
+            if (ativo) item.setAttribute("aria-current", "page");
+            else item.removeAttribute("aria-current");
+        });
+    }
+
     function atualizarPreviewPerfil(url = "") {
         const imagem = $("perfilFotoImagem");
         const inicial = $("perfilFotoInicial");
@@ -286,6 +295,7 @@
         if ($("frequenciaAlunoView")) $("frequenciaAlunoView").hidden = true;
         if ($("perfilAlunoView")) $("perfilAlunoView").hidden = false;
         atualizarNavegacaoPerfil(true);
+        atualizarNavegacaoMobile("perfil");
         window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#perfilAlunoView`);
         window.scrollTo({ top:0, behavior:"smooth" });
     }
@@ -295,6 +305,7 @@
         if ($("perfilAlunoView")) $("perfilAlunoView").hidden = true;
         if ($("portalHomeView")) $("portalHomeView").hidden = false;
         atualizarNavegacaoPerfil(false);
+        atualizarNavegacaoMobile("cursos");
         window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#portalHomeView`);
         window.scrollTo({ top:0, behavior:"smooth" });
     }
@@ -310,6 +321,7 @@
             const destino = rolarParaCursos ? "#cursosSection" : "#portalHomeView";
             item.classList.toggle("active", item.getAttribute("href") === destino);
         });
+        atualizarNavegacaoMobile("cursos");
         const hash = rolarParaCursos ? "#cursosSection" : "#portalHomeView";
         window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
         const alvo = rolarParaCursos ? $("cursosSection") : null;
@@ -644,6 +656,7 @@
         ["portalHomeView","perfilAlunoView","cursoViewSection","aulaViewSection"].forEach(id => { if ($(id)) $(id).hidden = true; });
         if ($("frequenciaAlunoView")) $("frequenciaAlunoView").hidden = false;
         document.querySelectorAll(".portal-nav-item").forEach(item => item.classList.toggle("active", item.id === "abrirFrequenciaNav"));
+        atualizarNavegacaoMobile("frequencia");
         window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#frequenciaAlunoView`);
         carregarFrequenciaAluno();
         window.scrollTo({ top:0, behavior:"smooth" });
@@ -989,6 +1002,7 @@
         $("logoutButton")?.addEventListener("click", realizarLogout);
         $("abrirPerfilNav")?.addEventListener("click", abrirPerfil);
         $("abrirFrequenciaNav")?.addEventListener("click", abrirFrequencia);
+        $("abrirCursosMobile")?.addEventListener("click", event => abrirInicioPortal(event, true));
         $("abrirFrequenciaMobile")?.addEventListener("click", abrirFrequencia);
         $("atualizarFrequenciaAluno")?.addEventListener("click", carregarFrequenciaAluno);
         $("abrirPerfilButton")?.addEventListener("click", abrirPerfil);
