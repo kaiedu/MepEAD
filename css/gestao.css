@@ -13289,3 +13289,100 @@ body.access-history-open { overflow:hidden; }
     .access-history-list .dashboard-access-row { grid-template-columns:38px minmax(0,1fr) auto; }
     .access-history-list .dashboard-access-date { grid-column:3; grid-row:1/3; }
 }
+
+/* =========================================================
+   MATÉRIAS — ORGANIZAÇÃO ACADÊMICA
+========================================================= */
+#page-materias { --materia-line:#2b2b33; max-width:1500px; }
+#page-materias .materias-header { min-height:178px; padding:31px 33px; position:relative; overflow:hidden; align-items:center; border:1px solid var(--materia-line); border-radius:20px; background:radial-gradient(circle at 82% -20%,rgba(245,34,45,.22),transparent 38%),linear-gradient(125deg,#17171c,#0c0c10 72%); box-shadow:0 22px 60px rgba(0,0,0,.23); }
+#page-materias .materias-header h2 { margin:6px 0 8px; color:#fff; font-size:clamp(30px,3vw,42px); letter-spacing:-1.3px; }
+#page-materias .materias-header p { max-width:610px; color:#898993; font-size:12px; line-height:1.6; }
+#page-materias .materias-header .primary-button { min-height:46px; padding:0 19px; border:1px solid rgba(245,34,45,.6); border-radius:11px; background:linear-gradient(135deg,#ef2632,#b70d17); color:#fff; font:inherit; font-size:11px; font-weight:850; box-shadow:0 13px 30px rgba(245,34,45,.2); cursor:pointer; }
+#page-materias .materias-toolbar { margin-top:15px; padding:17px; display:grid; grid-template-columns:240px minmax(250px,1fr); gap:13px; border:1px solid var(--materia-line); border-radius:15px; background:linear-gradient(145deg,#141419,#0f0f13); }
+#page-materias .materias-toolbar label { margin-bottom:8px; display:block; color:#74747e; font-size:8px; font-weight:900; letter-spacing:1px; text-transform:uppercase; }
+#page-materias .materias-toolbar select,
+#page-materias .materias-toolbar input { width:100%; height:44px; padding:0 13px; border:1px solid #313139; border-radius:9px; outline:0; background:#19191e; color:#ededf0; font:inherit; font-size:11px; }
+#page-materias .materias-toolbar select:focus,
+#page-materias .materias-toolbar input:focus { border-color:rgba(245,34,45,.65); box-shadow:0 0 0 3px rgba(245,34,45,.08); }
+#page-materias .materias-summary { margin-top:12px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+#page-materias .materias-summary article { min-height:98px; padding:18px 20px; display:flex; justify-content:center; flex-direction:column; border:1px solid var(--materia-line); border-radius:14px; background:linear-gradient(145deg,#141419,#0f0f13); }
+#page-materias .materias-summary small { color:#71717b; font-size:8px; font-weight:900; letter-spacing:.9px; }
+#page-materias .materias-summary strong { margin-top:6px; color:#f5f5f7; font-size:27px; line-height:1; }
+#page-materias .materias-summary span { margin-top:6px; color:#65656e; font-size:9px; }
+#page-materias .materias-summary article:first-child { border-color:rgba(245,34,45,.28); background:linear-gradient(145deg,rgba(245,34,45,.1),#101014 72%); }
+#page-materias .materias-panel { margin-top:12px; overflow:hidden; border:1px solid var(--materia-line); border-radius:17px; background:linear-gradient(145deg,#131318,#0e0e12); }
+#page-materias .materias-panel > header { min-height:78px; padding:17px 21px; display:flex; align-items:center; justify-content:space-between; gap:20px; border-bottom:1px solid var(--materia-line); }
+#page-materias .materias-panel > header h3 { margin-top:4px; color:#f0f0f2; font-size:16px; }
+#page-materias .materias-panel > header > span { padding:7px 10px; border:1px solid #35353d; border-radius:999px; background:#19191e; color:#85858e; font-size:8px; font-weight:850; }
+#page-materias .materia-row { min-height:88px; padding:13px 18px; display:grid; grid-template-columns:44px minmax(210px,1fr) 125px 135px 76px 160px; align-items:center; gap:14px; border-bottom:1px solid #28282f; transition:.18s ease; }
+#page-materias .materia-row:last-child { border-bottom:0; }
+#page-materias .materia-row:hover { background:rgba(255,255,255,.02); }
+#page-materias .materia-row.inativa { opacity:.58; }
+#page-materias .materia-row-mark { width:42px; height:42px; display:grid; place-items:center; border:1px solid rgba(245,34,45,.28); border-radius:11px; background:rgba(245,34,45,.08); color:#ff4d57; font-size:14px; font-weight:900; }
+#page-materias .materia-row-main { min-width:0; display:flex; flex-direction:column; }
+#page-materias .materia-row-main small { overflow:hidden; color:#e63843; font-size:8px; font-weight:850; letter-spacing:.6px; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; }
+#page-materias .materia-row-main strong { margin-top:4px; overflow:hidden; color:#eeeeF1; font-size:13px; text-overflow:ellipsis; white-space:nowrap; }
+#page-materias .materia-row-main p { margin-top:4px; overflow:hidden; color:#696973; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+#page-materias .materia-row-metric { display:flex; flex-direction:column; gap:5px; }
+#page-materias .materia-row-metric small { color:#62626c; font-size:7px; font-weight:850; letter-spacing:.65px; }
+#page-materias .materia-row-metric strong { color:#e5e5e8; font-size:17px; }
+#page-materias .materia-status { width:max-content; padding:6px 8px; display:inline-flex; align-items:center; gap:6px; border:1px solid #37373f; border-radius:999px; color:#85858e; font-size:8px; font-weight:850; text-transform:uppercase; }
+#page-materias .materia-status i { width:6px; height:6px; border-radius:50%; background:currentColor; }
+#page-materias .materia-status.ativa { border-color:rgba(40,209,124,.23); background:rgba(40,209,124,.07); color:#43d98a; }
+#page-materias .materia-row-actions { display:flex; justify-content:flex-end; gap:7px; }
+#page-materias .materia-row-actions button { min-height:34px; padding:0 10px; border:1px solid #35353d; border-radius:8px; background:#19191e; color:#aaaab2; font:inherit; font-size:9px; font-weight:800; cursor:pointer; }
+#page-materias .materia-row-actions button:hover { border-color:#50505a; color:#fff; }
+#page-materias .materias-loading,
+#page-materias .materias-empty { min-height:230px; padding:30px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:9px; color:#73737c; font-size:10px; text-align:center; }
+#page-materias .materias-loading i { width:24px; height:24px; border:2px solid #33333b; border-top-color:#ed3540; border-radius:50%; animation:liveSpinner .75s linear infinite; }
+#page-materias .materias-empty > span { width:44px; height:44px; display:grid; place-items:center; border:1px solid #35353d; border-radius:11px; background:#19191e; color:#85858e; }
+#page-materias .materias-empty strong { color:#d9d9dd; font-size:12px; }
+#page-materias .materias-empty p { color:#676771; font-size:9px; }
+
+body.materia-modal-open { overflow:hidden; }
+#page-materias .materia-modal { position:fixed; inset:0; z-index:13000; padding:22px; display:grid; place-items:center; }
+#page-materias .materia-modal[hidden] { display:none!important; }
+#page-materias .materia-modal-backdrop { position:absolute; inset:0; width:100%; height:100%; border:0; background:rgba(3,3,5,.84); backdrop-filter:blur(9px); cursor:pointer; }
+#page-materias .materia-modal-dialog { width:min(650px,100%); max-height:calc(100vh - 44px); position:relative; z-index:1; overflow:hidden; border:1px solid #36363f; border-radius:18px; background:linear-gradient(145deg,#16161b,#0e0e12); box-shadow:0 35px 100px rgba(0,0,0,.65); }
+#page-materias .materia-modal-dialog > header { min-height:105px; padding:22px 25px; display:flex; align-items:center; justify-content:space-between; gap:20px; border-bottom:1px solid #2b2b32; background:radial-gradient(circle at 82% -20%,rgba(245,34,45,.17),transparent 42%); }
+#page-materias .materia-modal-dialog > header h2 { margin-top:5px; color:#f4f4f6; font-size:23px; }
+#page-materias .materia-modal-dialog > header p { margin-top:5px; color:#72727c; font-size:9px; }
+#page-materias .materia-modal-dialog > header > button { width:39px; height:39px; border:1px solid #3a3a42; border-radius:9px; background:#19191e; color:#aaaab2; font:inherit; font-size:22px; cursor:pointer; }
+#page-materias #materiaForm { max-height:calc(100vh - 150px); padding:22px 25px 25px; overflow:auto; }
+#page-materias #materiaForm .form-group { margin-bottom:16px; }
+#page-materias #materiaForm label { margin-bottom:7px; display:block; color:#aaaab2; font-size:10px; font-weight:800; }
+#page-materias #materiaForm input,
+#page-materias #materiaForm select,
+#page-materias #materiaForm textarea { width:100%; padding:0 13px; border:1px solid #32323a; border-radius:9px; outline:0; background:#19191e; color:#eeeef1; font:inherit; font-size:11px; box-sizing:border-box; }
+#page-materias #materiaForm input,
+#page-materias #materiaForm select { height:43px; }
+#page-materias #materiaForm textarea { min-height:82px; padding-top:12px; resize:vertical; }
+#page-materias #materiaForm input:focus,
+#page-materias #materiaForm select:focus,
+#page-materias #materiaForm textarea:focus { border-color:rgba(245,34,45,.6); box-shadow:0 0 0 3px rgba(245,34,45,.08); }
+#page-materias #materiaForm small { margin-top:5px; display:block; color:#606069; font-size:8px; line-height:1.4; }
+#page-materias #materiaForm .form-row { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+#page-materias .materia-active-toggle { margin:2px 0 17px; padding:13px; display:flex!important; align-items:center; gap:11px; border:1px solid #303038; border-radius:10px; background:#17171c; cursor:pointer; }
+#page-materias .materia-active-toggle input { position:absolute; opacity:0; pointer-events:none; }
+#page-materias .materia-active-toggle > span { width:38px; height:21px; position:relative; flex:0 0 38px; border-radius:999px; background:#36363e; transition:.2s; }
+#page-materias .materia-active-toggle > span::after { position:absolute; top:3px; left:3px; width:15px; height:15px; border-radius:50%; background:#888892; transition:.2s; content:""; }
+#page-materias .materia-active-toggle input:checked + span { background:rgba(40,209,124,.25); }
+#page-materias .materia-active-toggle input:checked + span::after { left:20px; background:#38d786; }
+#page-materias .materia-active-toggle strong { display:block; color:#d9d9dd; font-size:10px; }
+#page-materias .materia-active-toggle small { margin-top:3px!important; }
+
+@media(max-width:1050px) {
+    #page-materias .materia-row { grid-template-columns:44px minmax(180px,1fr) 110px 120px 150px; }
+    #page-materias .materia-status { display:none; }
+}
+@media(max-width:720px) {
+    #page-materias .materias-header { min-height:0; padding:24px 20px; align-items:stretch; flex-direction:column; }
+    #page-materias .materias-header .primary-button { width:100%; }
+    #page-materias .materias-toolbar { grid-template-columns:1fr; }
+    #page-materias .materias-summary { grid-template-columns:1fr; }
+    #page-materias .materia-row { padding:15px; grid-template-columns:42px minmax(0,1fr); }
+    #page-materias .materia-row-metric { padding-left:56px; }
+    #page-materias .materia-row-actions { padding-left:56px; justify-content:flex-start; }
+    #page-materias .materia-row-actions button { flex:1; }
+    #page-materias #materiaForm .form-row { grid-template-columns:1fr; gap:0; }
+}

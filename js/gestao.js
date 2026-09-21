@@ -668,6 +668,16 @@ function mudarPagina(page, atualizarUrl = true) {
         );
     }
 
+    if (page === "materias" && window.MEPMaterias?.carregar) {
+        window.MEPMaterias.carregar();
+    }
+
+    if (page === "lives" && typeof window.recarregarMateriasLives === "function") {
+        window.recarregarMateriasLives().catch(
+            erro => console.error("MEP EAD | Não foi possível atualizar as matérias das lives:", erro)
+        );
+    }
+
 
     /* ================================
        TÍTULOS
@@ -680,6 +690,8 @@ function mudarPagina(page, atualizarUrl = true) {
         cursos: "Cursos",
 
         turmas: "Turmas",
+
+        materias: "Matérias",
 
         mensalidades: "Financeiro",
 

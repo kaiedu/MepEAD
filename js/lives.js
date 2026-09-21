@@ -51,6 +51,7 @@ const TABELA_TURMA_ALUNOS =
 let livesLista = [];
 let livesTurmas = [];
 let livesCursos = [];
+let livesMaterias = [];
 
 let liveAtual = null;
 let usuarioAtualLive = null;
@@ -126,6 +127,9 @@ const liveCurso =
 
 const liveTurma =
     document.getElementById("liveTurma");
+
+const liveMateria =
+    document.getElementById("liveMateria");
 
 const liveTitulo =
     document.getElementById("liveTitulo");
@@ -259,6 +263,7 @@ async function inicializarLives() {
     await carregarUsuarioLive();
     await carregarCursosLives();
     await carregarTurmasLives();
+    await carregarMateriasLives();
     await carregarLives();
 }
 
@@ -309,6 +314,9 @@ function configurarEventosLives() {
             "change",
             () => {
                 preencherTurmasDoCurso(
+                    liveCurso.value
+                );
+                preencherMateriasDoCurso(
                     liveCurso.value
                 );
             }
@@ -751,6 +759,56 @@ function preencherTurmasDoCurso(
 
 
 /* =========================================================
+   MATÉRIAS DO CURSO
+========================================================= */
+
+async function carregarMateriasLives(
+    cursoSelecionado = liveCurso?.value || "",
+    materiaSelecionada = liveMateria?.value || ""
+) {
+    try {
+        const { data, error } = await supabaseClient
+            .from("materias")
+            .select("id,curso_id,nome,ativa")
+            .order("nome", { ascending:true });
+        if (error) throw error;
+        livesMaterias = Array.isArray(data) ? data : [];
+        preencherMateriasDoCurso(
+            cursoSelecionado,
+            materiaSelecionada
+        );
+    } catch (erro) {
+        console.error("MEP EAD | Erro ao carregar matérias:", erro);
+        livesMaterias = [];
+        preencherMateriasDoCurso(
+            cursoSelecionado,
+            materiaSelecionada
+        );
+    }
+}
+
+function preencherMateriasDoCurso(cursoId, materiaSelecionada = "") {
+    if (!liveMateria) return;
+    const materias = livesMaterias.filter(materia =>
+        String(materia.curso_id) === String(cursoId) && materia.ativa !== false
+    );
+    liveMateria.disabled = !cursoId || !materias.length;
+    liveMateria.innerHTML = `<option value="">${!cursoId ? "Primeiro selecione o curso" : materias.length ? "Selecione uma matéria" : "Cadastre uma matéria para este curso"}</option>`;
+    materias.forEach(materia => {
+        const option = document.createElement("option");
+        option.value = materia.id;
+        option.textContent = materia.nome;
+        option.selected = String(materia.id) === String(materiaSelecionada);
+        liveMateria.appendChild(option);
+    });
+}
+
+function encontrarMateria(id) {
+    return livesMaterias.find(materia => String(materia.id) === String(id));
+}
+
+
+/* =========================================================
    CARREGAR LIVES
 ========================================================= */
 
@@ -769,6 +827,7 @@ async function carregarLives() {
                 .select(`
                     id,
                     turma_id,
+                    materia_id,
                     professor_id,
                     titulo,
                     descricao,
@@ -1023,6 +1082,11 @@ function criarCardLive(
             turma?.curso_id
         );
 
+    const materia =
+        encontrarMateria(
+            live.materia_id
+        );
+
     const status =
         normalizarStatus(
             live.status
@@ -1117,6 +1181,22 @@ function criarCardLive(
                         ${escaparHTML(
                             turma?.nome ||
                             "Turma não encontrada"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="live-info-row">
+
+                    <span>
+                        MATÉRIA
+                    </span>
+
+                    <strong>
+                        ${escaparHTML(
+                            materia?.nome ||
+                            "Não vinculada"
                         )}
                     </strong>
 
@@ -1264,7 +1344,7 @@ function tratarCliqueLive(
    NOVA LIVE
 ========================================================= */
 
-function abrirNovaLive() {
+async function abrirNovaLive() {
 
     if (!novaLiveModal) {
         return;
@@ -1295,6 +1375,7 @@ function abrirNovaLive() {
     limparMensagemNovaLive();
 
     preencherTurmasDoCurso("");
+    await carregarMateriasLives("", "");
 
     if (liveYoutubeId) {
 
@@ -1316,7 +1397,7 @@ function abrirNovaLive() {
    EDITAR LIVE
 ========================================================= */
 
-function abrirEditarLive(
+async function abrirEditarLive(
     live
 ) {
 
@@ -1358,6 +1439,11 @@ function abrirEditarLive(
         "",
         live.turma_id ||
         ""
+    );
+
+    await carregarMateriasLives(
+        turma?.curso_id || "",
+        live.materia_id || ""
     );
 
     if (liveTitulo) {
@@ -1484,6 +1570,10 @@ async function salvarLive(
         liveTurma?.value ||
         "";
 
+    const materiaId =
+        liveMateria?.value ||
+        "";
+
     const titulo =
         liveTitulo?.value?.trim() ||
         "";
@@ -1542,6 +1632,17 @@ async function salvarLive(
 
     }
 
+    if (!materiaId) {
+
+        mostrarMensagemNovaLive(
+            "Selecione a matéria desta aula.",
+            "erro"
+        );
+
+        return;
+
+    }
+
     if (!titulo) {
 
         mostrarMensagemNovaLive(
@@ -1593,6 +1694,9 @@ async function salvarLive(
 
         turma_id:
             turmaId,
+
+        materia_id:
+            materiaId,
 
         professor_id:
             professorId,
@@ -4492,6 +4596,9 @@ window.addEventListener(
 
 window.carregarLives =
     carregarLives;
+
+window.recarregarMateriasLives =
+    carregarMateriasLives;
 
 window.abrirNovaLive =
     abrirNovaLive;

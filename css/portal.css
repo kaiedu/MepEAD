@@ -5935,6 +5935,98 @@ a:focus-visible {
 #perfilAlunoView:target { display: block !important; }
 .portal-content:has(#perfilAlunoView:target) #portalHomeView { display: none !important; }
 
+/* =========================================================
+   PORTAL DO ALUNO — FREQUÊNCIA POR MATÉRIA
+========================================================= */
+.frequencia-aluno-view { max-width:1320px; margin:0 auto; }
+.frequencia-aluno-hero { min-height:190px; padding:31px 33px; position:relative; overflow:hidden; display:grid; grid-template-columns:minmax(0,1fr) 235px; align-items:center; gap:28px; border:1px solid #2d2d34; border-radius:21px; background:radial-gradient(circle at 84% -25%,rgba(245,34,45,.23),transparent 38%),linear-gradient(125deg,#17171c,#0c0c10 72%); box-shadow:0 24px 65px rgba(0,0,0,.25); }
+.frequencia-aluno-hero h2 { margin:6px 0 9px; color:#fff; font-size:clamp(31px,4vw,44px); letter-spacing:-1.4px; }
+.frequencia-aluno-hero p { max-width:650px; color:#8a8a94; font-size:12px; line-height:1.65; }
+.frequencia-regra { min-height:122px; padding:19px; display:flex; justify-content:center; flex-direction:column; border:1px solid rgba(245,34,45,.25); border-radius:15px; background:rgba(10,10,13,.58); backdrop-filter:blur(7px); }
+.frequencia-regra strong { color:#ff4650; font-size:36px; line-height:1; letter-spacing:-1.5px; }
+.frequencia-regra span { margin-top:8px; color:#8b8b94; font-size:9px; line-height:1.55; }
+.frequencia-legenda { margin-top:13px; min-height:58px; padding:11px 16px; display:flex; align-items:center; gap:18px; border:1px solid #2b2b32; border-radius:13px; background:#121216; }
+.frequencia-legenda > span { display:inline-flex; align-items:center; gap:7px; color:#85858e; font-size:9px; }
+.frequencia-legenda > span i { width:8px; height:8px; border-radius:50%; }
+.frequencia-legenda i.respondida { background:#31d47f; box-shadow:0 0 0 4px rgba(49,212,127,.08); }
+.frequencia-legenda i.nao-respondida { background:#f24a55; box-shadow:0 0 0 4px rgba(242,74,85,.08); }
+.frequencia-legenda button { min-height:35px; margin-left:auto; padding:0 12px; border:1px solid #393941; border-radius:8px; background:#1a1a1f; color:#aaaab2; font:inherit; font-size:9px; font-weight:800; cursor:pointer; }
+.frequencia-legenda button:hover { border-color:#53535d; color:#fff; }
+.frequencia-legenda button:disabled { opacity:.55; cursor:wait; }
+.frequencia-materias-list { margin-top:13px; display:flex; flex-direction:column; gap:13px; }
+.frequencia-materia-card { overflow:hidden; border:1px solid #2c2c34; border-radius:18px; background:linear-gradient(145deg,#141419,#0f0f13); box-shadow:0 17px 45px rgba(0,0,0,.16); }
+.frequencia-materia-card > header { min-height:104px; padding:21px 24px; display:flex; align-items:center; justify-content:space-between; gap:22px; border-bottom:1px solid #292930; background:rgba(255,255,255,.009); }
+.frequencia-materia-card > header > div { min-width:0; }
+.frequencia-materia-card > header small { color:#ed3742; font-size:8px; font-weight:900; letter-spacing:.75px; text-transform:uppercase; }
+.frequencia-materia-card > header h3 { margin-top:5px; color:#f3f3f5; font-size:20px; letter-spacing:-.45px; }
+.frequencia-materia-card > header p { max-width:680px; margin-top:6px; color:#73737d; font-size:10px; line-height:1.5; }
+.frequencia-situacao { width:max-content; padding:8px 11px; display:inline-flex; align-items:center; gap:7px; border:1px solid #3b3b43; border-radius:999px; background:#1a1a1f; color:#92929b; font-size:8px; font-weight:900; letter-spacing:.6px; text-transform:uppercase; }
+.frequencia-situacao i { width:7px; height:7px; border-radius:50%; background:currentColor; }
+.frequencia-situacao.aprovada { border-color:rgba(40,209,124,.26); background:rgba(40,209,124,.08); color:#3dd884; }
+.frequencia-situacao.reprovada { border-color:rgba(245,34,45,.28); background:rgba(245,34,45,.08); color:#ff5a64; }
+.frequencia-situacao.andamento { border-color:rgba(244,183,64,.25); background:rgba(244,183,64,.07); color:#f4bd52; }
+.frequencia-materia-stats { padding:14px 24px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; border-bottom:1px solid #292930; }
+.frequencia-materia-stats > span { min-height:69px; padding:12px 13px; display:flex; justify-content:center; flex-direction:column; border:1px solid #2f2f37; border-radius:10px; background:#18181d; }
+.frequencia-materia-stats small { color:#666670; font-size:7px; font-weight:900; letter-spacing:.65px; }
+.frequencia-materia-stats strong { margin-top:6px; color:#ececef; font-size:19px; }
+.frequencia-materia-stats strong.verde { color:#3bd784; }
+.frequencia-materia-stats strong.vermelho { color:#ff5963; }
+.frequencia-progress { padding:16px 24px; border-bottom:1px solid #292930; }
+.frequencia-progress > div { display:flex; align-items:center; justify-content:space-between; color:#92929b; font-size:9px; font-weight:800; }
+.frequencia-progress > div strong { color:#e8e8eb; }
+.frequencia-progress > i { height:7px; margin-top:9px; overflow:hidden; display:block; border-radius:999px; background:#292930; }
+.frequencia-progress > i b { height:100%; display:block; border-radius:inherit; background:linear-gradient(90deg,#df1723,#ff4a54); box-shadow:0 0 15px rgba(245,34,45,.24); }
+.frequencia-progress > small { margin-top:8px; display:block; color:#62626c; font-size:8px; }
+.frequencia-aulas { padding:12px; display:flex; flex-direction:column; gap:7px; }
+.frequencia-aula-card { overflow:hidden; border:1px solid #2d2d35; border-radius:11px; background:#15151a; }
+.frequencia-aula-card summary { min-height:70px; padding:10px 13px; display:grid; grid-template-columns:40px minmax(170px,1fr) auto 22px; align-items:center; gap:12px; list-style:none; cursor:pointer; }
+.frequencia-aula-card summary::-webkit-details-marker { display:none; }
+.frequencia-aula-numero { width:38px; height:38px; display:grid; place-items:center; border:1px solid #36363e; border-radius:9px; background:#1c1c21; color:#9999a2; font-size:10px; font-weight:900; }
+.frequencia-aula-card summary > div { min-width:0; display:flex; flex-direction:column; }
+.frequencia-aula-card summary > div small { color:#65656f; font-size:8px; }
+.frequencia-aula-card summary > div strong { margin-top:3px; overflow:hidden; color:#e5e5e8; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+.frequencia-aula-card summary > div span { margin-top:3px; color:#75757e; font-size:8px; }
+.frequencia-aula-card summary > b { padding:6px 8px; border:1px solid #37373f; border-radius:7px; color:#8c8c95; font-size:8px; text-transform:uppercase; }
+.frequencia-aula-card summary > b.presenca { border-color:rgba(40,209,124,.24); background:rgba(40,209,124,.07); color:#3ed986; }
+.frequencia-aula-card summary > b.falta { border-color:rgba(245,34,45,.25); background:rgba(245,34,45,.07); color:#ff5a64; }
+.frequencia-aula-card summary > b.andamento { border-color:rgba(244,183,64,.22); color:#e8b74f; }
+.frequencia-aula-card summary > i { color:#686872; font-size:15px; font-style:normal; transition:.2s; }
+.frequencia-aula-card[open] summary > i { transform:rotate(180deg); }
+.frequencia-chamadas { padding:11px 13px 13px 65px; display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:7px; border-top:1px solid #292930; background:#111115; }
+.frequencia-chamada { min-height:52px; padding:8px 10px; display:flex; align-items:center; gap:9px; border:1px solid #303038; border-radius:9px; background:#17171c; }
+.frequencia-chamada > i { width:27px; height:27px; flex:0 0 27px; display:grid; place-items:center; border-radius:7px; background:rgba(245,34,45,.08); color:#ff5963; font-size:10px; font-style:normal; font-weight:900; }
+.frequencia-chamada.respondida > i { background:rgba(40,209,124,.09); color:#3ed986; }
+.frequencia-chamada > span { display:flex; flex-direction:column; }
+.frequencia-chamada strong { color:#d6d6db; font-size:9px; }
+.frequencia-chamada small { margin-top:3px; color:#6d6d76; font-size:8px; }
+.frequencia-chamadas > p,
+.frequencia-sem-aulas { padding:15px; color:#6e6e78; font-size:9px; text-align:center; }
+.frequencia-loading,
+.frequencia-empty { min-height:260px; padding:35px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:9px; border:1px solid #2c2c34; border-radius:17px; background:#121216; color:#777781; font-size:10px; text-align:center; }
+.frequencia-loading > i { width:25px; height:25px; border:2px solid #36363e; border-top-color:#ed3540; border-radius:50%; animation:portalFrequenciaSpin .75s linear infinite; }
+@keyframes portalFrequenciaSpin { to { transform:rotate(360deg); } }
+.frequencia-empty > span { width:45px; height:45px; display:grid; place-items:center; border:1px solid #35353d; border-radius:11px; background:#19191e; }
+.frequencia-empty strong { color:#d9d9dd; font-size:12px; }
+.frequencia-empty p { max-width:420px; color:#6b6b74; font-size:9px; line-height:1.5; }
+
+@media(max-width:800px) {
+    .frequencia-aluno-hero { grid-template-columns:1fr; }
+    .frequencia-regra { min-height:90px; }
+    .frequencia-materia-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:600px) {
+    .frequencia-aluno-hero { min-height:0; padding:24px 20px; }
+    .frequencia-legenda { align-items:flex-start; flex-direction:column; }
+    .frequencia-legenda button { width:100%; margin-left:0; }
+    .frequencia-materia-card > header { align-items:flex-start; flex-direction:column; }
+    .frequencia-materia-stats { padding:12px; }
+    .frequencia-progress { padding:15px; }
+    .frequencia-aula-card summary { grid-template-columns:38px minmax(0,1fr) 20px; }
+    .frequencia-aula-card summary > b { grid-column:2; width:max-content; }
+    .frequencia-aula-card summary > i { grid-column:3; grid-row:1/3; }
+    .frequencia-chamadas { padding:10px; grid-template-columns:1fr; }
+}
+
 .perfil-aluno-view { max-width: 1180px; }
 
 .perfil-view-header {
@@ -6208,4 +6300,53 @@ body.instalacao-aberta { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
     .instalacao-card { animation: none; }
+}
+
+/* =========================================================
+   CURSO | MATÉRIAS CONCLUÍDAS E PRÓXIMAS AULAS
+========================================================= */
+
+.curso-aulas-section { padding:30px; border:1px solid var(--portal-line); border-radius:14px; background:#fafafa; box-shadow:0 13px 38px rgba(25,25,30,.04); }
+.curso-aulas-section > .section-heading { margin-bottom:24px; padding-bottom:21px; border-bottom:1px solid #e5e5e8; }
+.curso-aulas-section > .section-heading h2 { font-size:30px; }
+.curso-aulas-section > .section-heading p { max-width:560px; margin-top:8px; color:#797980; font-size:10px; line-height:1.55; }
+.curso-aulas-count.sem-proximas { border-color:#e4d5ae; background:#fff9eb; color:#8e680f; }
+.curso-aulas-list { display:flex; flex-direction:column; gap:20px; }
+.curso-lista-grupo { overflow:hidden; display:flex; flex-direction:column; border:1px solid var(--portal-line); border-radius:12px; background:#fff; }
+.curso-lista-grupo > header { min-height:94px; padding:20px 22px; display:flex; align-items:center; gap:15px; border-bottom:1px solid var(--portal-line); }
+.curso-lista-grupo > header > div { min-width:0; }
+.curso-lista-grupo > header h3 { margin-top:4px; color:var(--portal-text); font-size:18px; letter-spacing:-.025em; }
+.curso-lista-grupo > header p { margin-top:5px; color:#85858c; font-size:9px; line-height:1.45; }
+.curso-lista-grupo > header > strong { width:max-content; margin-left:auto; padding:7px 10px; border:1px solid #dedee2; border-radius:999px; background:#f7f7f8; color:#696970; font-size:8px; text-transform:uppercase; }
+.curso-lista-grupo > div { padding:14px; display:flex; flex-direction:column; gap:10px; }
+.materias-concluidas > header { border-bottom-color:rgba(255,255,255,.08); background:radial-gradient(circle at 90% 0,rgba(245,34,45,.18),transparent 35%),#121215; }
+.materias-concluidas > header h3 { color:#fff; }
+.materias-concluidas > header p { color:#888890; }
+.materias-concluidas > header > strong { border-color:rgba(255,255,255,.11); background:rgba(255,255,255,.05); color:#babac0; }
+.curso-grupo-icone { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; border:1px solid rgba(49,212,127,.24); border-radius:10px; background:rgba(49,212,127,.09); color:#39d681; font-size:15px; font-weight:900; }
+.curso-materia-concluida { min-height:92px; padding:18px 20px; display:grid; grid-template-columns:46px minmax(0,1fr) auto; align-items:center; gap:16px; border:1px solid var(--portal-line); border-radius:10px; background:#fff; box-shadow:0 7px 22px rgba(25,25,30,.035); }
+.curso-materia-concluida-icon { width:44px; height:44px; display:grid; place-items:center; border-radius:9px; background:#eaf8f0; color:#159451; font-size:16px; font-weight:900; }
+.curso-materia-concluida > div { min-width:0; }
+.curso-materia-concluida small { color:#159451; font-size:7px; font-weight:900; letter-spacing:.14em; }
+.curso-materia-concluida h3 { margin-top:5px; overflow:hidden; color:#242429; font-size:15px; text-overflow:ellipsis; white-space:nowrap; }
+.curso-materia-concluida p { margin-top:4px; color:#8c8c93; font-size:9px; }
+.curso-materia-concluida > strong { padding:9px 11px; border:1px solid #ccebd9; border-radius:999px; background:#f1fbf5; color:#13884a; font-size:8px; font-weight:900; letter-spacing:.035em; text-transform:uppercase; }
+.curso-materia-concluida.nao-aprovada .curso-materia-concluida-icon { background:#fff0f1; color:#d82c38; }
+.curso-materia-concluida.nao-aprovada small { color:#d82c38; }
+.curso-materia-concluida.nao-aprovada > strong { border-color:#f0cdd0; background:#fff5f5; color:#c92733; }
+.curso-aulas-ativas { display:flex; flex-direction:column; gap:12px; }
+.curso-sem-proximas-aulas { min-height:105px; padding:20px 22px; display:flex; align-items:center; gap:15px; border:1px dashed #d8d8dd; border-radius:12px; background:#fff; }
+.curso-sem-proximas-aulas > span { width:43px; height:43px; flex:0 0 43px; display:grid; place-items:center; border-radius:10px; background:#f2f2f4; font-size:17px; }
+.curso-sem-proximas-aulas strong { color:#303035; font-size:13px; }
+.curso-sem-proximas-aulas p { max-width:600px; margin-top:5px; color:#85858c; font-size:9px; line-height:1.5; }
+
+@media (max-width:700px) {
+    .curso-aulas-section { padding:19px 15px; }
+    .curso-aulas-section > .section-heading { align-items:flex-start; }
+    .curso-lista-grupo > header { align-items:flex-start; flex-wrap:wrap; padding:18px; }
+    .curso-lista-grupo > header > div { flex:1; }
+    .curso-lista-grupo > header > strong { margin:0 0 0 57px; }
+    .curso-materia-concluida { grid-template-columns:40px minmax(0,1fr); padding:16px; }
+    .curso-materia-concluida-icon { width:39px; height:39px; }
+    .curso-materia-concluida > strong { grid-column:2; width:max-content; max-width:100%; white-space:normal; }
 }

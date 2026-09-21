@@ -31,7 +31,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/portal.css?v=20260914-status-aula-1"
+        href="../css/portal.css?v=20260915-conteudo-organizado-2"
     >
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,6 +91,11 @@
                 <span>Meus cursos</span>
             </a>
 
+            <a href="#frequenciaAlunoView" class="portal-nav-item" id="abrirFrequenciaNav">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3h14a2 2 0 0 1 2 2v16H3V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7"/><path d="m7 12 3 3 7-7M7 19h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Frequência</span>
+            </a>
+
             <a href="#perfilAlunoView" class="portal-nav-item" id="abrirPerfilNav">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4.5 20c.8-4 3.3-6 7.5-6s6.7 2 7.5 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
                 <span>Seu perfil</span>
@@ -135,7 +140,7 @@
 
         <div class="portal-mobile-bar">
             <div><span>MEP EAD</span><strong>Área do aluno</strong></div>
-            <div class="portal-mobile-actions"><a href="#cursosSection">Meus cursos</a><a href="#perfilAlunoView" id="abrirPerfilMobile">Perfil</a></div>
+            <div class="portal-mobile-actions"><a href="#cursosSection">Cursos</a><a href="#frequenciaAlunoView" id="abrirFrequenciaMobile">Frequência</a><a href="#perfilAlunoView" id="abrirPerfilMobile">Perfil</a></div>
         </div>
 
 
@@ -503,6 +508,29 @@
 
 
         <!-- =================================================
+             FREQUÊNCIA DO ALUNO
+        ================================================== -->
+
+        <section class="portal-view frequencia-aluno-view" id="frequenciaAlunoView" hidden>
+            <header class="frequencia-aluno-hero">
+                <div><span class="eyebrow">ACOMPANHAMENTO ACADÊMICO</span><h2>Minha frequência</h2><p>Acompanhe sua presença por matéria, aula e chamada realizada durante as transmissões.</p></div>
+                <div class="frequencia-regra"><strong>60%</strong><span>mínimo de respostas por aula para contabilizar presença</span></div>
+            </header>
+
+            <div class="frequencia-legenda">
+                <span><i class="respondida"></i> Chamada respondida</span>
+                <span><i class="nao-respondida"></i> Chamada não respondida</span>
+                <button type="button" id="atualizarFrequenciaAluno">↻ Atualizar frequência</button>
+            </div>
+
+            <div class="frequencia-materias-list" id="frequenciaMateriasList">
+                <div class="frequencia-loading"><i></i><span>Calculando sua frequência...</span></div>
+            </div>
+        </section>
+
+
+
+        <!-- =================================================
              VISÃO DO CURSO
 
              A HOME fica oculta quando esta view é aberta.
@@ -612,21 +640,6 @@
 
                 </div>
 
-
-
-                <div class="curso-summary-item">
-
-                    <span>
-                        FREQUÊNCIA
-                    </span>
-
-
-                    <strong id="cursoViewFrequencia">
-                        0%
-                    </strong>
-
-                </div>
-
             </div>
 
 
@@ -639,65 +652,6 @@
                 </div>
                 <button type="button" id="cursoFinanceiroAcao">Regularizar mensalidade</button>
             </div>
-
-
-
-            <!-- =============================================
-                 PROGRESSO
-            ============================================== -->
-
-            <div
-                class="curso-progress-card"
-                id="cursoProgressCard"
-            >
-
-                <div class="curso-progress-header">
-
-                    <div>
-
-                        <span class="eyebrow">
-                            SEU PROGRESSO
-                        </span>
-
-
-                        <h3>
-                            Acompanhamento
-                        </h3>
-
-                    </div>
-
-
-                    <strong id="cursoProgressPercent">
-                        0%
-                    </strong>
-
-                </div>
-
-
-
-                <div class="curso-progress-bar">
-
-                    <div
-                        class="curso-progress-fill"
-                        id="cursoProgressFill"
-                        style="width: 0%;"
-                    ></div>
-
-                </div>
-
-
-
-                <div class="curso-progress-info">
-
-                    <span id="cursoProgressTexto">
-                        Nenhuma aula concluída.
-                    </span>
-
-                </div>
-
-            </div>
-
-
 
             <!-- =============================================
                  AULAS DO CURSO
@@ -712,18 +666,18 @@
 
                     <div>
 
-                        <span class="eyebrow">
-                            CONTEÚDO
+                        <span class="eyebrow" id="cursoConteudoEyebrow">
+                            TRILHA DA TURMA
                         </span>
 
 
-                        <h2>
-                            Aulas
+                        <h2 id="cursoConteudoTitulo">
+                            Conteúdo do curso
                         </h2>
 
 
-                        <p>
-                            Acompanhe as aulas da sua turma.
+                        <p id="cursoConteudoDescricao">
+                            Acompanhe as matérias concluídas e as próximas aulas da sua turma.
                         </p>
 
                     </div>
@@ -1403,7 +1357,7 @@
 
 <script src="../js/supabase.js"></script>
 
-<script src="../js/portal.js?v=20260914-status-aula-realtime-2"></script>
+<script src="../js/portal.js?v=20260915-conteudo-organizado-2"></script>
 
 
 </body>

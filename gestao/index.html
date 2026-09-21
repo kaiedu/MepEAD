@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/gestao.css?v=20260914-historico-login-7"
+        href="../css/gestao.css?v=20260915-materias-1"
     >
 
  <link rel="icon" type="image/png" href="img/capa.png">
@@ -115,6 +115,11 @@
 
                     <span>Turmas</span>
 
+                </button>
+
+                <button class="nav-item" data-page="materias">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v13H7a4 4 0 0 0-4 4V6a2 2 0 0 1 2-2z"/><path d="M7 9h10M7 13h7"/></svg></span>
+                    <span>Matérias</span>
                 </button>
 
 
@@ -820,6 +825,58 @@
             </div>
 
         </div>
+
+
+
+        <!-- =========================================
+             MATÉRIAS
+        ========================================== -->
+
+        <section class="page" id="page-materias">
+            <div class="section-header materias-header">
+                <div>
+                    <span class="eyebrow">ORGANIZAÇÃO ACADÊMICA</span>
+                    <h2>Matérias</h2>
+                    <p>Defina a grade, a quantidade de aulas e o limite de faltas de cada matéria.</p>
+                </div>
+                <button type="button" class="primary-button" id="novaMateriaButton">+ Nova matéria</button>
+            </div>
+
+            <div class="materias-toolbar">
+                <div><label for="materiaFiltroCurso">Curso</label><select id="materiaFiltroCurso"><option value="">Todos os cursos</option></select></div>
+                <div><label for="materiaBusca">Buscar</label><input type="search" id="materiaBusca" placeholder="Buscar matéria..." autocomplete="off"></div>
+            </div>
+
+            <div class="materias-summary">
+                <article><small>MATÉRIAS</small><strong id="materiasTotal">0</strong><span>cadastradas</span></article>
+                <article><small>ATIVAS</small><strong id="materiasAtivas">0</strong><span>na grade atual</span></article>
+                <article><small>AULAS PREVISTAS</small><strong id="materiasAulasPrevistas">0</strong><span>somadas na grade</span></article>
+            </div>
+
+            <section class="materias-panel">
+                <header><div><span class="eyebrow">GRADE CURRICULAR</span><h3>Organização das matérias</h3></div><span id="materiasExibidas">0 matérias</span></header>
+                <div class="materias-list" id="materiasList"><div class="materias-loading"><i></i><span>Carregando matérias...</span></div></div>
+            </section>
+
+            <div class="materia-modal" id="materiaModal" hidden aria-hidden="true">
+                <button type="button" class="materia-modal-backdrop" id="materiaModalBackdrop" aria-label="Fechar"></button>
+                <section class="materia-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="materiaModalTitulo">
+                    <header><div><span class="eyebrow">GRADE CURRICULAR</span><h2 id="materiaModalTitulo">Nova matéria</h2><p>Configure os critérios usados no cálculo de frequência.</p></div><button type="button" id="fecharMateriaModal" aria-label="Fechar">×</button></header>
+                    <form id="materiaForm">
+                        <div class="form-group"><label for="materiaCurso">Curso</label><select id="materiaCurso" required><option value="">Selecione o curso</option></select><small>A matéria ficará disponível nas turmas deste curso.</small></div>
+                        <div class="form-group"><label for="materiaNome">Nome da matéria</label><input id="materiaNome" type="text" maxlength="120" placeholder="Ex.: Teologia Sistemática" required></div>
+                        <div class="form-group"><label for="materiaDescricao">Descrição</label><textarea id="materiaDescricao" rows="3" maxlength="600" placeholder="Resumo opcional da matéria"></textarea></div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="materiaAulas">Quantidade de aulas</label><input id="materiaAulas" type="number" min="1" max="500" value="1" required><small>Total necessário para finalizar.</small></div>
+                            <div class="form-group"><label for="materiaFaltas">Faltas permitidas</label><input id="materiaFaltas" type="number" min="0" max="500" value="0" required><small>Limite para aprovação.</small></div>
+                        </div>
+                        <label class="materia-active-toggle"><input type="checkbox" id="materiaAtiva" checked><span></span><div><strong>Matéria ativa</strong><small>Disponível para vincular às aulas.</small></div></label>
+                        <div class="form-message" id="materiaMensagem" hidden></div>
+                        <div class="modal-actions"><button type="button" class="secondary-button" id="cancelarMateria">Cancelar</button><button type="submit" class="primary-button" id="salvarMateria">Salvar matéria</button></div>
+                    </form>
+                </section>
+            </div>
+        </section>
 
 
 
@@ -3186,6 +3243,18 @@
 
 
 
+            <!-- MATÉRIA -->
+
+            <div class="form-group">
+                <label for="liveMateria">Matéria</label>
+                <select id="liveMateria" name="materia_id" required disabled>
+                    <option value="">Primeiro selecione o curso</option>
+                </select>
+                <small>Esta definição será usada para calcular a frequência acadêmica dos alunos.</small>
+            </div>
+
+
+
             <!-- TÍTULO -->
 
             <div class="form-group">
@@ -4141,12 +4210,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../js/supabase.js"></script>
-<script src="../js/gestao.js?v=20260914-historico-login-6"></script>
+<script src="../js/gestao.js?v=20260915-materias-2"></script>
 <script src="../js/alunos.js?v=20260904-contadores-alunos-3"></script>
 <script src="../js/professores.js?v=20260904-professores-rebrand-1"></script>
 <script src="../js/cursos.js?v=20260904-cursos-rebrand-2"></script>
 <script src="../js/turmas.js?v=20260904-relatorio-turma-1"></script>
-<script src="../js/lives.js"></script>
+<script src="../js/materias.js?v=20260915-materias-2"></script>
+<script src="../js/lives.js?v=20260915-materias-2"></script>
 <script src="../js/presencas.js?v=20260914-correcao-presencas-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="../js/relatorios.js"></script>

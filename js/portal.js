@@ -8,14 +8,15 @@
 
     const supabaseClient = window.supabaseClient;
     const LIVE_SELECT = `
-        id, turma_id, professor_id, titulo, descricao,
+        id, turma_id, materia_id, professor_id, titulo, descricao,
         youtube_url, youtube_video_id, data_live,
         horario_inicio, horario_fim, status, created_at, updated_at
     `;
     const state = {
         authUser: null, usuario: null, cursos: [], cursoAtual: null, turmaAtual: null, aulas: [],
         assinaturaProcessando:false, fotoPerfilArquivo:null, removerFotoPerfil:false, fotoPreviewUrl:null,
-        canalStatusAulas:null, intervaloStatusAulas:null, timeoutStatusAulas:null, atualizandoStatusAulas:false
+        canalStatusAulas:null, intervaloStatusAulas:null, timeoutStatusAulas:null, atualizandoStatusAulas:false,
+        frequencia:[], frequenciaCarregando:false
     };
     const recorte = { imagem:null, escalaBase:1, zoom:1, x:0, y:0, arrastando:false, ponteiroId:null, inicioX:0, inicioY:0, origemX:0, origemY:0 };
     const $ = (id) => document.getElementById(id);
@@ -282,6 +283,7 @@
         if ($("portalHomeView")) $("portalHomeView").hidden = true;
         if ($("cursoViewSection")) $("cursoViewSection").hidden = true;
         if ($("aulaViewSection")) $("aulaViewSection").hidden = true;
+        if ($("frequenciaAlunoView")) $("frequenciaAlunoView").hidden = true;
         if ($("perfilAlunoView")) $("perfilAlunoView").hidden = false;
         atualizarNavegacaoPerfil(true);
         window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#perfilAlunoView`);
@@ -295,6 +297,24 @@
         atualizarNavegacaoPerfil(false);
         window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#portalHomeView`);
         window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function abrirInicioPortal(evento, rolarParaCursos = false) {
+        evento?.preventDefault();
+        pararMonitoramentoAulas();
+        ["perfilAlunoView", "frequenciaAlunoView", "cursoViewSection", "aulaViewSection"].forEach(id => {
+            if ($(id)) $(id).hidden = true;
+        });
+        if ($("portalHomeView")) $("portalHomeView").hidden = false;
+        document.querySelectorAll(".portal-nav-item").forEach(item => {
+            const destino = rolarParaCursos ? "#cursosSection" : "#portalHomeView";
+            item.classList.toggle("active", item.getAttribute("href") === destino);
+        });
+        const hash = rolarParaCursos ? "#cursosSection" : "#portalHomeView";
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
+        const alvo = rolarParaCursos ? $("cursosSection") : null;
+        if (alvo) setTimeout(() => alvo.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+        else window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function selecionarFotoPerfil() {
@@ -505,6 +525,130 @@
         }
     }
 
+    function horarioDeInstante(valor) {
+        if (!valor) return "—";
+        const data = new Date(valor);
+        return Number.isNaN(data.getTime()) ? "—" : data.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+    }
+
+    function frequenciaAgrupada(linhas) {
+        const materias = new Map();
+        for (const linha of linhas || []) {
+            const chaveMateria = `${linha.materia_id}:${linha.turma_id}`;
+            if (!materias.has(chaveMateria)) {
+                materias.set(chaveMateria, {
+                    id:linha.materia_id, nome:linha.materia_nome, descricao:linha.materia_descricao,
+                    cursoId:linha.curso_id, curso:linha.curso_nome, turmaId:linha.turma_id, turma:linha.turma_nome,
+                    aulasPrevistas:Number(linha.aulas_previstas || 0), faltasPermitidas:Number(linha.faltas_permitidas || 0), aulas:new Map()
+                });
+            }
+            const materia = materias.get(chaveMateria);
+            if (!linha.aula_id) continue;
+            if (!materia.aulas.has(linha.aula_id)) {
+                materia.aulas.set(linha.aula_id, {
+                    id:linha.aula_id, titulo:linha.aula_titulo, data:linha.aula_data,
+                    horario:linha.aula_horario, status:linha.aula_status, chamadas:new Map()
+                });
+            }
+            if (linha.chamada_id) {
+                materia.aulas.get(linha.aula_id).chamadas.set(linha.chamada_id, {
+                    id:linha.chamada_id, numero:Number(linha.chamada_numero || 0), abertaEm:linha.chamada_aberta_em,
+                    fechadaEm:linha.chamada_fechada_em, respondeu:linha.respondeu === true, respondidoEm:linha.respondido_em
+                });
+            }
+        }
+        return [...materias.values()].map(materia => ({ ...materia, aulas:[...materia.aulas.values()].map(aula => ({ ...aula, chamadas:[...aula.chamadas.values()].sort((a,b) => a.numero - b.numero) })) }));
+    }
+
+    function aulaEncerrada(status) {
+        return ["encerrada","encerrado","finalizada","finalizado"].includes(normalizarTexto(status));
+    }
+
+    function dadosFrequenciaMateria(materia) {
+        const aulas = materia.aulas.map(aula => {
+            const total = aula.chamadas.length;
+            const respondidas = aula.chamadas.filter(chamada => chamada.respondeu).length;
+            const percentual = total ? Math.round(respondidas * 100 / total) : 0;
+            const encerrada = aulaEncerrada(aula.status);
+            const avaliada = encerrada && total > 0;
+            return { ...aula, total, respondidas, percentual, encerrada, avaliada, presenca:avaliada && percentual >= 60 };
+        });
+        const avaliadas = aulas.filter(aula => aula.avaliada);
+        const presencas = avaliadas.filter(aula => aula.presenca).length;
+        const faltas = avaliadas.length - presencas;
+        const finalizada = materia.aulasPrevistas > 0 && avaliadas.length >= materia.aulasPrevistas;
+        const aprovada = finalizada && faltas <= materia.faltasPermitidas;
+        return { ...materia, aulas, avaliadas:avaliadas.length, presencas, faltas, finalizada, aprovada };
+    }
+
+    function renderizarChamadaFrequencia(chamada) {
+        const horarioChamada = horarioDeInstante(chamada.abertaEm);
+        const detalhe = chamada.respondeu
+            ? `Respondida às ${horarioDeInstante(chamada.respondidoEm)}`
+            : `Não respondida · aberta às ${horarioChamada}`;
+        return `<span class="frequencia-chamada ${chamada.respondeu ? "respondida" : "nao-respondida"}"><i>${chamada.respondeu ? "✓" : "×"}</i><span><strong>Chamada ${chamada.numero || "—"}</strong><small>${escapeHtml(detalhe)}</small></span></span>`;
+    }
+
+    function renderizarAulaFrequencia(aula, indice) {
+        let classe = "andamento", rotulo = "Em andamento";
+        if (aula.encerrada && !aula.total) { classe = "sem-chamadas"; rotulo = "Sem chamadas"; }
+        else if (aula.avaliada && aula.presenca) { classe = "presenca"; rotulo = "Presença"; }
+        else if (aula.avaliada) { classe = "falta"; rotulo = "Falta"; }
+        return `<details class="frequencia-aula-card">
+            <summary><span class="frequencia-aula-numero">${String(indice + 1).padStart(2,"0")}</span><div><small>${escapeHtml(formatarData(aula.data))} · ${escapeHtml(formatarHorario(aula.horario))}</small><strong>${escapeHtml(aula.titulo || "Aula")}</strong><span>${aula.respondidas}/${aula.total} chamadas respondidas</span></div><b class="${classe}">${rotulo}${aula.total ? ` · ${aula.percentual}%` : ""}</b><i>⌄</i></summary>
+            <div class="frequencia-chamadas">${aula.chamadas.length ? aula.chamadas.map(renderizarChamadaFrequencia).join("") : `<p>Nenhuma chamada de presença foi registrada nesta aula.</p>`}</div>
+        </details>`;
+    }
+
+    function renderizarFrequencia() {
+        const lista = $("frequenciaMateriasList");
+        if (!lista) return;
+        const materias = frequenciaAgrupada(state.frequencia).map(dadosFrequenciaMateria);
+        if (!materias.length) {
+            lista.innerHTML = `<div class="frequencia-empty"><span>▤</span><strong>Nenhuma matéria disponível</strong><p>Quando a gestão organizar a grade do seu curso, ela aparecerá aqui.</p></div>`;
+            return;
+        }
+        lista.innerHTML = materias.map(materia => {
+            const progresso = materia.aulasPrevistas ? Math.min(100, Math.round(materia.avaliadas * 100 / materia.aulasPrevistas)) : 0;
+            const situacao = !materia.finalizada ? { classe:"andamento", texto:"Em andamento" } : materia.aprovada ? { classe:"aprovada", texto:"Aprovado por frequência" } : { classe:"reprovada", texto:"Não aprovado por frequência" };
+            return `<article class="frequencia-materia-card">
+                <header><div><small>${escapeHtml(materia.curso)} · ${escapeHtml(materia.turma)}</small><h3>${escapeHtml(materia.nome)}</h3><p>${escapeHtml(materia.descricao || "Acompanhe abaixo as aulas e chamadas desta matéria.")}</p></div><span class="frequencia-situacao ${situacao.classe}"><i></i>${situacao.texto}</span></header>
+                <div class="frequencia-materia-stats"><span><small>AULAS COMPUTADAS</small><strong>${materia.avaliadas}/${materia.aulasPrevistas}</strong></span><span><small>PRESENÇAS</small><strong class="verde">${materia.presencas}</strong></span><span><small>FALTAS</small><strong class="${materia.faltas > materia.faltasPermitidas ? "vermelho" : ""}">${materia.faltas}</strong></span><span><small>LIMITE DE FALTAS</small><strong>${materia.faltasPermitidas}</strong></span></div>
+                <div class="frequencia-progress"><div><span>Progresso da matéria</span><strong>${progresso}%</strong></div><i><b style="width:${progresso}%"></b></i><small>${materia.finalizada ? "Todas as aulas previstas foram computadas." : `Faltam ${Math.max(0,materia.aulasPrevistas - materia.avaliadas)} aula(s) computada(s) para o resultado final.`}</small></div>
+                <div class="frequencia-aulas">${materia.aulas.length ? materia.aulas.map(renderizarAulaFrequencia).join("") : `<div class="frequencia-sem-aulas">Nenhuma aula foi vinculada a esta matéria.</div>`}</div>
+            </article>`;
+        }).join("");
+    }
+
+    async function carregarFrequenciaAluno() {
+        if (state.frequenciaCarregando) return;
+        state.frequenciaCarregando = true;
+        const lista = $("frequenciaMateriasList");
+        const botao = $("atualizarFrequenciaAluno");
+        if (lista) lista.innerHTML = `<div class="frequencia-loading"><i></i><span>Calculando sua frequência...</span></div>`;
+        if (botao) botao.disabled = true;
+        try {
+            const { data, error } = await supabaseClient.rpc("minha_frequencia_por_materia");
+            if (error) throw error;
+            state.frequencia = data || [];
+            renderizarFrequencia();
+        } catch (erro) {
+            console.error("MEP EAD | Erro ao carregar frequência:", erro);
+            if (lista) lista.innerHTML = `<div class="frequencia-empty error"><span>!</span><strong>Frequência indisponível</strong><p>${escapeHtml(erro.message || "Tente novamente.")}</p></div>`;
+        } finally { state.frequenciaCarregando = false; if (botao) botao.disabled = false; }
+    }
+
+    function abrirFrequencia(evento) {
+        evento?.preventDefault();
+        pararMonitoramentoAulas();
+        ["portalHomeView","perfilAlunoView","cursoViewSection","aulaViewSection"].forEach(id => { if ($(id)) $(id).hidden = true; });
+        if ($("frequenciaAlunoView")) $("frequenciaAlunoView").hidden = false;
+        document.querySelectorAll(".portal-nav-item").forEach(item => item.classList.toggle("active", item.id === "abrirFrequenciaNav"));
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#frequenciaAlunoView`);
+        carregarFrequenciaAluno();
+        window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
     async function carregarCursos() {
         const loading = $("cursosLoading");
         if (loading) loading.hidden = false;
@@ -597,6 +741,8 @@
         state.cursoAtual = curso;
         state.turmaAtual = turma;
         $("portalHomeView").hidden = true;
+        if ($("frequenciaAlunoView")) $("frequenciaAlunoView").hidden = true;
+        if ($("perfilAlunoView")) $("perfilAlunoView").hidden = true;
         $("cursoViewSection").hidden = false;
         atualizarCabecalhoCurso();
         await carregarAulas();
@@ -654,9 +800,9 @@
                 .order("data_live", { ascending: true, nullsFirst: false }).order("horario_inicio", { ascending: true, nullsFirst: false });
             if (error) throw error;
             state.aulas = data || [];
+            await carregarFrequenciaParaCurso();
             renderizarAulas();
             iniciarMonitoramentoAulas();
-            await atualizarIndicadoresCurso();
         } catch (erro) {
             state.aulas = [];
             renderizarAulas();
@@ -681,7 +827,10 @@
                 mudou = true;
                 return { ...live, status: atualizada.status, updated_at: atualizada.updated_at };
             });
-            if (mudou) renderizarAulas();
+            if (mudou) {
+                await carregarFrequenciaParaCurso();
+                renderizarAulas();
+            }
         } catch (erro) {
             console.warn("MEP EAD | Não foi possível atualizar o status das aulas:", erro);
         } finally {
@@ -724,15 +873,82 @@
         state.intervaloStatusAulas = setInterval(atualizarStatusAulas, 5000);
     }
 
+    async function carregarFrequenciaParaCurso() {
+        try {
+            const { data, error } = await supabaseClient.rpc("minha_frequencia_por_materia");
+            if (error) throw error;
+            state.frequencia = data || [];
+        } catch (erro) {
+            state.frequencia = [];
+            console.warn("MEP EAD | Não foi possível organizar as matérias concluídas:", erro);
+        }
+    }
+
+    function materiasConcluidasDaTurma() {
+        if (!state.turmaAtual?.id) return [];
+        return frequenciaAgrupada(state.frequencia)
+            .filter(materia => String(materia.turmaId) === String(state.turmaAtual.id))
+            .map(dadosFrequenciaMateria)
+            .filter(materia => materia.finalizada)
+            .sort((a, b) => {
+                const ultimaA = a.aulas.map(aula => aula.data || "").sort().at(-1) || "";
+                const ultimaB = b.aulas.map(aula => aula.data || "").sort().at(-1) || "";
+                return ultimaB.localeCompare(ultimaA);
+            });
+    }
+
+    function criarResumoMateriaConcluida(materia) {
+        const resultado = materia.aprovada ? "Aprovado por frequência" : "Não aprovado por frequência";
+        return `<article class="curso-materia-concluida ${materia.aprovada ? "aprovada" : "nao-aprovada"}">
+            <span class="curso-materia-concluida-icon">${materia.aprovada ? "✓" : "!"}</span>
+            <div><small>MATÉRIA CONCLUÍDA</small><h3>${escapeHtml(materia.nome || "Matéria")}</h3><p>${escapeHtml(materia.turma || "Sua turma")}</p></div>
+            <strong>${escapeHtml(resultado)}</strong>
+        </article>`;
+    }
+
     function renderizarAulas() {
-        const lista = $("cursoAulasList"), vazio = $("cursoAulasEmpty"), total = state.aulas.length;
-        if ($("cursoAulasCount")) $("cursoAulasCount").textContent = total === 1 ? "1 aula" : `${total} aulas`;
-        if ($("cursoViewTotalAulas")) $("cursoViewTotalAulas").textContent = String(total);
+        const lista = $("cursoAulasList"), vazio = $("cursoAulasEmpty");
+        const materiasConcluidas = materiasConcluidasDaTurma();
+        const materiasConcluidasIds = new Set(materiasConcluidas.map(materia => String(materia.id)));
+        const aulasVisiveis = state.aulas.filter(live => !(
+            live.materia_id &&
+            materiasConcluidasIds.has(String(live.materia_id)) &&
+            aulaEncerrada(live.status)
+        ));
+        const total = aulasVisiveis.length;
+        if ($("cursoAulasCount")) {
+            $("cursoAulasCount").textContent = total
+                ? (total === 1 ? "1 aula disponível" : `${total} aulas disponíveis`)
+                : (materiasConcluidas.length ? "Aguardando novas aulas" : "Nenhuma aula cadastrada");
+            $("cursoAulasCount").classList.toggle("sem-proximas", total === 0);
+        }
+        if ($("cursoViewTotalAulas")) $("cursoViewTotalAulas").textContent = String(state.aulas.length);
         if (!lista) return;
         lista.innerHTML = "";
-        if (!total) { if (vazio) vazio.hidden = false; return; }
+        if (!total && !materiasConcluidas.length) { if (vazio) vazio.hidden = false; return; }
         if (vazio) vazio.hidden = true;
-        state.aulas.forEach((live, indice) => {
+
+        if (aulasVisiveis.length) {
+            const grupoAulas = document.createElement("section");
+            grupoAulas.className = "curso-lista-grupo aulas-em-exibicao";
+            grupoAulas.innerHTML = `<header><div><span class="eyebrow">CONTINUE SEUS ESTUDOS</span><h3>Aulas atuais e próximas</h3><p>Acompanhe a matéria em andamento e os próximos encontros da turma.</p></div><strong>${total} ${total === 1 ? "aula" : "aulas"}</strong></header><div class="curso-aulas-ativas"></div>`;
+            lista.appendChild(grupoAulas);
+        } else if (materiasConcluidas.length) {
+            const semProximas = document.createElement("div");
+            semProximas.className = "curso-sem-proximas-aulas";
+            semProximas.innerHTML = `<span>⌛</span><div><strong>Nenhuma próxima aula agendada</strong><p>Quando a gestão liberar a próxima matéria, ela aparecerá aqui. Seu histórico continua disponível logo abaixo.</p></div>`;
+            lista.appendChild(semProximas);
+        }
+
+        if (materiasConcluidas.length) {
+            const grupo = document.createElement("section");
+            grupo.className = "curso-lista-grupo materias-concluidas";
+            grupo.innerHTML = `<header><span class="curso-grupo-icone">✓</span><div><span class="eyebrow">HISTÓRICO ACADÊMICO</span><h3>Matérias concluídas</h3><p>Consulte o resultado final de cada matéria encerrada.</p></div><strong>${materiasConcluidas.length} ${materiasConcluidas.length === 1 ? "matéria" : "matérias"}</strong></header><div>${materiasConcluidas.map(criarResumoMateriaConcluida).join("")}</div>`;
+            lista.appendChild(grupo);
+        }
+
+        const gradeAulas = lista.querySelector(".curso-aulas-ativas") || lista;
+        aulasVisiveis.forEach((live, indice) => {
             const card = document.createElement("article");
             card.className = "curso-aula-card";
             const horario = live.horario_inicio ? ` • ${escapeHtml(formatarHorario(live.horario_inicio))}` : "";
@@ -743,7 +959,7 @@
                 <span class="curso-aula-date">${escapeHtml(formatarData(live.data_live))}${horario}</span></div>
                 <button type="button" class="curso-aula-acessar-button is-${acesso.classe}" ${acesso.liberado ? "" : "disabled"}>${escapeHtml(acesso.texto)}</button>`;
             if (acesso.liberado) card.querySelector(".curso-aula-acessar-button").addEventListener("click", () => abrirAula(live));
-            lista.appendChild(card);
+            gradeAulas.appendChild(card);
         });
     }
 
@@ -755,36 +971,12 @@
         window.location.href = `./aula.html?id=${encodeURIComponent(String(live.id).trim())}`;
     }
 
-    async function atualizarIndicadoresCurso() {
-        const total = state.aulas.length;
-        let percentual = 0;
-        try {
-            const liveIds = state.aulas.map((live) => live.id).filter(Boolean);
-            if (liveIds.length) {
-                const { data: chamadas, error: erroChamadas } = await supabaseClient.from("presencas_chamadas").select("id, aula_id")
-                    .in("aula_id", liveIds);
-                if (erroChamadas) throw erroChamadas;
-                const chamadaIds = (chamadas || []).map((chamada) => chamada.id);
-                if (chamadaIds.length) {
-                    const { data: respostas, error: erroRespostas } = await supabaseClient.from("presencas").select("chamada_id")
-                        .eq("aluno_id", state.usuario.id).eq("presente", true).in("chamada_id", chamadaIds);
-                    if (erroRespostas) throw erroRespostas;
-                    percentual = Math.round((new Set((respostas || []).map((resposta) => resposta.chamada_id)).size / chamadaIds.length) * 100);
-                }
-            }
-        } catch (erro) { console.warn("MEP EAD | Não foi possível calcular a frequência:", erro); }
-        percentual = Math.max(0, Math.min(100, percentual));
-        if ($("cursoViewFrequencia")) $("cursoViewFrequencia").textContent = `${percentual}%`;
-        if ($("cursoProgressPercent")) $("cursoProgressPercent").textContent = `${percentual}%`;
-        if ($("cursoProgressFill")) $("cursoProgressFill").style.width = `${percentual}%`;
-        if ($("cursoProgressTexto")) $("cursoProgressTexto").textContent = total ? `${total} ${total === 1 ? "aula disponível" : "aulas disponíveis"}.` : "Nenhuma aula disponível.";
-    }
-
     function voltarParaCursos() {
         pararMonitoramentoAulas();
         state.cursoAtual = null; state.turmaAtual = null; state.aulas = [];
         $("cursoViewSection").hidden = true;
         $("aulaViewSection").hidden = true;
+        if ($("frequenciaAlunoView")) $("frequenciaAlunoView").hidden = true;
         $("portalHomeView").hidden = false;
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -796,6 +988,9 @@
     function configurarEventos() {
         $("logoutButton")?.addEventListener("click", realizarLogout);
         $("abrirPerfilNav")?.addEventListener("click", abrirPerfil);
+        $("abrirFrequenciaNav")?.addEventListener("click", abrirFrequencia);
+        $("abrirFrequenciaMobile")?.addEventListener("click", abrirFrequencia);
+        $("atualizarFrequenciaAluno")?.addEventListener("click", carregarFrequenciaAluno);
         $("abrirPerfilButton")?.addEventListener("click", abrirPerfil);
         $("abrirPerfilMobile")?.addEventListener("click", abrirPerfil);
         $("fecharPerfilButton")?.addEventListener("click", fecharPerfil);
@@ -817,15 +1012,8 @@
         $("instalacaoConfirmarButton")?.addEventListener("click", confirmarInstalacao);
         $("instalacaoDepoisButton")?.addEventListener("click", adiarInstalacao);
         $("instalacaoBackdrop")?.addEventListener("click", adiarInstalacao);
-        document.querySelector('.portal-nav-item[href="#portalHomeView"]')?.addEventListener("click", event => {
-            if ($("perfilAlunoView") && !$("perfilAlunoView").hidden) fecharPerfil(event);
-        });
-        document.querySelector('.portal-nav-item[href="#cursosSection"]')?.addEventListener("click", event => {
-            if ($("perfilAlunoView") && !$("perfilAlunoView").hidden) {
-                fecharPerfil(event);
-                setTimeout(() => $("cursosSection")?.scrollIntoView({ behavior:"smooth" }), 50);
-            }
-        });
+        document.querySelector('.portal-nav-item[href="#portalHomeView"]')?.addEventListener("click", event => abrirInicioPortal(event, false));
+        document.querySelector('.portal-nav-item[href="#cursosSection"]')?.addEventListener("click", event => abrirInicioPortal(event, true));
         if (new URLSearchParams(window.location.search).get("pagamento") === "retorno") {
             setTimeout(() => mostrarToast("Assinatura recebida", "Estamos confirmando a situação da sua mensalidade. A atualização pode levar alguns instantes.", "success"), 600);
         }
@@ -835,7 +1023,9 @@
     }
 
     function sincronizarViewPeloHash() {
-        if (window.location.hash === "#perfilAlunoView") {
+        if (window.location.hash === "#frequenciaAlunoView") {
+            abrirFrequencia();
+        } else if (window.location.hash === "#perfilAlunoView") {
             abrirPerfil();
         }
     }
@@ -858,7 +1048,7 @@
         } catch (erro) { mostrarErro("Erro ao carregar portal", erro); }
     }
 
-    window.MEPPortal = { state, abrirCurso, abrirAula, abrirPerfil, carregarCursos, carregarAulas, atualizarStatusAulas, iniciarAssinatura, realizarLogout };
+    window.MEPPortal = { state, abrirCurso, abrirAula, abrirPerfil, abrirFrequencia, carregarFrequenciaAluno, carregarCursos, carregarAulas, atualizarStatusAulas, iniciarAssinatura, realizarLogout };
     registrarAplicativo();
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", inicializar);
     else inicializar();
