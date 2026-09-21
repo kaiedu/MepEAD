@@ -23,7 +23,7 @@
     `;
     const CHAT_SELECT = `
         id, live_id, aluno_id, mensagem, created_at,
-        aluno:usuarios!chat_mensagens_aluno_id_fkey(nome, foto_url)
+        aluno:usuarios!chat_mensagens_aluno_id_fkey(nome, foto_url, perfil)
     `;
 
     const state = {
@@ -301,8 +301,11 @@
 
     function obterAutorChat(mensagem) {
         const aluno = Array.isArray(mensagem?.aluno) ? mensagem.aluno[0] : mensagem?.aluno;
-        const nomeCompleto = aluno?.nome || (mensagem?.aluno_id === state.usuario?.id ? state.usuario?.nome : "Aluno");
-        const nome = resumirNomeChat(nomeCompleto);
+        const professor = normalizarTexto(aluno?.perfil) === "professor";
+        const nomeBase = aluno?.nome || (mensagem?.aluno_id === state.usuario?.id ? state.usuario?.nome : "Aluno");
+        const nome = professor
+            ? `${resumirNomeChat(nomeBase)} · Professor`
+            : resumirNomeChat(nomeBase);
         return { nome, fotoUrl: aluno?.foto_url || null };
     }
 

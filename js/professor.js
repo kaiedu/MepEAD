@@ -1,146 +1,155 @@
-/* Dados da área do professor, usando os mesmos vínculos do painel administrativo. */
-(function () {
+/* MEP EAD | Portal operacional do professor. */
+(() => {
     "use strict";
     if (typeof supabaseClient === "undefined") return;
 
-    let professor, cursos = [], turmas = [], matriculas = [], lives = [];
+    const state = { usuario:null, vinculos:[], cursos:[], turmas:[], matriculas:[], lives:[], materias:[], chamadas:[] };
     const $ = id => document.getElementById(id);
-    const esc = v => String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-    const empty = (t, p, i = "◌") => `<div class="empty-state"><div class="empty-icon">${i}</div><h3>${esc(t)}</h3><p>${esc(p)}</p></div>`;
-    const loading = text => `<div class="loading-state"><div class="loading-spinner"></div><span>${text}</span></div>`;
-    const data = v => v ? new Intl.DateTimeFormat("pt-BR", { dateStyle:"medium" }).format(new Date(`${v}T00:00:00`)) : "Data não informada";
-    const turma = id => turmas.find(x => x.id === id);
-    const curso = x => x?.cursos?.nome || "Curso não informado";
-    const nomeTurma = id => turma(id)?.nome || "Turma não informada";
-    const titulos = {dashboard:"Dashboard", cursos:"Meus cursos", turmas:"Minhas turmas", aulas:"Aulas", alunos:"Alunos", lives:"Lives", presencas:"Presenças", configuracoes:"Configurações"};
+    const esc = value => String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    const norm = value => String(value || "").trim().toLowerCase().replaceAll("-","_").replaceAll(" ","_");
+    const hoje = () => new Date().toLocaleDateString("sv-SE", { timeZone:"America/Sao_Paulo" });
+    const formatDate = value => value ? new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"short",year:"numeric",timeZone:"UTC"}).format(new Date(`${value}T12:00:00Z`)) : "Data não informada";
+    const formatTime = value => value ? String(value).slice(0,5) : "Horário não informado";
+    const curso = id => state.cursos.find(item => String(item.id) === String(id));
+    const turma = id => state.turmas.find(item => String(item.id) === String(id));
+    const materia = id => state.materias.find(item => String(item.id) === String(id));
+    const courseFromClass = classId => curso(turma(classId)?.curso_id);
 
-    function abrirPagina(nome) {
-        if (!titulos[nome]) return;
-        document.querySelectorAll(".page").forEach(x => x.classList.toggle("active", x.id === `page-${nome}`));
-        document.querySelectorAll("[data-page]").forEach(x => x.classList.toggle("active", x.dataset.page === nome));
-        if ($("pageTitle")) $("pageTitle").textContent = titulos[nome];
-        history.replaceState(null, "", `#${nome}`);
-        ({cursos:renderCursos, turmas:renderTurmas, alunos:renderAlunos, aulas:renderAulas, lives:renderLives, presencas:renderPresencas}[nome] || (() => {}))();
+    function toast(title, text, type = "") {
+        const box = $("teacherToast"); if (!box) return;
+        $("teacherToastTitle").textContent = title; $("teacherToastText").textContent = text;
+        box.className = `teacher-toast ${type}`; box.hidden = false;
+        clearTimeout(toast.timer); toast.timer = setTimeout(() => { box.hidden = true; }, 4500);
     }
 
-    async function sessao() {
-        const {data: s} = await supabaseClient.auth.getSession();
-        if (!s?.session) return false;
-        const {data: u, error} = await supabaseClient.from("usuarios").select("id,nome,email,perfil,ativo").eq("auth_id", s.session.user.id).maybeSingle();
-        if (error || !u || u.perfil !== "professor" || u.ativo !== true) { await supabaseClient.auth.signOut(); return false; }
-        professor = u;
-        $("userName").textContent = u.nome || "Professor";
-        $("userAvatar").textContent = (u.nome || "P").trim()[0].toUpperCase();
+    function empty(title, text, icon = "◌") {
+        return `<div class="teacher-empty"><span>${icon}</span><strong>${esc(title)}</strong><p>${esc(text)}</p></div>`;
+    }
+
+    function statusLabel(status) {
+        return ({ao_vivo:"AO VIVO",agendada:"AGENDADA",encerrada:"ENCERRADA",encerrado:"ENCERRADA",finalizada:"FINALIZADA",finalizado:"FINALIZADA"})[norm(status)] || String(status || "AGENDADA").replaceAll("_"," ").toUpperCase();
+    }
+
+    function openPage(name, event) {
+        event?.preventDefault();
+        if (![$("page-inicio"),$("page-aulas"),$("page-turmas"),$("page-alunos")].some(page => page?.id === `page-${name}`)) name = "inicio";
+        document.querySelectorAll(".teacher-page").forEach(page => page.classList.toggle("active", page.id === `page-${name}`));
+        document.querySelectorAll("[data-page]").forEach(item => item.classList.toggle("active", item.dataset.page === name));
+        const titles = {inicio:"Visão geral",aulas:"Minhas aulas",turmas:"Minhas turmas",alunos:"Alunos"};
+        if ($("pageTitle")) $("pageTitle").textContent = titles[name];
+        history.replaceState(null,"",`#${name}`); window.scrollTo({top:0,behavior:"smooth"});
+        if (name === "aulas") renderClasses();
+        if (name === "turmas") renderClassesGroups();
+        if (name === "alunos") renderStudents();
+    }
+
+    async function authenticate() {
+        const { data:{ session } } = await supabaseClient.auth.getSession();
+        if (!session) return false;
+        const { data, error } = await supabaseClient.from("usuarios").select("id,nome,email,perfil,ativo,foto_url").eq("auth_id",session.user.id).maybeSingle();
+        if (error || !data || norm(data.perfil) !== "professor" || data.ativo !== true) return false;
+        state.usuario = data;
+        const first = (data.nome || "Professor").trim().split(/\s+/)[0];
+        $("userName").textContent = data.nome || "Professor"; $("userAvatar").textContent = first.charAt(0).toUpperCase();
+        $("welcomeTitle").textContent = `Bem-vindo, ${first}.`;
         return true;
     }
 
-    async function carregar() {
-        const {data: vinculos, error} = await supabaseClient.from("turma_professores").select("turma_id").eq("professor_id", professor.id);
-        /* A tabela de vínculos pode não estar liberada para perfis antigos.
-           Ela serve apenas para restringir a visualização, portanto uma falha
-           aqui não pode impedir o carregamento dos dados do portal. */
-        if (error) console.warn("MEP EAD | Não foi possível consultar os vínculos do professor:", error.message);
-        const ids = error ? [] : [...new Set((vinculos || []).map(x => x.turma_id).filter(Boolean))];
-        /*
-         * Instalações antigas podem ainda não ter registros em
-         * turma_professores. Nesse caso mostramos os dados reais já
-         * cadastrados, tal como o painel de Gestão, em vez de exibir uma
-         * área vazia. Quando houver vínculo, a visão permanece restrita às
-         * turmas do professor.
-         */
-        const consultaCursos = supabaseClient.from("cursos")
-            .select("id,nome,descricao,imagem_url,ativo")
-            .order("nome");
-        const consultaTurmas = supabaseClient.from("turmas")
-            .select("id,curso_id,nome,codigo,data_inicio,data_fim,ativa")
-            .order("nome");
-        const consultaMatriculas = supabaseClient.from("turma_alunos")
-            .select("turma_id,aluno_id,ativo,data_matricula,usuarios(id,nome,email)")
-            .eq("ativo", true);
-        const consultaLives = supabaseClient.from("lives")
-            .select("id,turma_id,titulo,descricao,youtube_url,data_live,horario_inicio,horario_fim,status")
-            .order("data_live", {ascending:false})
-            .order("horario_inicio", {ascending:false});
-        if (ids.length) {
-            consultaTurmas.in("id", ids);
-            consultaMatriculas.in("turma_id", ids);
-            consultaLives.in("turma_id", ids);
-        } else {
-            console.warn("MEP EAD | Professor sem vínculo de turma; exibindo os dados cadastrados na Gestão.");
-        }
-        const [c, t, m, l] = await Promise.all([
-            consultaCursos,
-            consultaTurmas,
-            consultaMatriculas,
-            consultaLives
+    async function loadData() {
+        const { data: links, error: linksError } = await supabaseClient.from("turma_professores").select("turma_id").eq("professor_id",state.usuario.id);
+        if (linksError) throw linksError;
+        state.vinculos = links || [];
+        const linkedIds = [...new Set(state.vinculos.map(item => item.turma_id).filter(Boolean))];
+
+        let liveQuery = supabaseClient.from("lives").select("id,turma_id,materia_id,professor_id,titulo,descricao,data_live,horario_inicio,horario_fim,status,created_at,updated_at").order("data_live",{ascending:false}).order("horario_inicio",{ascending:false});
+        liveQuery = linkedIds.length ? liveQuery.or(`professor_id.eq.${state.usuario.id},turma_id.in.(${linkedIds.join(",")})`) : liveQuery.eq("professor_id",state.usuario.id);
+        const { data: lives, error: livesError } = await liveQuery; if (livesError) throw livesError;
+        state.lives = lives || [];
+
+        const classIds = [...new Set([...linkedIds,...state.lives.map(item => item.turma_id)].filter(Boolean))];
+        if (!classIds.length) { state.turmas=[]; state.cursos=[]; state.matriculas=[]; state.materias=[]; state.chamadas=[]; return; }
+        const [classesResult,enrollmentsResult] = await Promise.all([
+            supabaseClient.from("turmas").select("id,curso_id,nome,codigo,descricao,data_inicio,data_fim,ativa").in("id",classIds).order("nome"),
+            supabaseClient.from("turma_alunos").select("turma_id,aluno_id,ativo,data_matricula,usuarios(id,nome,email,foto_url)").in("turma_id",classIds).eq("ativo",true)
         ]);
-        if (c.error || t.error || m.error || l.error) throw (c.error || t.error || m.error || l.error);
-        cursos = c.data || [];
-        const cursosPorId = new Map(cursos.map(item => [item.id, item]));
-        turmas = (t.data || []).map(item => ({ ...item, cursos: cursosPorId.get(item.curso_id) || null }));
-        matriculas = m.data || []; lives = l.data || [];
+        if (classesResult.error || enrollmentsResult.error) throw (classesResult.error || enrollmentsResult.error);
+        state.turmas = classesResult.data || []; state.matriculas = enrollmentsResult.data || [];
+        const courseIds = [...new Set(state.turmas.map(item => item.curso_id).filter(Boolean))];
+        const liveIds = state.lives.map(item => item.id);
+        const [coursesResult,subjectsResult,callsResult] = await Promise.all([
+            courseIds.length ? supabaseClient.from("cursos").select("id,nome,descricao,imagem_url,ativo").in("id",courseIds) : Promise.resolve({data:[]}),
+            courseIds.length ? supabaseClient.from("materias").select("id,curso_id,nome,descricao,ativa").in("curso_id",courseIds) : Promise.resolve({data:[]}),
+            liveIds.length ? supabaseClient.from("presencas_chamadas").select("id,aula_id,numero,ativa,aberta_em,fechada_em").in("aula_id",liveIds) : Promise.resolve({data:[]})
+        ]);
+        if (coursesResult.error || subjectsResult.error || callsResult.error) throw (coursesResult.error || subjectsResult.error || callsResult.error);
+        state.cursos=coursesResult.data||[]; state.materias=subjectsResult.data||[]; state.chamadas=callsResult.data||[];
     }
 
-    function dashboard() {
-        const cursosVinculados = new Set(turmas.map(x => x.curso_id).filter(Boolean));
-        const alunos = new Set(matriculas.map(x => x.aluno_id).filter(Boolean));
-        [["totalCursos",cursosVinculados.size],["totalTurmas",turmas.length],["totalAlunos",alunos.size],["totalAulas",lives.length]].forEach(([id,v]) => { if ($(id)) $(id).textContent = v; });
-        if ($("dashboardTurmas")) $("dashboardTurmas").innerHTML = turmas.length ? turmas.slice(0,5).map(x => `<div class="teacher-dashboard-turma"><div class="teacher-dashboard-turma-info"><strong>${esc(x.nome)}</strong><span>${esc(curso(x))}</span></div><span class="teacher-dashboard-turma-count">${matriculas.filter(m=>m.turma_id===x.id).length} aluno(s)</span></div>`).join("") : empty("Nenhuma turma vinculada", "Peça à administração para vinculá-lo a uma turma.", "🎓");
-        const live = lives.find(x=>x.status === "ao_vivo") || lives.find(x=>x.status === "agendada") || lives[0];
-        if ($("proximaLive")) $("proximaLive").innerHTML = live ? liveCard(live) : empty("Nenhuma live cadastrada", "Quando houver uma transmissão vinculada às suas turmas, ela aparecerá aqui.", "◉");
+    function roomUrl(live) { return `./aula.html?id=${encodeURIComponent(live.id)}`; }
+
+    function nextRelevantClass() {
+        const ranking = {ao_vivo:0,agendada:1};
+        return [...state.lives].sort((a,b) => {
+            const ra=ranking[norm(a.status)]??2, rb=ranking[norm(b.status)]??2;
+            if (ra!==rb) return ra-rb;
+            return `${a.data_live||""}T${a.horario_inicio||""}`.localeCompare(`${b.data_live||""}T${b.horario_inicio||""}`);
+        })[0];
     }
 
-    function liveCard(x) {
-        const horario = x.horario_inicio ? ` às ${esc(x.horario_inicio.slice(0,5))}` : "";
-        const link = x.youtube_url ? `<p><a class="primary-button" href="${esc(x.youtube_url)}" target="_blank" rel="noopener">Abrir transmissão</a></p>` : "";
-        return `<article class="teacher-live-card"><div class="teacher-live-card-header"><div><h3>${esc(x.titulo || "Live sem título")}</h3><p>${esc(nomeTurma(x.turma_id))} · ${data(x.data_live)}${horario}</p>${x.descricao ? `<p>${esc(x.descricao)}</p>` : ""}</div><span class="live-badge">${esc((x.status || "agendada").replace("_"," ").toUpperCase())}</span></div>${link}</article>`;
+    function renderDashboard() {
+        const students = new Set(state.matriculas.map(item => item.aluno_id));
+        $("totalAulas").textContent=state.lives.length; $("totalTurmas").textContent=state.turmas.length; $("totalAlunos").textContent=students.size; $("totalChamadas").textContent=state.chamadas.length;
+        const todayCount=state.lives.filter(item => item.data_live===hoje()).length; $("aulasHojeTexto").textContent=todayCount?`${todayCount} ${todayCount===1?"aula hoje":"aulas hoje"}`:"Nenhuma aula hoje";
+        const liveCount=state.lives.filter(item => norm(item.status)==="ao_vivo").length; $("navLiveCount").hidden=!liveCount; $("navLiveCount").textContent=liveCount;
+        const next=nextRelevantClass(), content=$("nextClassContent"), badge=$("nextClassStatus");
+        if (!next) { content.innerHTML=empty("Nenhuma aula vinculada","Quando uma aula for atribuída a você, ela aparecerá aqui.","▦"); badge.textContent="SEM AULAS"; badge.className="teacher-live-dot"; }
+        else {
+            const status=norm(next.status), cls=turma(next.turma_id), crs=courseFromClass(next.turma_id);
+            $("nextClassHeading").textContent=status==="ao_vivo"?"Aula acontecendo agora":"Próxima aula"; badge.textContent=statusLabel(status); badge.className=`teacher-live-dot ${status}`;
+            content.innerHTML=`<article class="next-class-card"><small>${esc(crs?.nome||"MEP EAD")} · ${esc(cls?.nome||"Turma")}</small><h4>${esc(next.titulo||"Aula")}</h4><p>${esc(next.descricao||"Entre na sala para conduzir a chamada e acompanhar o chat da turma.")}</p><div class="next-class-meta"><span>${esc(formatDate(next.data_live))}</span><span>${esc(formatTime(next.horario_inicio))}</span><span>${esc(materia(next.materia_id)?.nome||"Matéria não informada")}</span></div><div class="next-class-actions"><button type="button" class="room-button ${status==="ao_vivo"?"live":""}" data-room="${esc(next.id)}">${status==="ao_vivo"?"Entrar na sala ao vivo":"Abrir sala de controle"}</button></div></article>`;
+        }
+        $("dashboardTurmas").innerHTML=state.turmas.length?state.turmas.slice(0,5).map(item=>`<article class="teacher-compact-item"><span>${esc((item.nome||"T").charAt(0).toUpperCase())}</span><div><strong>${esc(item.nome)}</strong><small>${esc(curso(item.curso_id)?.nome||"Curso")} · ${state.matriculas.filter(enrollment=>enrollment.turma_id===item.id).length} alunos</small></div></article>`).join(""):empty("Nenhuma turma vinculada","A gestão precisa vincular seu perfil a uma turma.","▤");
     }
 
-    function renderCursos() {
-        const lista = $("listaCursos"), vazio = $("cursosEmpty"); if (!lista) return;
-        const cursosComTurma = cursos;
-        lista.innerHTML = cursosComTurma.map(cursoItem => {
-            const turmasDoCurso = turmas.filter(turmaItem => turmaItem.curso_id === cursoItem.id);
-            const alunosDoCurso = matriculas.filter(matricula => turmasDoCurso.some(turmaItem => turmaItem.id === matricula.turma_id));
-            const alunosUnicos = [...new Map(alunosDoCurso.map(matricula => [matricula.aluno_id, matricula])).values()];
-            const turmasTexto = turmasDoCurso.map(turmaItem => turmaItem.nome).join(", ");
-            const listaAlunos = alunosUnicos.length
-                ? alunosUnicos.map(matricula => `<li>${esc(matricula.usuarios?.nome || "Aluno")}</li>`).join("")
-                : "<li>Nenhum aluno matriculado.</li>";
-            return `<article class="teacher-course-card"><div class="teacher-course-cover">${cursoItem.imagem_url?`<img src="${esc(cursoItem.imagem_url)}" alt="">`:"📚"}</div><div class="teacher-course-info"><h3>${esc(cursoItem.nome)}</h3><p>${esc(cursoItem.descricao || turmasTexto || "Curso cadastrado no sistema.")}</p><div class="teacher-course-meta"><span>${turmasDoCurso.length} turma(s)</span><span>${alunosUnicos.length} aluno(s)</span></div><div class="teacher-course-enrollments"><strong>Turmas: ${esc(turmasTexto)}</strong><span>Alunos matriculados</span><ul>${listaAlunos}</ul></div></div></article>`;
-        }).join("");
-        vazio.hidden = cursosComTurma.length > 0;
+    function classCard(item) {
+        const dateValue=item.data_live?new Date(`${item.data_live}T12:00:00Z`):null, status=norm(item.status), cls=turma(item.turma_id), crs=courseFromClass(item.turma_id);
+        const day=dateValue?String(dateValue.getUTCDate()).padStart(2,"0"):"—", month=dateValue?dateValue.toLocaleDateString("pt-BR",{month:"short",timeZone:"UTC"}).replace(".","").toUpperCase():"DATA";
+        return `<article class="teacher-class-card ${status==="ao_vivo"?"is-live":""}" data-search="${esc(`${item.titulo} ${cls?.nome} ${crs?.nome}`.toLowerCase())}" data-status="${status}"><div class="teacher-class-date"><strong>${day}</strong><span>${esc(month)}</span></div><div class="teacher-class-info"><small>${esc(crs?.nome||"Curso")} · ${esc(cls?.nome||"Turma")} · ${esc(formatTime(item.horario_inicio))}</small><h3>${esc(item.titulo||"Aula sem título")}</h3><p>${esc(materia(item.materia_id)?.nome||item.descricao||"Sala de controle da aula")}</p></div><div class="teacher-class-actions"><span class="status-badge ${status}">${esc(statusLabel(status))}</span><button type="button" data-room="${esc(item.id)}">Abrir sala <span>→</span></button></div></article>`;
     }
-    function renderTurmas() {
-        const lista=$("listaTurmas"), vazio=$("turmasEmpty"); if(!lista)return;
-        lista.innerHTML=turmas.map(x=>`<article class="teacher-turma-card" data-turma><div class="teacher-turma-card-header"><div><h3>${esc(x.nome)}</h3><p class="curso-name">${esc(curso(x))}</p></div><span class="turma-badge">${x.ativa?"ATIVA":"INATIVA"}</span></div><div class="teacher-turma-details"><div class="teacher-turma-detail"><span>ALUNOS MATRICULADOS</span><strong>${matriculas.filter(m=>m.turma_id===x.id).length}</strong></div><div class="teacher-turma-detail"><span>INÍCIO</span><strong>${data(x.data_inicio)}</strong></div></div></article>`).join("");
-        vazio.hidden=turmas.length>0;
-    }
-    function renderAlunos() {
-        const lista=$("listaAlunos"), vazio=$("alunosEmpty"); if(!lista)return;
-        const unicos=new Map(); matriculas.forEach(m=>{if(!unicos.has(m.aluno_id))unicos.set(m.aluno_id,{...m,turmas:[]});unicos.get(m.aluno_id).turmas.push(`${curso(turma(m.turma_id))} · ${nomeTurma(m.turma_id)}`);});
-        const dados=[...unicos.values()]; lista.innerHTML=dados.map(m=>alunoCard(m,`${esc(m.usuarios?.email || "")}<br>${esc(m.turmas.join(", "))}`,"MATRICULADO")).join(""); vazio.hidden=dados.length>0;
-    }
-    function alunoCard(m, detalhe, status) { return `<article class="teacher-student-card" data-aluno><div class="student-info"><div class="student-avatar">${esc((m.usuarios?.nome||"A")[0].toUpperCase())}</div><div class="student-name"><strong>${esc(m.usuarios?.nome||"Aluno")}</strong><span>${detalhe}</span></div></div><span class="student-status">${esc(status)}</span></article>`; }
-    function renderAulas() { const lista=$("listaAulas"); if(lista)lista.innerHTML=lives.length?lives.map(liveCard).join(""):empty("Nenhuma aula cadastrada","As aulas ao vivo vinculadas às suas turmas aparecerão aqui.","▶"); }
-    function renderLives() { const lista=$("listaLives"); if(lista)lista.innerHTML=lives.length?lives.map(liveCard).join(""):empty("Nenhuma live cadastrada","Quando uma live for vinculada às suas turmas, ela aparecerá aqui.","🔴"); }
 
-    async function renderPresencas() {
-        const lista=$("listaPresencas"); if(!lista)return; lista.innerHTML=loading("Carregando frequência dos alunos...");
-        const ids=turmas.map(x=>x.id); if(!ids.length){lista.innerHTML=empty("Nenhum aluno matriculado","Não há turmas vinculadas ao seu perfil.","✓");return;}
-        const {data: registros,error}=await supabaseClient.from("presencas").select("aluno_id,turma_id,presente,aula_id").in("turma_id",ids);
-        if(error){console.error(error);lista.innerHTML=empty("Não foi possível carregar",error.message,"⚠️");return;}
-        const mapa=new Map(); matriculas.forEach(m=>mapa.set(`${m.turma_id}:${m.aluno_id}`,{...m,total:0,presentes:0}));
-        (registros||[]).forEach(r=>{const m=mapa.get(`${r.turma_id}:${r.aluno_id}`);if(m){m.total++;if(r.presente)m.presentes++;}});
-        const dados=[...mapa.values()]; lista.innerHTML=dados.length?`<div class="teacher-students-list">${dados.map(m=>{const p=m.total?Math.round(m.presentes*100/m.total):0;return alunoCard(m,`${esc(curso(turma(m.turma_id)))} · ${esc(nomeTurma(m.turma_id))} · ${m.presentes}/${m.total} presença(s)`,m.total?`${p}%`:"SEM CHAMADAS");}).join("")}</div>`:empty("Nenhuma presença registrada","As frequências das suas turmas aparecerão aqui.","✓");
+    function renderClasses() {
+        const search=String($("buscarAula")?.value||"").trim().toLowerCase(), filter=$("filtroAulaStatus")?.value||"";
+        const items=state.lives.filter(item=>(!filter||norm(item.status)===filter)&&(!search||`${item.titulo} ${turma(item.turma_id)?.nome} ${courseFromClass(item.turma_id)?.nome}`.toLowerCase().includes(search)));
+        $("aulasCount").textContent=`${state.lives.length} ${state.lives.length===1?"aula":"aulas"}`; $("listaAulas").innerHTML=items.length?items.map(classCard).join(""):empty("Nenhuma aula encontrada",state.lives.length?"Ajuste os filtros utilizados.":"A gestão ainda não vinculou aulas ao seu perfil.","▦");
     }
-    function busca(campo,seletor){const el=$(campo);if(el)el.addEventListener("input",()=>{const t=el.value.trim().toLowerCase();document.querySelectorAll(seletor).forEach(x=>x.hidden=!x.textContent.toLowerCase().includes(t));});}
-    busca("buscarTurma","#listaTurmas [data-turma]"); busca("buscarAluno","#listaAlunos [data-aluno]");
-    $("novaAulaButton")?.addEventListener("click",()=>abrirPagina("lives"));
-    $("logoutButton")?.addEventListener("click",async()=>{await supabaseClient.auth.signOut();location.replace("../index.html");});
-    document.querySelectorAll("[data-page]").forEach(x=>x.addEventListener("click",()=>abrirPagina(x.dataset.page)));
-    async function iniciar(){if(!await sessao()){location.replace("../index.html");return;}try{await carregar();dashboard();}catch(e){console.error("MEP EAD | Erro ao carregar a área do professor:",e);$("dashboardTurmas").innerHTML=empty("Não foi possível carregar",e.message||"Tente novamente.","⚠️");}abrirPagina(location.hash.slice(1)||"dashboard");}
-    supabaseClient.auth.onAuthStateChange((e,s)=>{if(e==="SIGNED_OUT"||(e==="TOKEN_REFRESHED"&&!s))location.replace("../index.html");});
-    document.readyState==="loading"?document.addEventListener("DOMContentLoaded",iniciar):iniciar();
-    window.MEPProfessor={abrirPagina,recarregar:iniciar};
+
+    function renderClassesGroups() {
+        const search=String($("buscarTurma")?.value||"").trim().toLowerCase();
+        const items=state.turmas.filter(item=>!search||`${item.nome} ${item.codigo} ${curso(item.curso_id)?.nome}`.toLowerCase().includes(search));
+        $("turmasCount").textContent=`${state.turmas.length} ${state.turmas.length===1?"turma":"turmas"}`;
+        $("listaTurmas").innerHTML=items.length?items.map(item=>`<article class="teacher-turma-card"><header><span>${esc(curso(item.curso_id)?.nome||"CURSO")}</span><h3>${esc(item.nome)}</h3><p>${esc(item.codigo||item.descricao||"Turma MEP EAD")}</p></header><div><span><small>ALUNOS ATIVOS</small><strong>${state.matriculas.filter(enrollment=>enrollment.turma_id===item.id).length}</strong></span><span><small>AULAS</small><strong>${state.lives.filter(live=>live.turma_id===item.id).length}</strong></span></div></article>`).join(""):empty("Nenhuma turma encontrada",state.turmas.length?"Ajuste sua pesquisa.":"A gestão precisa vincular uma turma ao seu perfil.","▤");
+    }
+
+    function renderStudents() {
+        const map=new Map(); state.matriculas.forEach(item=>{const current=map.get(item.aluno_id)||{...item,classes:[]};current.classes.push(turma(item.turma_id)?.nome||"Turma");map.set(item.aluno_id,current);});
+        const search=String($("buscarAluno")?.value||"").trim().toLowerCase(); const students=[...map.values()].filter(item=>!search||`${item.usuarios?.nome} ${item.usuarios?.email} ${item.classes.join(" ")}`.toLowerCase().includes(search));
+        $("alunosCount").textContent=`${map.size} ${map.size===1?"aluno":"alunos"}`;
+        $("listaAlunos").innerHTML=students.length?students.map(item=>`<article class="teacher-student-card"><div class="student-profile"><div class="student-avatar">${esc((item.usuarios?.nome||"A").charAt(0).toUpperCase())}</div><div><strong>${esc(item.usuarios?.nome||"Aluno")}</strong><small>${esc(item.usuarios?.email||"E-mail não informado")}</small></div></div><div class="student-classes">${esc(item.classes.join(" · "))}</div><span class="student-active">ATIVO</span></article>`).join(""):empty("Nenhum aluno encontrado",map.size?"Ajuste sua pesquisa.":"Não há matrículas ativas nas suas turmas.","♙");
+    }
+
+    function bindEvents() {
+        document.querySelectorAll("[data-page]").forEach(item=>item.addEventListener("click",event=>openPage(item.dataset.page,event)));
+        document.addEventListener("click",event=>{const button=event.target.closest("[data-room]");if(button) location.href=roomUrl({id:button.dataset.room});});
+        $("buscarAula")?.addEventListener("input",renderClasses); $("filtroAulaStatus")?.addEventListener("change",renderClasses); $("buscarTurma")?.addEventListener("input",renderClassesGroups); $("buscarAluno")?.addEventListener("input",renderStudents);
+        $("logoutButton")?.addEventListener("click",async()=>{await supabaseClient.auth.signOut();location.replace("../index.html");});
+        window.addEventListener("hashchange",()=>openPage(location.hash.slice(1)||"inicio"));
+    }
+
+    async function init() {
+        bindEvents();
+        if (!await authenticate()) { location.replace("../index.html"); return; }
+        try { await loadData(); renderDashboard(); renderClasses(); renderClassesGroups(); renderStudents(); openPage(location.hash.slice(1)||"inicio"); }
+        catch(error){ console.error("MEP EAD | Portal do professor:",error); toast("Não foi possível carregar o portal",error.message||"Tente novamente.","error"); $("nextClassContent").innerHTML=empty("Dados indisponíveis","Atualize a página em alguns instantes.","!"); }
+    }
+    document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();
 })();
