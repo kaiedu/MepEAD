@@ -632,16 +632,37 @@
         if (overlay) { overlay.hidden = true; overlay.setAttribute("aria-hidden", "true"); }
     }
 
-    async function sairDaTelaCheiaParaPresenca() {
+    function atualizarModoTelaCheia(expandido) {
         const player = $("livePlayer");
-        if (player?.classList.contains("mep-player-expandido")) {
-            player.classList.remove("mep-player-expandido");
-            document.body.classList.remove("mep-player-expandido-ativo");
-            $("liveFullscreenButton")?.setAttribute("aria-label", "Tela cheia");
-            state.chatEmTelaCheia = false;
-            moverChatParaTelaCheia(false);
-            atualizarVisibilidadeChat();
+        player?.classList.toggle("mep-player-expandido", expandido);
+        document.body.classList.toggle("mep-player-expandido-ativo", expandido);
+        const botao = $("liveFullscreenButton");
+        botao?.setAttribute("aria-label", expandido ? "Sair da tela cheia" : "Tela cheia");
+        botao?.setAttribute("title", expandido ? "Sair da tela cheia" : "Tela cheia");
+        state.chatEmTelaCheia = expandido;
+        moverChatParaTelaCheia(expandido);
+        atualizarVisibilidadeChat();
+    }
+
+    function liberarOrientacao() {
+        try {
+            screen.orientation?.unlock?.();
+        } catch (_) {
+            /* Alguns navegadores, como o Safari, não expõem esta API. */
         }
+    }
+
+    async function solicitarPaisagem() {
+        try {
+            await screen.orientation?.lock?.("landscape");
+        } catch (_) {
+            /* Com a orientação do manifesto liberada, o giro físico continua funcionando. */
+        }
+    }
+
+    async function sairDaTelaCheiaParaPresenca() {
+        atualizarModoTelaCheia(false);
+        liberarOrientacao();
         if (!document.fullscreenElement || !document.exitFullscreen) return;
         try {
             await document.exitFullscreen();
@@ -864,15 +885,27 @@
         if (data) state.participante = data;
     }
 
-    function telaCheia() {
+    async function telaCheia() {
         const player = $("livePlayer");
         if (!player) return;
-        const expandido = player.classList.toggle("mep-player-expandido");
-        document.body.classList.toggle("mep-player-expandido-ativo", expandido);
-        $("liveFullscreenButton")?.setAttribute("aria-label", expandido ? "Sair da tela cheia" : "Tela cheia");
-        state.chatEmTelaCheia = expandido;
-        moverChatParaTelaCheia(expandido);
-        atualizarVisibilidadeChat();
+        const expandido = player.classList.contains("mep-player-expandido") || document.fullscreenElement === player;
+
+        if (expandido) {
+            atualizarModoTelaCheia(false);
+            liberarOrientacao();
+            if (document.fullscreenElement && document.exitFullscreen) {
+                try { await document.exitFullscreen(); } catch (_) { /* O fallback visual já foi encerrado. */ }
+            }
+            return;
+        }
+
+        atualizarModoTelaCheia(true);
+        if (player.requestFullscreen) {
+            try { await player.requestFullscreen(); } catch (_) { /* Mantém o fallback que funciona no iPhone. */ }
+        } else if (player.webkitRequestFullscreen) {
+            try { player.webkitRequestFullscreen(); } catch (_) { /* Mantém o fallback visual. */ }
+        }
+        await solicitarPaisagem();
     }
 
     function voltarParaAulas() { limparEstado(); window.location.href = "./index.html"; }
@@ -896,6 +929,12 @@
         $("logoutButton")?.addEventListener("click", logout);
         $("confirmarPresencaButton")?.addEventListener("click", confirmarPresenca);
         $("liveFullscreenButton")?.addEventListener("click", telaCheia);
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement && $("livePlayer")?.classList.contains("mep-player-expandido")) {
+                atualizarModoTelaCheia(false);
+                liberarOrientacao();
+            }
+        });
         $("liveChatCloseButton")?.addEventListener("click", alternarChat);
         $("liveChatToggleButton")?.addEventListener("click", alternarChat);
         $("liveChatForm")?.addEventListener("submit", enviarMensagemChat);
