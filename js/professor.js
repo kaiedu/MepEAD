@@ -44,10 +44,14 @@
     }
 
     async function authenticate() {
-        const { data:{ session } } = await supabaseClient.auth.getSession();
-        if (!session) return false;
+        if (window.MEPSessionGuard && !await window.MEPSessionGuard.verificar()) return false;
+        const { data:{ session }, error:sessionError } = await supabaseClient.auth.getSession();
+        if (sessionError || !session) { window.MEPSessionGuard?.mostrar(); return false; }
         const { data, error } = await supabaseClient.from("usuarios").select("id,nome,email,perfil,ativo,foto_url").eq("auth_id",session.user.id).maybeSingle();
-        if (error || !data || norm(data.perfil) !== "professor" || data.ativo !== true) return false;
+        if (error || !data || norm(data.perfil) !== "professor" || data.ativo !== true) {
+            window.MEPSessionGuard?.mostrar({ titulo:"Acesso não disponível", mensagem:"Não foi possível validar um perfil ativo de professor. Entre novamente ou fale com a gestão." });
+            return false;
+        }
         state.usuario = data;
         const first = (data.nome || "Professor").trim().split(/\s+/)[0];
         $("userName").textContent = data.nome || "Professor";
@@ -171,7 +175,7 @@
 
     async function init() {
         bindEvents();
-        if (!await authenticate()) { location.replace("../index.html"); return; }
+        if (!await authenticate()) return;
         try { await loadData(); renderAll(); openPage(location.hash.slice(1)||"inicio"); }
         catch(error){ console.error("MEP EAD | Portal do professor:",error); toast("Não foi possível carregar o portal",error.message||"Tente novamente.","error"); $("nextClassContent").innerHTML=empty("Dados indisponíveis","Atualize a página em alguns instantes.","!"); }
     }

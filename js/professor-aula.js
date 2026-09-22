@@ -18,9 +18,10 @@
     function emptyHistory(){return `<div class="teacher-empty"><span>✓</span><strong>Nenhuma chamada realizada</strong><p>As chamadas desta aula aparecerão aqui.</p></div>`;}
 
     async function authenticate() {
-        const {data:{session}}=await supabaseClient.auth.getSession(); if(!session)return false;
+        if(window.MEPSessionGuard&&!await window.MEPSessionGuard.verificar())return false;
+        const {data:{session},error:sessionError}=await supabaseClient.auth.getSession();if(sessionError||!session){window.MEPSessionGuard?.mostrar();return false;}
         const {data,error}=await supabaseClient.from("usuarios").select("id,nome,email,perfil,ativo,foto_url").eq("auth_id",session.user.id).maybeSingle();
-        if(error||!data||norm(data.perfil)!=="professor"||data.ativo!==true)return false;
+        if(error||!data||norm(data.perfil)!=="professor"||data.ativo!==true){window.MEPSessionGuard?.mostrar({titulo:"Acesso não disponível",mensagem:"Não foi possível validar um perfil ativo de professor. Entre novamente ou fale com a gestão."});return false;}
         state.usuario=data; const first=(data.nome||"Professor").trim().split(/\s+/)[0]; $("classroomUserName").textContent=data.nome||"Professor"; $("classroomUserAvatar").textContent=first.charAt(0).toUpperCase(); return true;
     }
 
@@ -83,6 +84,6 @@
     function subscribeRealtime(){const calls=supabaseClient.channel(`professor-calls-${state.live.id}`).on("postgres_changes",{event:"*",schema:"public",table:"presencas_chamadas",filter:`aula_id=eq.${state.live.id}`},()=>loadPresence().catch(console.error)).on("postgres_changes",{event:"*",schema:"public",table:"presencas",filter:`aula_id=eq.${state.live.id}`},()=>loadPresence().catch(console.error)).subscribe();const chat=supabaseClient.channel(`professor-chat-${state.live.id}`).on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_mensagens",filter:`live_id=eq.${state.live.id}`},async payload=>addMessage(await completeAuthor(payload.new),{newMessage:true})).subscribe();const live=supabaseClient.channel(`professor-live-${state.live.id}`).on("postgres_changes",{event:"UPDATE",schema:"public",table:"lives",filter:`id=eq.${state.live.id}`},payload=>{state.live={...state.live,...payload.new};renderClass();renderPresence();}).subscribe();state.channels.push(calls,chat,live);}
     function cleanup(){stopTimer();state.channels.forEach(channel=>supabaseClient.removeChannel?.(channel));state.channels=[];}
     function bindEvents(){$("openPresenceButton")?.addEventListener("click",openCall);$("refreshPresenceButton")?.addEventListener("click",()=>loadPresence().catch(error=>toast("Erro ao atualizar",error.message,"error")));$("openChatButton")?.addEventListener("click",openChat);$("closeChatButton")?.addEventListener("click",closeChat);$("chatBackdrop")?.addEventListener("click",closeChat);$("chatInput")?.addEventListener("input",updateChatForm);$("chatForm")?.addEventListener("submit",sendChat);document.addEventListener("keydown",event=>{if(event.key==="Escape"&&state.chatOpen)closeChat();});window.addEventListener("beforeunload",cleanup);}
-    async function init(){bindEvents();if(!await authenticate()){location.replace("../index.html");return;}try{await loadClass();subscribeRealtime();}catch(error){console.error("MEP EAD | Sala do professor:",error);toast("Não foi possível abrir a sala",error.message||"Tente novamente.","error");$("classroomTitle").textContent="Sala indisponível";$("classroomDescription").textContent=error.message||"A aula não pôde ser carregada.";}}
+    async function init(){bindEvents();if(!await authenticate())return;try{await loadClass();subscribeRealtime();}catch(error){console.error("MEP EAD | Sala do professor:",error);toast("Não foi possível abrir a sala",error.message||"Tente novamente.","error");$("classroomTitle").textContent="Sala indisponível";$("classroomDescription").textContent=error.message||"A aula não pôde ser carregada.";}}
     document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();
 })();

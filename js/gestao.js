@@ -48,6 +48,13 @@ async function verificarAcesso() {
 
     try {
 
+        if (
+            window.MEPSessionGuard &&
+            !await window.MEPSessionGuard.verificar()
+        ) {
+            return;
+        }
+
         const {
             data,
             error
@@ -61,7 +68,7 @@ async function verificarAcesso() {
                 error
             );
 
-            voltarLogin();
+            mostrarLoginNecessario();
 
             return;
 
@@ -78,7 +85,7 @@ async function verificarAcesso() {
                 "Usuário não autenticado."
             );
 
-            voltarLogin();
+            mostrarLoginNecessario();
 
             return;
 
@@ -117,7 +124,9 @@ async function verificarAcesso() {
                 erroUsuario
             );
 
-            voltarLogin();
+            mostrarLoginNecessario(
+                "Não foi possível validar seu perfil. Entre novamente para continuar."
+            );
 
             return;
 
@@ -132,7 +141,9 @@ async function verificarAcesso() {
 
             await supabaseClient.auth.signOut();
 
-            voltarLogin();
+            mostrarLoginNecessario(
+                "Seu perfil não foi encontrado. Entre novamente ou fale com o suporte."
+            );
 
             return;
 
@@ -223,7 +234,9 @@ async function verificarAcesso() {
             erro
         );
 
-        voltarLogin();
+        mostrarLoginNecessario(
+            "Não foi possível validar sua sessão. Entre novamente para continuar."
+        );
 
     }
 
@@ -1073,6 +1086,21 @@ function voltarLogin() {
 
     window.location.href =
         "../index.html";
+
+}
+
+function mostrarLoginNecessario(mensagem) {
+
+    if (window.MEPSessionGuard) {
+        window.MEPSessionGuard.mostrar({
+            mensagem:
+                mensagem ||
+                "Por segurança, é necessário entrar novamente para continuar usando o MEP EAD."
+        });
+        return;
+    }
+
+    voltarLogin();
 
 }
 

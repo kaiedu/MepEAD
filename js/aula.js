@@ -147,10 +147,14 @@
 
     async function verificarSessao() {
         if (typeof supabaseClient === "undefined") throw new Error("Cliente Supabase não encontrado.");
+        if (window.MEPSessionGuard && !await window.MEPSessionGuard.verificar()) return null;
         const { data, error } = await supabaseClient.auth.getSession();
-        if (error) throw error;
+        if (error) {
+            window.MEPSessionGuard?.mostrar();
+            return null;
+        }
         if (!data?.session?.user) {
-            window.location.href = "../index.html";
+            window.MEPSessionGuard?.mostrar();
             return null;
         }
         state.authUser = data.session.user;
